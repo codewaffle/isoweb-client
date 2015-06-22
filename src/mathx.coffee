@@ -1,7 +1,8 @@
+# this file should mirror mathx.py
+
 class RNG
   constructor: (@seed) ->
-    if not @seed?
-      @seed = Math.floor(Math.random() * Math.pow(2,32))
+    @seed = @seed % 233280
 
   rand01: ->
     @seed = (@seed * 9301 + 49297) % 233280

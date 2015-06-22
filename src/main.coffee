@@ -1,5 +1,6 @@
 three = require 'three'
 world = require './world'
+ent = require './ent'
 input = require('./input')
 
 scene = new three.Scene()
@@ -20,6 +21,25 @@ scene.add(light0)
 inputManager = new input.InputManager(camera)
 
 DT = 1/60
+
+network = require './network'
+conn = new network.Connection('ws://127.0.0.1:10000/player')
+console.log 'money money money'
+
+plr = new ent.Player()
+
+scene.add(plr)
+
+document.addEventListener(
+  'mousedown',
+  (evt) -> conn.send({
+      event: 'click',
+      x: inputManager.mousePos.x,
+      y: inputManager.mousePos.y
+    }),
+  false
+)
+
 
 render = ->
   requestAnimationFrame(render)

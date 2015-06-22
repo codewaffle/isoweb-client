@@ -34,7 +34,6 @@ class InputManager
     )
 
   onMouseDown: (evt) ->
-    console.log 'woo'
     if not @panning
       @panning = true
       @panStart.copy(@mousePos)
