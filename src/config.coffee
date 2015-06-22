@@ -1,2 +1,2 @@
 module.exports =
-  ChunkSize: 4
+  ChunkSize: 32
