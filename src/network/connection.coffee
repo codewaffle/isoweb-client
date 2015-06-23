@@ -13,6 +13,11 @@ module.exports = class Connection
     @conn.onmessage = (evt) =>
       @onMessage(evt)
 
+    @sendMoveToPacket = new DataView(new ArrayBuffer(10))
+
+    # packet header is constant
+    @sendMoveToPacket.setUint16(0, packetTypes.MOVE_TO)
+
   onMessage: (evt) ->
     dv = new DataView(evt.data)
     packetType = dv.getUint16(0)
@@ -30,5 +35,10 @@ module.exports = class Connection
 
       console.log islandId, entCount
 
-  send: (obj) ->
-    @conn.send(JSON.stringify(obj, replacer))
+  sendBinary: (data) ->
+    @conn.send(data)
+
+  sendMoveTo: (x, y) ->
+    @sendMoveToPacket.setFloat32(2, x)
+    @sendMoveToPacket.setFloat32(6, y)
+    @sendBinary(@sendMoveToPacket.buffer)

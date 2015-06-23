@@ -32,12 +32,9 @@ scene.add(plr)
 
 document.addEventListener(
   'mousedown',
-  (evt) -> conn.send({
-      event: 'click',
-      x: inputManager.mousePos.x,
-      y: inputManager.mousePos.y
-    }),
-  false
+  (evt) ->
+    conn.sendMoveTo(inputManager.mousePos.x, inputManager.mousePos.y)
+  ,false
 )
 
 
