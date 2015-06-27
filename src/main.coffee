@@ -20,11 +20,11 @@ scene.add(light0)
 
 inputManager = new input.InputManager(camera)
 
+# at one point there were fixed timesteps for processing - the time will come again.
 DT = 1/60
 
 network = require './network'
 conn = new network.Connection('ws://127.0.0.1:10000/player')
-console.log 'money money money'
 
 document.addEventListener(
   'mousedown',
@@ -32,7 +32,6 @@ document.addEventListener(
     conn.sendMoveTo(inputManager.mousePos.x, inputManager.mousePos.y)
   ,false
 )
-
 
 render = ->
   requestAnimationFrame(render)

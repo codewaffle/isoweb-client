@@ -1,6 +1,9 @@
 packetTypes = require './packet_types'
 packetHandlers = require './packet_handlers'
 
+PacketReader = require './packet_reader'
+packet = new PacketReader()
+
 module.exports = class Connection
   constructor: (@endpoint) ->
     @conn = new WebSocket(@endpoint)
@@ -15,13 +18,13 @@ module.exports = class Connection
     @sendMoveToPacket.setUint16(0, packetTypes.MOVE_TO)
 
   onMessage: (evt) ->
-    dv = new DataView(evt.data)
-    packetType = dv.getUint16(0)
+    packet.setBuffer(evt.data)
+    packetType = packet.readUint16(0)
 
     switch packetType
-      when packetTypes.ISLAND_UPDATE then packetHandlers.handleIslandUpdate(dv, 2)
-      when packetTypes.SPAWN then packetHandlers.handleSpawn(dv, 2)
-      when packetTypes.INFO then packetHandlers.handleInfo(dv, 2)
+      when packetTypes.ISLAND_UPDATE then packetHandlers.handleIslandUpdate(packet)
+      when packetTypes.SPAWN then packetHandlers.handleSpawn(packet)
+      when packetTypes.INFO then packetHandlers.handleInfo(packet)
       else console.log 'UNKNOWN PACKET', packetType, evt.data
 
   sendBinary: (data) ->
