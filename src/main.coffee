@@ -26,10 +26,6 @@ network = require './network'
 conn = new network.Connection('ws://127.0.0.1:10000/player')
 console.log 'money money money'
 
-plr = new ent.Player()
-
-scene.add(plr)
-
 document.addEventListener(
   'mousedown',
   (evt) ->
