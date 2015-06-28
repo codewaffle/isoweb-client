@@ -5,10 +5,16 @@ module.exports = class PacketReader
     @dv = new DataView(@buffer)
     @pos = 0
 
-  readString: ->
+  readSmallString: ->
     len = @dv.getUint8(@pos)
     slice = @buffer.slice(@pos+1, @pos+1+len)
     @pos += 1+len
+    return texdec.decode(slice)
+
+  readString: ->
+    len = @dv.getUint16(@pos)
+    slice = @buffer.slice(@pos+2, @pos+1+len)
+    @pos += 2+len
     return texdec.decode(slice)
 
   readUint32: ->
@@ -25,6 +31,9 @@ module.exports = class PacketReader
     val = @dv.getUint8(@pos)
     @pos += 1
     return val
+
+  readChar: ->
+    return String.fromCharCode(@readUint8())
 
   readFloat32: ->
     val = @dv.getFloat32(@pos)
