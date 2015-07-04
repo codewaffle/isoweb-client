@@ -24,7 +24,6 @@ module.exports = class Connection
     switch packetType
       when packetTypes.ISLAND_UPDATE then packetHandlers.handleIslandUpdate(packet)
       when packetTypes.SPAWN then packetHandlers.handleSpawn(packet)
-      when packetTypes.INFO then packetHandlers.handleInfo(packet)
       else console.log 'UNKNOWN PACKET', packetType, evt.data
 
   sendBinary: (data) ->

@@ -4,13 +4,21 @@ ent = require './ent'
 input = require('./input')
 
 scene = new three.Scene()
-camera = new three.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000.0)
+
+camera = new three.PerspectiveCamera(
+  75,
+  window.innerWidth/window.innerHeight,
+  0.1,
+  1000.0)
+
 camera.position.z = 10
 renderer = new three.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
 island = new world.Island(0)
+world.currentIsland = island
+
 scene.add island
 
 light0 = new three.DirectionalLight(0xffffff, 0.3)

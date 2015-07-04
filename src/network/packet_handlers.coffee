@@ -1,3 +1,6 @@
+ent = require '../ent'
+world = require '../world'
+
 module.exports =
   handleIslandUpdate: (pr) ->
     islandId = pr.readUint32()
@@ -14,9 +17,19 @@ module.exports =
 
   handleSpawn: (pr) ->
     name = pr.readSmallString()
+
+    entClass = ent.map[name]
+
+    ent = new entClass()
+
+    console.log("SPAWN ", name, entClass)
+
     posX = pr.readFloat32()
     posY = pr.readFloat32()
     bear = pr.readFloat32()
+
+    ent.position.x = posX
+    ent.position.y = posY
 
     numAttribs = pr.readUint8()
 
@@ -33,3 +46,8 @@ module.exports =
         1/0 # i dunno, error or something?
 
       console.log('Attr', attrName, attrType, attrVal)
+      ent.setAttribute(attrName, attrType, attrVal)
+
+    console.log 'ready to spawn at', posX, posY
+    world.currentIsland.add(ent)
+

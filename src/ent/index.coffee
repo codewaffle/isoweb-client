@@ -1,3 +1,11 @@
+mesh = require './mesh'
+
 module.exports =
-  Player: require './player'
   Entity: require './entity'
+  mesh: mesh
+
+  map:
+    'SimpleSprite': mesh.SimpleSprite
+    'SimpleMesh': mesh.SimpleMesh
+
+
