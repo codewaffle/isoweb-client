@@ -13,7 +13,7 @@ module.exports = class PacketReader
 
   readString: ->
     len = @dv.getUint16(@pos)
-    slice = @buffer.slice(@pos+2, @pos+1+len)
+    slice = @buffer.slice(@pos+2, @pos+2+len)
     @pos += 2+len
     return texdec.decode(slice)
 
