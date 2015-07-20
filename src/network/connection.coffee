@@ -12,24 +12,13 @@ module.exports = class Connection
     @conn.onmessage = (evt) =>
       @onMessage(evt)
 
-    @sendMoveToPacket = new DataView(new ArrayBuffer(10))
-
-    # packet header is constant
-    @sendMoveToPacket.setUint16(0, packetTypes.MOVE_TO)
-
   onMessage: (evt) ->
     packet.setBuffer(evt.data)
     packetType = packet.readUint16(0)
 
     switch packetType
-      when packetTypes.ISLAND_UPDATE then packetHandlers.handleIslandUpdate(packet)
-      when packetTypes.SPAWN then packetHandlers.handleSpawn(packet)
+      when packetTypes.ENTITY_UPDATE then packetHandlers.handleEntityUpdate(packet)
       else console.log 'UNKNOWN PACKET', packetType, evt.data
 
   sendBinary: (data) ->
     @conn.send(data)
-
-  sendMoveTo: (x, y) ->
-    @sendMoveToPacket.setFloat32(2, x)
-    @sendMoveToPacket.setFloat32(6, y)
-    @sendBinary(@sendMoveToPacket.buffer)

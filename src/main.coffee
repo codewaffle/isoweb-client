@@ -1,7 +1,5 @@
 three = require 'three'
-world = require './world'
-ent = require './ent'
-input = require('./input')
+input = require './input'
 
 scene = new three.Scene()
 
@@ -15,11 +13,6 @@ camera.position.z = 10
 renderer = new three.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
-
-island = new world.Island(0)
-world.currentIsland = island
-
-scene.add island
 
 light0 = new three.DirectionalLight(0xffffff, 0.3)
 light0.position.set(0, 0, 1)  # this is actually direction on directional lights.
