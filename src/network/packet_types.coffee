@@ -1,7 +1,6 @@
 module.exports =
-  ISLAND_UPDATE: 1
-  MOVE_TO: 2
-  SPAWN: 3
+  PING: 1
+  PONG: 2
 
   ENTITY_UPDATE: 100
   POSITION_UPDATE: 101

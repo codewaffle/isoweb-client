@@ -39,3 +39,9 @@ module.exports = class PacketReader
     val = @dv.getFloat32(@pos)
     @pos += 4
     return val
+
+  readFloat64: ->
+    val = @dv.getFloat64(@pos)
+    @pos += 8
+    return val
+
