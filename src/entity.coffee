@@ -14,7 +14,8 @@ class Entity extends three.Object3D
     @model = null
     main.scene.add(@)
 
-  update_scale: (@scale) ->
+  update_scale: (scale) ->
+    @meshScale = parseFloat(scale)
     @updateModel()
 
   update_model: (val) ->
@@ -44,11 +45,12 @@ class Entity extends three.Object3D
     @updateModel()
 
   updateModel: ->
-    if not (@geom? and @model_map? and @scale?)
+    if not (@geom? and @model_map? and @meshScale?)
       return
 
-    @material = new three.MeshPhongMaterial({map: @model_map})
+    @material = new three.MeshPhongMaterial({map: @model_map, transparent: true})
     @mesh = new three.Mesh(@geom, @material)
+    @mesh.scale.set(@meshScale,@meshScale,@meshScale)
     @mesh.castShadow = true
     @mesh.receiveShadow = true
     @add(@mesh)

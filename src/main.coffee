@@ -29,7 +29,10 @@ light0.shadowCameraTop = 20
 light0.shadowCameraBottom = -20
 light0.position.set(-60, 20, 100)  # this is actually direction on directional lights.
 
-scene.add(light0)
+# scene.add(light0)
+
+light = new three.AmbientLight( 0xdddddd )
+scene.add( light )
 
 pl = new three.PlaneGeometry(1000, 1000)
 mat = new three.MeshPhongMaterial({color: 0x88ddaa})
