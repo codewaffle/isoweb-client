@@ -42,7 +42,7 @@ module.exports = class Connection
     # t0
     @outgoingSync[num] = now
     @sendBinary(time_req.buffer)
-    setTimeout((=> @requestTimeSync()), 555)
+    setTimeout((=> @requestTimeSync()), 200)
 
   handleTimeSync: (packet) ->
     num = packet.readUint16()
