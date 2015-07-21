@@ -1,6 +1,7 @@
 config = require './config'
 three = require 'three'
 main = require './main'
+asset = require './asset'
 
 jsonLoader = new three.JSONLoader()
 texLoader = new three.TextureLoader()
@@ -13,20 +14,18 @@ class Entity extends three.Object3D
     @model = null
     main.scene.add(@)
 
-  update_sprite: (val) ->
+  update_scale: (@scale) ->
+    @updateModel()
+
   update_model: (val) ->
-    jsonLoader.load(
-      config.asset_base + val,
-      (geom, materials) =>
-        @setGeom(geom)
-    )
-  update_map: (val) ->
-    texLoader.load(
-      config.asset_base + val,
-      (tex) =>
-        @setMap(tex)
+    asset.getGeom(val, (geom) =>
+      @setGeom(geom)
     )
 
+  update_map: (val) ->
+    asset.getTexture(val, (tex) =>
+      @setMap(tex)
+    )
 
   updatePosition: (x, y) ->
     @position.x = x
@@ -39,14 +38,15 @@ class Entity extends three.Object3D
       @['update_' + attrName](attrVal)
 
   setGeom: (@geom) ->
-    if @model_map?
-      @updateModel()
+    @updateModel()
 
   setMap: (@model_map) ->
-    if @geom?
-      @updateModel()
+    @updateModel()
 
   updateModel: ->
+    if not (@geom? and @model_map? and @scale?)
+      return
+
     @material = new three.MeshPhongMaterial({map: @model_map})
     @mesh = new three.Mesh(@geom, @material)
     @mesh.castShadow = true

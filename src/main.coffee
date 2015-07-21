@@ -9,7 +9,7 @@ camera = new three.PerspectiveCamera(
   0.1,
   1000.0)
 
-camera.position.z = 10
+camera.position.z = 30
 renderer = new three.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
@@ -32,7 +32,7 @@ light0.position.set(-60, 20, 100)  # this is actually direction on directional l
 scene.add(light0)
 
 pl = new three.PlaneGeometry(1000, 1000)
-mat = new three.MeshPhongMaterial({color: 0x00ff88})
+mat = new three.MeshPhongMaterial({color: 0x88ddaa})
 o = new three.Mesh(pl, mat)
 o.castShadow = false
 o.receiveShadow = true
@@ -45,7 +45,7 @@ inputManager = new input.InputManager(camera)
 DT = 1/60
 
 network = require './network'
-conn = new network.Connection('ws://127.0.0.1:10000/player')
+conn = new network.Connection('ws://96.40.72.113:10000/player')
 
 document.addEventListener(
   'mousedown',
