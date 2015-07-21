@@ -15,7 +15,7 @@ class Entity extends three.Object3D
     main.scene.add(@)
 
   update_scale: (scale) ->
-    @meshScale = parseFloat(scale)
+    @meshScale = scale
     @updateModel()
 
   update_model: (val) ->
@@ -28,9 +28,14 @@ class Entity extends three.Object3D
       @setMap(tex)
     )
 
-  updatePosition: (x, y) ->
+  update_z: (val) ->
+    @position.z = val
+
+  updatePosition: (x, y, r) ->
     @position.x = x
     @position.y = y
+    @rotation.z = r
+
 
   updateAttribute: (attrName, attrVal) ->
     @attrs[attrName] = attrVal
