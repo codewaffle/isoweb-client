@@ -15,7 +15,10 @@ module.exports =
         callbacks[path] = [cb]
         jsonLoader.load(
           config.asset_base + path,
-          (geom, materials) ->
+          (_geom, materials) ->
+            geom = new three.BufferGeometry()
+            geom.fromGeometry(_geom)
+
             cache[path] = geom
             for callback in callbacks[path]
               callback(geom)
