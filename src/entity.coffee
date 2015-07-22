@@ -2,17 +2,28 @@ config = require './config'
 three = require 'three'
 main = require './main'
 asset = require './asset'
+clock = require './clock'
 
 jsonLoader = new three.JSONLoader()
 texLoader = new three.TextureLoader()
 entCount = 0
 
+updateList = {}
+
 class Entity extends three.Object3D
   constructor: (@id) ->
     super()
+    @updates = []
+    @updating = false
     @attrs = {}
     @sprite = null
     @model = null
+
+    # ugh memory management.. could maybe make these global to save memory but might reduce performance
+    @tmpVec0 = new three.Vector3(0,0,0)
+    @tmpVec1 = new three.Vector3(0,0,0)
+    @tmpVec2 = new three.Vector3(0,0,0)
+
     main.scene.add(@)
     # console.log "ENTITY", entCount++
 
@@ -33,11 +44,47 @@ class Entity extends three.Object3D
   update_z: (val) ->
     @position.z = val
 
-  updatePosition: (x, y, r) ->
-    @position.x = x
-    @position.y = y
-    @rotation.z = r
+  updatePosition: (pr) ->
+    @pushUpdate(
+      pr.timestamp,
+      pr.readFloat32(),
+      pr.readFloat32(),
+      pr.readFloat32()
+    )
 
+  pushUpdate: (t, x, y, r) ->
+    @updates.push([t,x,y,r])
+
+    if not @updating
+      @updating = true
+      updateList[@id] = @
+
+  update: () ->
+    srv = clock.server_now() - 0.500
+
+    # discard old updates, keeping the last
+    while @updates.length > 0 and @updates[0][0] < srv
+      u = @updates.shift()
+
+    if u?
+      if @updates.length > 0
+        t0 = u[0]
+        t1 = @updates[0][0]
+        span = t1 - t0
+
+        t = (srv - t0) / span
+        # console.log t
+
+        @tmpVec0.set(u[1], u[2], u[3])
+        @tmpVec1.set(@updates[0][1], @updates[0][2], @updates[0][3])
+        @tmpVec0.lerp(@tmpVec1, t)
+
+        @position.set(@tmpVec0.x, @tmpVec0.y, @position.z)
+        @rotation.z = @tmpVec0.z
+
+      @updates.unshift(u)
+
+    return true
 
   updateAttribute: (attrName, attrVal) ->
     @attrs[attrName] = attrVal
@@ -69,3 +116,9 @@ module.exports =
     registry[id] ?= new Entity(id)
     return registry[id]
   registry: registry
+  update: () ->
+    for key, ent of updateList
+      if not ent.update()
+        ent.updating = false
+        console.log 'end update'
+        delete updateList[key]

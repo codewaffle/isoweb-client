@@ -32,7 +32,7 @@ module.exports = class Connection
 
   requestTimeSync: () ->
     time_req = new DataView(new ArrayBuffer(4))
-    now = Date.now()/1000.0
+    now = window.performance.now() / 1000.0
     num = Math.floor(Math.random() * 65536.0)
 
     time_req.setUint16(0, packetTypes.PING)
@@ -41,13 +41,13 @@ module.exports = class Connection
     # t0
     @outgoingSync[num] = now
     @sendBinary(time_req.buffer)
-    setTimeout((=> @requestTimeSync()), 200)
+    setTimeout((=> @requestTimeSync()), 15000)
 
   handleTimeSync: (packet) ->
     num = packet.readUint16()
     t0 = @outgoingSync[num]
     t1 = packet.readFloat64()
     t2 = packet.timestamp
-    t3 = Date.now()/1000.0
+    t3 = window.performance.now() / 1000.0
 
     clock.ntp_sync(t0, t1, t2, t3)

@@ -8,7 +8,7 @@ drift = {}
 history = []
 offset_avg = 0
 rt_avg = 0
-history_size = 125
+history_size = 10
 
 push_sample = (sample) ->
   history.push(sample)
@@ -23,10 +23,10 @@ push_sample = (sample) ->
     offset_avg = history.map((t) -> t.off).reduce((t, s) -> t + s) / history.length
     rt_avg = history.map( (t) -> t.rt ).reduce((t, s) -> t + s) / history.length
 
-  # console.log 'ping: ' + rt_avg + '  offset: ' + offset_avg
+  console.log 'ping: ' + rt_avg + '  offset: ' + offset_avg
 
 module.exports =
   ntp_sync: (t0, t1, t2, t3) ->
     push_sample(ntp(t0, t1, t2, t3))
   server_now: ->
-    Date.now()/1000.0 + offset_avg
+    window.performance.now()/1000.0 + offset_avg

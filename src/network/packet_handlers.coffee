@@ -14,9 +14,7 @@ module.exports =
 
     while updateType > 0
       switch updateType
-        when packetTypes.POSITION_UPDATE then ent.updatePosition(
-          pr.readFloat32(), pr.readFloat32(), pr.readFloat32()
-        )
+        when packetTypes.POSITION_UPDATE then ent.updatePosition(pr)
         when packetTypes.STRING_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readString())
         when packetTypes.FLOAT_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readFloat32())
 

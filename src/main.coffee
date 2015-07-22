@@ -1,5 +1,6 @@
 three = require 'three'
 input = require './input'
+entity = require './entity'
 
 module.exports.scene = scene = new three.Scene()
 
@@ -60,6 +61,7 @@ document.addEventListener(
 render = ->
   requestAnimationFrame(render)
   inputManager.update(DT)
+  entity.update()
   renderer.render(scene, camera)
 
 render()
