@@ -31,4 +31,4 @@ module.exports =
   server_now: ->
     window.performance.now()/1000.0 + offset_avg
   server_adjusted: ->
-    window.performance.now()/1000.0 + offset_avg - rt_avg*2.0
+    window.performance.now()/1000.0 + offset_avg - Math.max(rt_avg*2.0, 0.1)
