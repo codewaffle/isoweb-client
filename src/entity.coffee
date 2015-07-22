@@ -81,8 +81,11 @@ class Entity extends three.Object3D
 
         @position.set(@tmpVec0.x, @tmpVec0.y, @position.z)
         @rotation.z = @tmpVec0.z
-
-      @updates.unshift(u)
+        @updates.unshift(u)
+      else
+        @position.set(u[1], u[2], @position.z)
+        @rotation.z = u[3]
+        return false
 
     return true
 
