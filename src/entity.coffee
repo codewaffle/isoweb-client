@@ -5,6 +5,7 @@ asset = require './asset'
 
 jsonLoader = new three.JSONLoader()
 texLoader = new three.TextureLoader()
+entCount = 0
 
 class Entity extends three.Object3D
   constructor: (@id) ->
@@ -13,6 +14,7 @@ class Entity extends three.Object3D
     @sprite = null
     @model = null
     main.scene.add(@)
+    # console.log "ENTITY", entCount++
 
   update_scale: (scale) ->
     @meshScale = scale

@@ -48,7 +48,6 @@ module.exports = class Connection
     t0 = @outgoingSync[num]
     t1 = packet.readFloat64()
     t2 = packet.timestamp
-    console.log t1, t2
     t3 = Date.now()/1000.0
 
     clock.ntp_sync(t0, t1, t2, t3)
