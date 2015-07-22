@@ -21,9 +21,8 @@ module.exports = class Connection
 
   onMessage: (evt) ->
     packet.setBuffer(evt.data)
-    packetType = packet.readUint16(0)
 
-    switch packetType
+    switch packet.type
       when packetTypes.PONG then @handleTimeSync(packet)
       when packetTypes.ENTITY_UPDATE then packetHandlers.handleEntityUpdate(packet)
       else console.log 'UNKNOWN PACKET', packetType, evt.data
@@ -48,7 +47,8 @@ module.exports = class Connection
     num = packet.readUint16()
     t0 = @outgoingSync[num]
     t1 = packet.readFloat64()
-    t2 = packet.readFloat64()
+    t2 = packet.timestamp
+    console.log t1, t2
     t3 = Date.now()/1000.0
 
     clock.ntp_sync(t0, t1, t2, t3)
