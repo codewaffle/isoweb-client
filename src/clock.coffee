@@ -8,7 +8,7 @@ drift = {}
 history = []
 offset_avg = 0
 rt_avg = 0
-history_size = 10
+history_size = 25
 
 push_sample = (sample) ->
   history.push(sample)
@@ -30,3 +30,5 @@ module.exports =
     push_sample(ntp(t0, t1, t2, t3))
   server_now: ->
     window.performance.now()/1000.0 + offset_avg
+  server_adjusted: ->
+    window.performance.now()/1000.0 + offset_avg - (rt_avg * 2.0)

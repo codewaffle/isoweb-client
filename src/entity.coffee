@@ -60,7 +60,7 @@ class Entity extends three.Object3D
       updateList[@id] = @
 
   update: () ->
-    srv = clock.server_now() - 0.500
+    srv = clock.server_adjusted()
 
     # discard old updates, keeping the last
     while @updates.length > 0 and @updates[0][0] < srv
