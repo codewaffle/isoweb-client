@@ -28,6 +28,8 @@ module.exports = class Connection
       else console.log 'UNKNOWN PACKET', packetType, evt.data
 
   sendBinary: (data) ->
+    if @conn.readyState != 1
+      window.location.reload(true)
     @conn.send(data)
 
   requestTimeSync: () ->

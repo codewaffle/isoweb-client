@@ -123,5 +123,4 @@ module.exports =
     for key, ent of updateList
       if not ent.update()
         ent.updating = false
-        console.log 'end update'
         delete updateList[key]
