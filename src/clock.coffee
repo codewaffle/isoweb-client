@@ -29,6 +29,6 @@ module.exports =
   ntp_sync: (t0, t1, t2, t3) ->
     push_sample(ntp(t0, t1, t2, t3))
   server_now: ->
-    window.performance.now()/1000.0 + offset_avg
+    Date.now()/1000.0 + offset_avg
   server_adjusted: ->
-    window.performance.now()/1000.0 + offset_avg - Math.max(rt_avg*2.0, 0.1)
+    Date.now()/1000.0 + offset_avg - Math.max(rt_avg*2.0, 0.1)
