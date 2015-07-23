@@ -1,16 +1,14 @@
 config = require './config'
-three = require 'three'
 main = require './main'
 asset = require './asset'
 clock = require './clock'
+pixi = require 'pixi'
 
-jsonLoader = new three.JSONLoader()
-texLoader = new three.TextureLoader()
 entCount = 0
 
 updateList = {}
 
-class Entity extends three.Object3D
+class Entity extends pixi.Container
   constructor: (@id) ->
     super()
     @updates = []
@@ -18,31 +16,34 @@ class Entity extends three.Object3D
     @attrs = {}
     @sprite = null
     @model = null
+    @anchor_x = 0.5
+    @anchor_y = 0.5
 
     # ugh memory management.. could maybe make these global to save memory but might reduce performance
-    @tmpVec0 = new three.Vector3(0,0,0)
-    @tmpVec1 = new three.Vector3(0,0,0)
-    @tmpVec2 = new three.Vector3(0,0,0)
+    @tmpVec0 = new pixi.Point(0,0)
+    @tmpVec1 = new pixi.Point(0,0)
+    @tmpVec2 = new pixi.Point(0,0)
 
-    main.scene.add(@)
+    main.stage.addChild(@)
     # console.log "ENTITY", entCount++
 
   update_scale: (scale) ->
     @meshScale = scale
     @updateModel()
 
-  update_model: (val) ->
-    asset.getGeom(val, (geom) =>
-      @setGeom(geom)
-    )
-
-  update_map: (val) ->
-    asset.getTexture(val, (tex) =>
-      @setMap(tex)
+  update_sprite: (val) ->
+    asset.getSprite(val, (spr) =>
+      @setSprite(spr)
     )
 
   update_z: (val) ->
-    @position.z = val
+    # @position.z = val
+
+  update_anchor_x: (val) ->
+    @anchor_x = val
+
+  update_anchor_y: (val) ->
+    @anchor_y = val
 
   updatePosition: (pr) ->
     @pushUpdate(
@@ -53,7 +54,7 @@ class Entity extends three.Object3D
     )
 
   pushUpdate: (t, x, y, r) ->
-    @updates.push([t,x,y,r])
+    @updates.push([t,x*100,y*100,r])
 
     if not @updating
       @updating = true
@@ -75,16 +76,12 @@ class Entity extends three.Object3D
         t = (srv - t0) / span
         # console.log t
 
-        @tmpVec0.set(u[1], u[2], u[3])
-        @tmpVec1.set(@updates[0][1], @updates[0][2], @updates[0][3])
-        @tmpVec0.lerp(@tmpVec1, t)
-
-        @position.set(@tmpVec0.x, @tmpVec0.y, @position.z)
-        @rotation.z = @tmpVec0.z
+        @position.set(u[1] + (@updates[0][1] - u[1]) * t, u[2] + (@updates[0][2] - u[2]) * t)
+        @rotation = u[3] + (@updates[0][3] - u[3]) * t
         @updates.unshift(u)
       else
-        @position.set(u[1], u[2], @position.z)
-        @rotation.z = u[3]
+        @position.set(u[1], u[2])
+        @rotation = u[3]
         return false
 
     return true
@@ -98,19 +95,21 @@ class Entity extends three.Object3D
   setGeom: (@geom) ->
     @updateModel()
 
-  setMap: (@model_map) ->
+  setSprite: (@sprite) ->
     @updateModel()
 
   updateModel: ->
-    if not (@geom? and @model_map? and @meshScale?)
+    if not (@sprite? and @meshScale?)
       return
 
-    @material = new three.MeshPhongMaterial({map: @model_map, transparent: true})
-    @mesh = new three.Mesh(@geom, @material)
-    @mesh.scale.set(@meshScale,@meshScale,@meshScale)
-    @mesh.castShadow = true
-    @mesh.receiveShadow = true
-    @add(@mesh)
+    #@sprite = new pixi.Sprite(@model_map)
+    @sprite.scale.x = @meshScale
+    @sprite.scale.y = @meshScale
+    @sprite.anchor.x = @anchor_x
+    @sprite.anchor.y = @anchor_y
+    @addChild(@sprite)
+
+    # @add(@mesh)
 
 registry = {}
 

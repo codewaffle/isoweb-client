@@ -1,13 +1,12 @@
-three = require 'three'
-
+pixi = require 'pixi'
 
 class InputManager
   constructor: (@camera) ->
-    @mousePos = new three.Vector2()
+    @mousePos = new pixi.Point()
 
-    @panStart = new three.Vector2()
+    @panStart = new pixi.Point()
     @panning = false
-    @panEnd = new three.Vector2()
+    @panEnd = new pixi.Point()
 
     document.addEventListener(
       'mousemove',

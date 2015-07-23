@@ -31,4 +31,4 @@ module.exports =
   server_now: ->
     Date.now()/1000.0 + offset_avg
   server_adjusted: ->
-    Date.now()/1000.0 + offset_avg - Math.max(rt_avg*2.0, 0.1)
+    Date.now()/1000.0 + offset_avg - Math.max(rt_avg*2.0, 0.10)
