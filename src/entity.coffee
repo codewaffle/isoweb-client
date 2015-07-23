@@ -18,11 +18,8 @@ class Entity extends pixi.Container
     @model = null
     @anchor_x = 0.5
     @anchor_y = 0.5
+    @sprite_cbs = []
 
-    # ugh memory management.. could maybe make these global to save memory but might reduce performance
-    @tmpVec0 = new pixi.Point(0,0)
-    @tmpVec1 = new pixi.Point(0,0)
-    @tmpVec2 = new pixi.Point(0,0)
 
     main.stage.addChild(@)
     # console.log "ENTITY", entCount++
@@ -44,6 +41,16 @@ class Entity extends pixi.Container
 
   update_anchor_y: (val) ->
     @anchor_y = val
+
+  update_hit_area: (txt) ->
+    if @sprite?
+      @sprite.interactive = true
+      @sprite.hitArea = eval('new pixi.' + txt)
+    else
+      @sprite_cbs.push( (spr) ->
+        spr.interactive = true
+        spr.hitArea = eval('new pixi.' + txt)
+      )
 
   updatePosition: (pr) ->
     @pushUpdate(
@@ -97,6 +104,9 @@ class Entity extends pixi.Container
 
   setSprite: (@sprite) ->
     @updateModel()
+    if @sprite_cbs.length > 0
+      for cb in @sprite_cbs
+        cb(@sprite)
 
   updateModel: ->
     if not (@sprite? and @meshScale?)
@@ -107,6 +117,10 @@ class Entity extends pixi.Container
     @sprite.scale.y = @meshScale
     @sprite.anchor.x = @anchor_x
     @sprite.anchor.y = @anchor_y
+
+    @sprite.on('mouseover', ->
+      console.log 'mouse me harder'
+    )
     @addChild(@sprite)
 
     # @add(@mesh)

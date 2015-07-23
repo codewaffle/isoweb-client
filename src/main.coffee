@@ -6,8 +6,8 @@ entity = require './entity'
 renderer = new pixi.autoDetectRenderer(128, 128)
 renderer.backgroundColor = 0xAAFFCC
 module.exports.stage = stage = new pixi.Container()
-stage.scale.x = 1/4.0
-stage.scale.y = 1/4.0
+stage.scale.x = 1/3.0
+stage.scale.y = 1/3.0
 document.body.appendChild(renderer.view)
 
 resize = ->
@@ -24,7 +24,7 @@ update = ->
   entity.update()
   renderer.render(stage)
   stage.position.y += 0.15
-  stage.position.x += 0.5
+  stage.position.x += 0.15
   requestAnimationFrame(update)
 requestAnimationFrame(update)
 
