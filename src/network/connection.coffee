@@ -22,17 +22,26 @@ module.exports = class Connection
   onMessage: (evt) ->
     packet.setBuffer(evt.data)
 
-    switch packet.type
-      when packetTypes.PONG then @handleTimeSync(packet)
-      when packetTypes.ENTITY_UPDATE then packetHandlers.handleEntityUpdate(packet)
-      else console.log 'UNKNOWN PACKET', packetType, evt.data
+    pt = packet.getType()
+
+    while pt > 0
+      switch pt
+        when packetTypes.PONG then @handleTimeSync(packet)
+        when packetTypes.ENTITY_UPDATE then packetHandlers.handleEntityUpdate(packet)
+        else console.log 'UNKNOWN PACKET', packetType, evt.data
+      pt = packet.getType()
 
   sendBinary: (data) ->
     if @conn.readyState != 1
       window.location.reload(true)
     @conn.send(data)
 
-  requestTimeSync: () ->
+  # what a mess.. most of this should either be in clock or most of clock should be here.
+  requestTimeSync: (count) ->
+    if not count?
+      clock.reset_latency()
+      count = 0
+
     time_req = new DataView(new ArrayBuffer(4))
     now = Date.now() / 1000.0
     num = Math.floor(Math.random() * 65536.0)
@@ -43,7 +52,11 @@ module.exports = class Connection
     # t0
     @outgoingSync[num] = now
     @sendBinary(time_req.buffer)
-    setTimeout((=> @requestTimeSync()), 2500)
+
+    if count < 10
+      setTimeout((=> @requestTimeSync(count+1)), 200)
+    else
+      clock.calculate_latency()
 
   handleTimeSync: (packet) ->
     num = packet.readUint16()
