@@ -4,8 +4,15 @@ module.exports = class PacketReader
   setBuffer: (@buffer) ->
     @dv = new DataView(@buffer)
     @pos = 0
+
+  getType: ->
     @type = @readUint8()
-    @timestamp = @readFloat32()
+
+    if @type > 0
+      @timestamp = @readFloat32()
+      return @type
+
+    return 0
 
   readSmallString: ->
     len = @dv.getUint8(@pos)
