@@ -37,8 +37,8 @@ module.exports = class Connection
     now = Date.now() / 1000.0
     num = Math.floor(Math.random() * 65536.0)
 
-    time_req.setUint16(0, packetTypes.PING)
-    time_req.setUint16(2, num)
+    time_req.setUint8(0, packetTypes.PING)
+    time_req.setUint16(1, num)
 
     # t0
     @outgoingSync[num] = now
