@@ -43,7 +43,7 @@ module.exports = class Connection
       clock.reset_latency()
       count = 0
 
-    time_req = new DataView(new ArrayBuffer(4))
+    time_req = new DataView(new ArrayBuffer(3))
     now = Date.now() / 1000.0
     num = Math.floor(Math.random() * 65536.0)
 

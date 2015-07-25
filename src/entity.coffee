@@ -3,6 +3,7 @@ main = require './main'
 asset = require './asset'
 clock = require './clock'
 pixi = require 'pixi'
+entityController = require('./entity_controller')
 
 entCount = 0
 
@@ -108,9 +109,10 @@ class Entity extends pixi.Container
       for cb in @sprite_cbs
         cb(@sprite)
 
-  takeControl: () ->
-    # TODO : take control of this entity - snap the camera to it, use it when sending commands. stuff.
-    print 'pls fix'
+  takeControl: (@conn) ->
+    ec = new entityController.EntityController(@)
+    ec.setConnection(@conn)
+
 
   updateModel: ->
     if not (@sprite? and @meshScale?)
