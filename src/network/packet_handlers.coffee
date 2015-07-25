@@ -3,7 +3,7 @@ packetTypes = require './packet_types'
 
 module.exports =
   handleEntityUpdate: (pr) ->
-    entId = pr.readUint32()
+    entId = pr.readEntityId()
 
     # get or create entity
     ent = entity.get(entId)
@@ -18,3 +18,8 @@ module.exports =
         when packetTypes.FLOAT_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readFloat32())
 
       updateType = pr.readUint8()
+  handleAssignControl: (pr) ->
+    entId = pr.readEntityId()
+
+    ent = entity.get(entId)
+    ent.takeControl()

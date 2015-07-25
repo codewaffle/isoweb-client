@@ -31,6 +31,11 @@ module.exports = class PacketReader
     @pos += 4
     return val
 
+  readEntityId: ->
+    # special cased because I intend on supporting more than 4 billion entities (including deleted entities)
+    # I don't want to recycle ids. This will probably end up as 2 ints, with the 1st int indicating what made the item.
+    return @readUint32()
+
   readUint16: ->
     val = @dv.getUint16(@pos)
     @pos += 2

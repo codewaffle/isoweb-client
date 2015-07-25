@@ -108,6 +108,10 @@ class Entity extends pixi.Container
       for cb in @sprite_cbs
         cb(@sprite)
 
+  takeControl: () ->
+    # TODO : take control of this entity - snap the camera to it, use it when sending commands. stuff.
+    print 'pls fix'
+
   updateModel: ->
     if not (@sprite? and @meshScale?)
       return
