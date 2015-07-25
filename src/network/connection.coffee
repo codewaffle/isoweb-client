@@ -27,7 +27,7 @@ module.exports = class Connection
     while pt > 0
       switch pt
         when packetTypes.PONG then @handleTimeSync(packet)
-        when packetTypes.DO_ASSIGN_CONTROL then packetHandlers.handleAssignControl(packet)
+        when packetTypes.DO_ASSIGN_CONTROL then packetHandlers.handleAssignControl(@, packet)
         when packetTypes.ENTITY_UPDATE then packetHandlers.handleEntityUpdate(packet)
         else console.log 'UNKNOWN PACKET', packetType, evt.data
       pt = packet.getType()

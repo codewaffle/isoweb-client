@@ -18,8 +18,8 @@ module.exports =
         when packetTypes.FLOAT_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readFloat32())
 
       updateType = pr.readUint8()
-  handleAssignControl: (pr) ->
+  handleAssignControl: (conn, pr) ->
     entId = pr.readEntityId()
 
     ent = entity.get(entId)
-    ent.takeControl()
+    ent.takeControl(conn)

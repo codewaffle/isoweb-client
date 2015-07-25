@@ -112,6 +112,7 @@ class Entity extends pixi.Container
   takeControl: (@conn) ->
     ec = new entityController.EntityController(@)
     ec.setConnection(@conn)
+    ec.takeControl()
 
 
   updateModel: ->
