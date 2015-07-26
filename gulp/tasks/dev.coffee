@@ -3,7 +3,7 @@ connect = require 'gulp-connect'
 
 gulp.task 'connect', ->
   connect.server({
-    root: ['dist']
+    root: ['dist', '../']
   })
 
 gulp.task 'dev', ['connect', 'watch']
