@@ -126,16 +126,26 @@ class Entity extends pixi.Container
     @sprite.anchor.x = @anchor_x
     @sprite.anchor.y = @anchor_y
 
-    @sprite.on('mouseover', ->
-      console.log 'mouse me harder'
+    @sprite.on('mouseover', =>
+      @sprite.tint = 0xAACCFF
     )
-    @sprite.on('mousedown', =>
-      # perform default command (or return menu if multiple conflicting default commands [it happens])
-      # entityController.current.cmdContextual(@)
 
-      # get menu of all commands
+    @sprite.on('mouseout', =>
+      @sprite.tint = 0xFFFFFF
+    )
+
+    @sprite.on('click', (ev) =>
+    # perform default command (or return menu if multiple conflicting default commands [it happens])
+      console.log('Requesting contextual command')
+      entityController.current.cmdContextual(@)
+    )
+
+    @sprite.on('rightclick', (ev) =>
+      # get full menu
       entityController.current.cmdMenuReq(@)
     )
+
+    # add to Container
     @addChild(@sprite)
 
 registry = {}

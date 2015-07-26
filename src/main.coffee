@@ -10,6 +10,11 @@ stage.scale.x = 1/3.0
 stage.scale.y = 1/3.0
 document.body.appendChild(renderer.view)
 
+document.addEventListener('contextmenu', (e) ->
+  e.preventDefault()
+  return false
+)
+
 resize = ->
   h = window.innerHeight
   w = window.innerWidth
