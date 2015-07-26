@@ -69,11 +69,11 @@ class Entity extends pixi.Container
       @updating = true
       updateList[@id] = @
 
-  update: () ->
-    srv = clock.server_adjusted()
+  update: (srv) ->
+    srv ?= clock.server_adjusted()
 
     # discard old updates, keeping the last
-    while @updates.length > 0 and @updates[0][0] < srv
+    while @updates.length > 0 and @updates[0][0] <= srv
       u = @updates.shift()
 
     if u?
@@ -150,6 +150,7 @@ class Entity extends pixi.Container
     if @hidden
       @addChild(@sprite)
       @hidden = false
+      @update(clock.server_now()+500)
 
   setHidden: () ->
     if not @hidden
