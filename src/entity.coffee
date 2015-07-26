@@ -20,6 +20,7 @@ class Entity extends pixi.Container
     @anchor_x = 0.5
     @anchor_y = 0.5
     @sprite_cbs = []
+    @hidden = true
 
 
     main.stage.addChild(@)
@@ -145,8 +146,24 @@ class Entity extends pixi.Container
       entityController.current.cmdMenuReq(@)
     )
 
-    # add to Container
-    @addChild(@sprite)
+  setVisible: () ->
+    if @hidden
+      @addChild(@sprite)
+      @hidden = false
+
+  setHidden: () ->
+    if not @hidden
+      @removeChild(@sprite)
+      @hidden = true
+
+  setDestroyed: () ->
+    if @parent?
+      @parent.removeChild(@)
+
+      if @hidden
+        @sprite.destroy(true)
+
+      @destroy(true)
 
 registry = {}
 

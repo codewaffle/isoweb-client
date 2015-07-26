@@ -16,6 +16,8 @@ module.exports =
         when packetTypes.POSITION_UPDATE then ent.updatePosition(pr)
         when packetTypes.STRING_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readString())
         when packetTypes.FLOAT_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readFloat32())
+        when packetTypes.INT_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readUint32())
+        when packetTypes.BYTE_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readUint8())
 
       updateType = pr.readUint8()
   handleAssignControl: (conn, pr) ->
@@ -41,4 +43,17 @@ module.exports =
       for mi in menu
         console.log mi[0] + ': ' + mi[1]
 
+  handleEntityShow: (conn, pr) ->
+    entId = pr.readEntityId()
+    ent = entity.get(entId)
+    ent.setVisible()
 
+  handleEntityHide: (conn, pr) ->
+    entId = pr.readEntityId()
+    ent = entity.get(entId)
+    ent.setHidden()
+
+  handleEntityDestroy: (conn, pr) ->
+    entId = pr.readEntityId()
+    ent = entity.get(entId)
+    ent.setDestroyed()
