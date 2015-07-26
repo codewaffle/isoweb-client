@@ -13,6 +13,8 @@ document.body.appendChild(renderer.view)
 resize = ->
   h = window.innerHeight
   w = window.innerWidth
+  stage.position.y = h/2
+  stage.position.x = w/2
   renderer.resize(w, h)
 window.addEventListener('resize', resize)
 resize()
@@ -20,11 +22,11 @@ resize()
 network = require './network'
 conn = new network.Connection('ws://96.40.72.113:10000/player')
 
+
+
 update = ->
   entity.update()
   renderer.render(stage)
-  stage.position.y += 0.15
-  stage.position.x += 0.15
   requestAnimationFrame(update)
 requestAnimationFrame(update)
 

@@ -15,7 +15,7 @@ class EntityController
   cmdMove: (x, y) ->
     # request to move to world coords x, y
     pkt = new DataView(new ArrayBuffer(9))
-    pkt.setUint8(0, packetTypes.CMD_MOVE)
+    pkt.setUint8(0, packetTypes.CMD_CONTEXTUAL_POSITION)
     pkt.setFloat32(1, x)
     pkt.setFloat32(5, y)
     @conn.sendBinary(pkt.buffer)
@@ -23,7 +23,7 @@ class EntityController
   cmdContextual: (targetEnt) ->
     # request to perform a contextual action
     pkt = new DataView(new arrayBuffer(5))
-    pkt.setUint8(0, packetTypes.CMD_CONTEXTUAL)
+    pkt.setUint8(0, packetTypes.CMD_CONTEXTUAL_ENTITY)
     pkt.setUint32(1, targetEnt.id)
     @conn.sendBinary(pkt.buffer)
 
@@ -31,14 +31,14 @@ class EntityController
   cmdMenuReq: (targetEnt) ->
     # request the menu for targetEnt
     pkt = new DataView(new ArrayBuffer(1+4))
-    pkt.setUint8(0, packetTypes.CMD_MENU_REQ)
+    pkt.setUint8(0, packetTypes.CMD_MENU_REQ_ENTITY)
     pkt.setUint32(1, targetEnt.id)
     @conn.sendBinary(pkt.buffer)
 
   cmdMenuExec: (targetEnt, actionId) ->
     # try to execute menu action actionId on entity targetEnt
     pkt = new DataView(new ArrayBuffer(1+4+2))
-    pkt.setUint8(0, packetTypes.CMD_MENU_EXEC)
+    pkt.setUint8(0, packetTypes.CMD_MENU_EXEC_ENTITY)
     pkt.setUint32(1, targetEnt.id)
     pkt.setUint16(5, actionId)
     @conn.sendBinary(pkt.buffer)
