@@ -2,7 +2,7 @@ entity = require '../entity'
 packetTypes = require './packet_types'
 
 module.exports =
-  handleEntityUpdate: (pr) ->
+  handleEntityUpdate: (conn, pr) ->
     entId = pr.readEntityId()
 
     # get or create entity
@@ -23,3 +23,22 @@ module.exports =
 
     ent = entity.get(entId)
     ent.takeControl(conn)
+  handleEntityMenu: (conn, pr) ->
+    entId = pr.readEntityId()
+
+    numItems = pr.readUint8()
+
+    menu = []
+
+    while numItems > 0
+      numItems -= 1
+      menu.push([
+        pr.readSmallString(),
+        pr.readSmallString()
+      ])
+      console.log "SHOW MENU FOR:", entId
+
+      for mi in menu
+        console.log mi[0] + ': ' + mi[1]
+
+

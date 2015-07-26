@@ -130,7 +130,11 @@ class Entity extends pixi.Container
       console.log 'mouse me harder'
     )
     @sprite.on('mousedown', =>
-      entityController.current.cmdContextual(@)
+      # perform default command (or return menu if multiple conflicting default commands [it happens])
+      # entityController.current.cmdContextual(@)
+
+      # get menu of all commands
+      entityController.current.cmdMenuReq(@)
     )
     @addChild(@sprite)
 
