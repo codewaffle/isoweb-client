@@ -115,6 +115,7 @@ class Entity extends pixi.Container
     ec.takeControl()
 
 
+
   updateModel: ->
     if not (@sprite? and @meshScale?)
       return
@@ -128,9 +129,10 @@ class Entity extends pixi.Container
     @sprite.on('mouseover', ->
       console.log 'mouse me harder'
     )
+    @sprite.on('mousedown', =>
+      entityController.current.cmdContextual(@)
+    )
     @addChild(@sprite)
-
-    # @add(@mesh)
 
 registry = {}
 

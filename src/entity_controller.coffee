@@ -8,6 +8,7 @@ class EntityController
     @cmdMove(-32.0 + Math.random() * 64.0, -32.0 + Math.random() * 64.0)
 
   takeControl: () ->
+    module.exports.current = @
     # TODO : set this controller as our main controller. follow this entity, use it for HUDs, etc...
     # TODO : input should pipe through here to the server
     # TODO : the server may send a TakeControl request at any time to switch the player to a different entity.
@@ -22,7 +23,7 @@ class EntityController
 
   cmdContextual: (targetEnt) ->
     # request to perform a contextual action
-    pkt = new DataView(new arrayBuffer(5))
+    pkt = new DataView(new ArrayBuffer(5))
     pkt.setUint8(0, packetTypes.CMD_CONTEXTUAL_ENTITY)
     pkt.setUint32(1, targetEnt.id)
     @conn.sendBinary(pkt.buffer)
@@ -45,3 +46,4 @@ class EntityController
 
 module.exports =
   EntityController: EntityController
+  current: null
