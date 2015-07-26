@@ -3,6 +3,7 @@ connect = require 'gulp-connect'
 
 gulp.task 'connect', ->
   connect.server({
+    port: 9000,
     root: ['dist', '../']
   })
 
