@@ -161,10 +161,8 @@ class Entity extends pixi.Container
     if @parent?
       @parent.removeChild(@)
 
-      if @hidden
-        @sprite.destroy(true)
-
-      @destroy(true)
+      @sprite.destroy()
+      @destroy()
 
 registry = {}
 
