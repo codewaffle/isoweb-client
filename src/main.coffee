@@ -1,6 +1,7 @@
 pixi = require 'pixi'
 input = require './input'
 entity = require './entity'
+config = require './config'
 
 # inputManager = new input.InputManager()
 renderer = new pixi.autoDetectRenderer(128, 128)
@@ -15,11 +16,21 @@ document.addEventListener('contextmenu', (e) ->
   return false
 )
 
+bg = new pixi.extras.TilingSprite(
+  pixi.Texture.fromImage(config.asset_base + 'tiles/tile_grass.png'), renderer.width, renderer.height)
+stage.addChild(bg)
+
+
 resize = ->
   h = window.innerHeight
   w = window.innerWidth
+  bg.width = w / stage.scale.x
+  bg.height = h / stage.scale.y
   stage.position.y = h/2
   stage.position.x = w/2
+  bg.position.x = -stage.position.x/stage.scale.x
+  bg.position.y = -stage.position.y/stage.scale.y
+
   renderer.resize(w, h)
 window.addEventListener('resize', resize)
 resize()
@@ -27,7 +38,27 @@ resize()
 network = require './network'
 conn = new network.Connection('ws://96.40.72.113:10000/player')
 
+# hacking here :/
 
+
+
+glslify = require 'glslify'
+
+class LUTFilter extends pixi.AbstractFilter
+  constructor: ->
+    tmp = glslify('./shader/lut.glsl')
+    fragmentSrc = tmp
+    console.log(tmp)
+    super(null, fragmentSrc, {
+      nightLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'night_lut.png')}
+      morningLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'morning_lut.png')}
+      fireLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'fire_lut.png')}
+    })
+
+
+bla = new LUTFilter()
+
+stage.filters = [bla]
 
 update = ->
   entity.update()
