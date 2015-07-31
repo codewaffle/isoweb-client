@@ -172,6 +172,7 @@ class Entity extends pixi.Container
       @sprite.destroy()
       @destroy()
 
+
 registry = {}
 
 module.exports =

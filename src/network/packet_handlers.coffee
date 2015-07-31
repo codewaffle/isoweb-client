@@ -1,4 +1,5 @@
 entity = require '../entity'
+menu = require '../menu_manager'
 packetTypes = require './packet_types'
 
 module.exports =
@@ -39,9 +40,7 @@ module.exports =
         pr.readSmallString()
       ])
 
-    console.log "SHOW MENU FOR:", entId
-    for mi in menu
-      console.log mi[0] + ': ' + mi[1]
+    menu.show
 
   handleEntityShow: (conn, pr) ->
     entId = pr.readEntityId()

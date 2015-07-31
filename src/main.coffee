@@ -2,13 +2,19 @@ pixi = require 'pixi'
 input = require './input'
 entity = require './entity'
 config = require './config'
+menu = require './menu_manager'
 
-# inputManager = new input.InputManager()
+inputManager = new input.InputManager()
+
+menuManager = new menu.MenuManager()
+
 renderer = new pixi.autoDetectRenderer(128, 128)
 renderer.backgroundColor = 0xAAFFCC
-module.exports.stage = stage = new pixi.Container()
+
+stage = new pixi.Container()
 stage.scale.x = 1/3.0
 stage.scale.y = 1/3.0
+
 document.body.appendChild(renderer.view)
 
 document.addEventListener('contextmenu', (e) ->
@@ -38,6 +44,12 @@ resize()
 network = require './network'
 conn = new network.Connection('ws://96.40.72.113:10000/player')
 
+module.exports =
+  stage: stage
+  inputManager: inputManager
+  menuManager: menuManager
+
+
 # hacking here :/
 
 
@@ -65,4 +77,3 @@ update = ->
   renderer.render(stage)
   requestAnimationFrame(update)
 requestAnimationFrame(update)
-
