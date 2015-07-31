@@ -38,10 +38,10 @@ module.exports =
         pr.readSmallString(),
         pr.readSmallString()
       ])
-      console.log "SHOW MENU FOR:", entId
 
-      for mi in menu
-        console.log mi[0] + ': ' + mi[1]
+    console.log "SHOW MENU FOR:", entId
+    for mi in menu
+      console.log mi[0] + ': ' + mi[1]
 
   handleEntityShow: (conn, pr) ->
     entId = pr.readEntityId()
