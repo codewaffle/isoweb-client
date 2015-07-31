@@ -88,12 +88,18 @@ class Entity extends pixi.Container
         @position.set(u[1] + (@updates[0][1] - u[1]) * t, u[2] + (@updates[0][2] - u[2]) * t)
         @rotation = u[3] + (@updates[0][3] - u[3]) * t
         @updates.unshift(u)
+        return true
       else
         @position.set(u[1], u[2])
         @rotation = u[3]
+        @updates.unshift(u)
         return false
+    else if @updates.length > 0
+      u = @updates[0]
+      @position.set(u[1], u[2])
+      @rotation = u[3]
 
-    return true
+    return false
 
   updateAttribute: (attrName, attrVal) ->
     @attrs[attrName] = attrVal
