@@ -23,8 +23,8 @@ class Menu
       entityId = target.getAttribute('data-entity-id')
       cmd = target.getAttribute('data-command')
       if entityId && cmd
-        entity = entity.get(entityId)
-        entityController.current.cmdMenuExec(entity, cmd)
+        ent = entity.get(entityId)
+        entityController.current.cmdMenuExec(ent, cmd)
     )
 
     # set position
