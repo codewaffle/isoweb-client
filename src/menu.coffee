@@ -1,3 +1,4 @@
+entity = require './entity'
 entityController = require './entity_controller'
 
 
@@ -22,7 +23,8 @@ class Menu
       entityId = target.getAttribute('data-entity-id')
       cmd = target.getAttribute('data-command')
       if entityId && cmd
-        entityController.current.cmdMenuExec(entityId, cmd)
+        entity = entity.get(entityId)
+        entityController.current.cmdMenuExec(entity, cmd)
     )
 
     # set position
