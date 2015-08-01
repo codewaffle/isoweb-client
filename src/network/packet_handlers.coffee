@@ -1,5 +1,4 @@
 entity = require '../entity'
-menu = require '../menu_manager'
 packetTypes = require './packet_types'
 
 module.exports =
@@ -40,7 +39,7 @@ module.exports =
         pr.readSmallString()
       ])
 
-    menu.show
+    require('../main').menuManager.showContextMenu(menu, entId)
 
   handleEntityShow: (conn, pr) ->
     entId = pr.readEntityId()

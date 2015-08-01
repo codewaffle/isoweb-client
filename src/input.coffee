@@ -6,15 +6,18 @@ class InputManager
 
     document.addEventListener(
       'mousemove',
-      (evt) => @onMouseMove(evt),
-      false
+      (evt) => @onMouseMove(evt)
+    )
+    document.addEventListener(
+      'click',
+      (evt) => @onMouseDown(evt)
     )
 
   onMouseMove: (evt) ->
-    @mousePos.set(
-      (evt.clientX / window.innerWidth) * 2 - 1,
-      (evt.clientY / window.innerWidth) * -2 + 1
-    )
+    @mousePos.set(evt.clientX, evt.clientY)
+
+  onMouseDown: (evt) ->
+    require('./main').menuManager.hideContextMenu()
 
 module.exports =
   InputManager: InputManager
