@@ -27,8 +27,13 @@ module.exports = class Connection
     while pt > 0
       switch pt
         when packetTypes.PONG then @handleTimeSync(packet)
-        when packetTypes.ENTITY_UPDATE then packetHandlers.handleEntityUpdate(packet)
-        else console.log 'UNKNOWN PACKET', packetType, evt.data
+        when packetTypes.DO_ASSIGN_CONTROL then packetHandlers.handleAssignControl(@, packet)
+        when packetTypes.ENTITY_UPDATE then packetHandlers.handleEntityUpdate(@, packet)
+        when packetTypes.CMD_MENU_REQ_ENTITY then packetHandlers.handleEntityMenu(@, packet)
+        when packetTypes.ENTITY_SHOW then packetHandlers.handleEntityShow(@, packet)
+        when packetTypes.ENTITY_HIDE then packetHandlers.handleEntityHide(@, packet)
+        when packetTypes.ENTITY_DESTROY then packetHandlers.handleEntityDestroy(@, packet)
+        else console.log 'UNKNOWN PACKET', pt, evt.data
       pt = packet.getType()
 
   sendBinary: (data) ->
@@ -42,7 +47,7 @@ module.exports = class Connection
       clock.reset_latency()
       count = 0
 
-    time_req = new DataView(new ArrayBuffer(4))
+    time_req = new DataView(new ArrayBuffer(3))
     now = Date.now() / 1000.0
     num = Math.floor(Math.random() * 65536.0)
 

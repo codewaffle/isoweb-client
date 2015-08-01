@@ -1,10 +1,49 @@
 <!doctype html>
 <html>
 <head>
+  <style>
+    /* TODO: move this stuff into a LESS :P  (looking at you mal) */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* context menu stuff */
+
+    .menu {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgb(127, 127, 127);
+      z-index: 1; /* should be on top of canvas anyway */
+      top: 10px;
+      left: 10px;
+    }
+    .menu ul {
+      margin: 0;
+      padding: 4px;
+    }
+    .menu li {
+      list-style: none;
+      color: rgb(255, 255, 255);
+      margin: 0;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-family: "Arvo", Courier, monospace;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .menu li:hover {
+      background-color: rgb(92, 92, 92);
+    }
+    menu
+  </style>
 </head>
 <body>
-<script src="lib/pixi.js"></script>
-<script src="lib/howler.js"></script>
-<script src="js/main.js"></script>
+  <script src="lib/pixi.js"></script>
+  <script src="lib/howler.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
