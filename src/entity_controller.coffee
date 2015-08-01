@@ -1,5 +1,12 @@
 packetTypes = require './network/packet_types'
 
+_setSmallString = (buf, idx, str) ->
+  buf.setUint8(idx, str.length)
+  for i in [0...str.length]
+    buf.setUint8(i+idx+1, str.charCodeAt(i))
+
+  return idx + 1 + str.length
+
 class EntityController
   constructor: (@ent) ->
   setConnection: (@conn) ->
@@ -36,12 +43,12 @@ class EntityController
     pkt.setUint32(1, targetEnt.id)
     @conn.sendBinary(pkt.buffer)
 
-  cmdMenuExec: (targetEnt, actionId) ->
+  cmdMenuExec: (targetEnt, action) ->
     # try to execute menu action actionId on entity targetEnt
-    pkt = new DataView(new ArrayBuffer(1+4+2))
+    pkt = new DataView(new ArrayBuffer(1+4+1+action.length))
     pkt.setUint8(0, packetTypes.CMD_MENU_EXEC_ENTITY)
     pkt.setUint32(1, targetEnt.id)
-    pkt.setUint16(5, actionId)
+    _setSmallString(pkt, 5, action)
     @conn.sendBinary(pkt.buffer)
 
 module.exports =
