@@ -1,20 +1,23 @@
+menu = require './menu'
 main = require './main'
-Menu = require './menu'
-
 
 class MenuManager
   constructor: ->
     @currentMenu = null
 
-  showContextMenu: (items, entity) ->
-    if !@currentMenu
-      hideContextMenu()
-    @currentMenu = new Menu(items, entity)
-    @currentMenu.show(main.inputManager)
+  showContextMenu: (items, entityId) ->
+    if @currentMenu
+      @hideContextMenu()
 
-  hideContextMenu: () ->
-    @currentMenu.hide()
-    @currentMenu = null
+    pos = require('./main').inputManager.mousePos
+    @currentMenu = new menu.Menu(items, entityId)
+    @currentMenu.show(pos.x, pos.y)
+
+  hideContextMenu: ->
+    if @currentMenu
+      @currentMenu.hide()
+      @currentMenu = null
+
 
 module.exports =
   MenuManager: MenuManager
