@@ -1,8 +1,8 @@
 config = require './config'
-main = require './main'
 asset = require './asset'
 clock = require './clock'
 pixi = require 'pixi'
+entityController = require('./entity_controller')
 
 entCount = 0
 
@@ -19,9 +19,9 @@ class Entity extends pixi.Container
     @anchor_x = 0.5
     @anchor_y = 0.5
     @sprite_cbs = []
+    @hidden = true
 
-
-    main.stage.addChild(@)
+    require('./main').stage.addChild(@)
     # console.log "ENTITY", entCount++
 
   update_scale: (scale) ->
@@ -67,11 +67,11 @@ class Entity extends pixi.Container
       @updating = true
       updateList[@id] = @
 
-  update: () ->
-    srv = clock.server_adjusted()
+  update: (srv) ->
+    srv ?= clock.server_adjusted()
 
     # discard old updates, keeping the last
-    while @updates.length > 0 and @updates[0][0] < srv
+    while @updates.length > 0 and @updates[0][0] <= srv
       u = @updates.shift()
 
     if u?
@@ -86,12 +86,20 @@ class Entity extends pixi.Container
         @position.set(u[1] + (@updates[0][1] - u[1]) * t, u[2] + (@updates[0][2] - u[2]) * t)
         @rotation = u[3] + (@updates[0][3] - u[3]) * t
         @updates.unshift(u)
+        return true
       else
-        @position.set(u[1], u[2])
-        @rotation = u[3]
+        @position.set(@position.x + (u[1] - @position.x) * 0.5, @position.y + (u[2] - @position.y) * 0.5)
+        @rotation = @rotation + (u[3] - @rotation) * 0.5
+        @updates.unshift(u)
         return false
 
-    return true
+    if @updates.length > 0
+      u = @updates[0]
+      @position.set(@position.x + (u[1] - @position.x) * 0.5, @position.y + (u[2] - @position.y) * 0.5)
+      @rotation = @rotation + (u[3] - @rotation) * 0.5
+      return true
+
+    return false
 
   updateAttribute: (attrName, attrVal) ->
     @attrs[attrName] = attrVal
@@ -108,6 +116,13 @@ class Entity extends pixi.Container
       for cb in @sprite_cbs
         cb(@sprite)
 
+  takeControl: (@conn) ->
+    ec = new entityController.EntityController(@)
+    ec.setConnection(@conn)
+    ec.takeControl()
+
+
+
   updateModel: ->
     if not (@sprite? and @meshScale?)
       return
@@ -118,12 +133,43 @@ class Entity extends pixi.Container
     @sprite.anchor.x = @anchor_x
     @sprite.anchor.y = @anchor_y
 
-    @sprite.on('mouseover', ->
-      console.log 'mouse me harder'
+    @sprite.on('mouseover', =>
+      @sprite.tint = 0xAACCFF
     )
-    @addChild(@sprite)
 
-    # @add(@mesh)
+    @sprite.on('mouseout', =>
+      @sprite.tint = 0xFFFFFF
+    )
+
+    @sprite.on('click', (ev) =>
+    # perform default command (or return menu if multiple conflicting default commands [it happens])
+      console.log('Requesting contextual command')
+      entityController.current.cmdContextual(@)
+    )
+
+    @sprite.on('rightclick', (ev) =>
+      # get full menu
+      entityController.current.cmdMenuReq(@)
+    )
+
+  setVisible: () ->
+    if @hidden
+      @addChild(@sprite)
+      @hidden = false
+      @update(clock.server_now()+500)
+
+  setHidden: () ->
+    if not @hidden
+      @removeChild(@sprite)
+      @hidden = true
+
+  setDestroyed: () ->
+    if @parent?
+      @parent.removeChild(@)
+
+      @sprite.destroy()
+      @destroy()
+
 
 registry = {}
 
