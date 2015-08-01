@@ -1,5 +1,4 @@
 config = require './config'
-main = require './main'
 asset = require './asset'
 clock = require './clock'
 pixi = require 'pixi'
@@ -22,8 +21,7 @@ class Entity extends pixi.Container
     @sprite_cbs = []
     @hidden = true
 
-
-    main.stage.addChild(@)
+    require('./main').stage.addChild(@)
     # console.log "ENTITY", entCount++
 
   update_scale: (scale) ->
