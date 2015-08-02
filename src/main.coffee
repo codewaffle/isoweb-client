@@ -47,6 +47,18 @@ resize()
 if location.search != '?offline'
   network = require './network'
   conn = new network.Connection('ws://96.40.72.113:10000/player')
+else
+  # offline stuff goes here...
+
+  # test container
+  w = new container.ContainerWindow(null, 10, 10)
+  w.show()
+  w.updateContainer([
+    new item.Item('wood', 1000),
+    new item.Item('rocks', 9999)
+    new item.Item('a meat popcicle')
+    new item.Item('a MULTIPASS&trade; for "Leeloo Dallas"')
+  ])
 
 module.exports =
   stage: stage
@@ -81,12 +93,3 @@ update = ->
   renderer.render(stage)
   requestAnimationFrame(update)
 requestAnimationFrame(update)
-
-w = new container.ContainerWindow(null, 10, 10)
-w.show()
-w.updateContainer([
-  new item.Item('wood', 1000),
-  new item.Item('rocks', 9999)
-  new item.Item('a meat popcicle')
-  new item.Item('a MULTIPASS&trade; for "Leeloo Dallas"')
-])

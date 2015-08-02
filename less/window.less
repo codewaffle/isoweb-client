@@ -16,7 +16,12 @@
 }
 
 // container window styles
+div.container {
+  overflow: auto;
+}
+
 .container {
+  width: 400px;
   padding: 0;
   margin: 0;
   border-collapse: collapse;
@@ -51,6 +56,16 @@
     &:last-child {
       border-right: none;
     }
+  }
+
+  div.container-item {
+    float: left;
+    width: 48px;
+    height: 48px;
+    border-style: outset;
+    background: no-repeat center;
+    background-size: 48px 48px;
+    margin: 4px;
   }
 
   .container-item:hover {
