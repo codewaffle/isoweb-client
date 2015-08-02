@@ -5,6 +5,9 @@ source = require 'vinyl-source-stream'
 gutil = require 'gulp-util'
 coffeelint = require 'gulp-coffeelint'
 merge = require 'merge-stream'
+watch = require 'gulp-watch'
+less = require 'gulp-less'
+plumber = require 'gulp-plumber'
 
 coffeelintOpts =
   max_line_length:
@@ -42,13 +45,29 @@ bundle = (_bundler, changed) ->
 gulp.task 'browserify', ->
   bundle(bundler)
 
+
 gulp.task 'prelint', ->
   gulp.src('./src/**/*.coffee')
     .pipe(coffeelint(coffeelintOpts))
     .pipe(coffeelint.reporter())
+
+
+gulp.task 'less', ->
+  gulp.src 'less/main.less'
+  .pipe plumber()
+  .pipe less()
+  .pipe gulp.dest 'dist/css'
+
+
+gulp.task 'less-watch', ['less'], ->
+  watch 'less/**/*.less', ->
+    gulp.start 'less'
+  , verbose: true
+
 
 gulp.task 'browserify-watch', ['prelint'], ->
   watcher = watchify(bundler)
   watcher.on 'update', (changed) -> bundle(watcher, changed)
   watcher.on 'log', gutil.log
   bundle(watcher)
+  gulp.start 'less-watch'
