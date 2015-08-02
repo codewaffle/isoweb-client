@@ -26,6 +26,8 @@ class Entity extends pixi.Container
     # console.log "ENTITY", entCount++
 
   update_name: (@name) ->
+  update_mass: (@mass) ->
+  update_volume: (@volume) ->
 
   update_scale: (scale) ->
     @meshScale = scale
