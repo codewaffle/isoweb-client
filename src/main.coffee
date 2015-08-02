@@ -3,6 +3,9 @@ input = require './input'
 entity = require './entity'
 config = require './config'
 menu = require './menu_manager'
+gameWindow = require './window'
+container = require './containerWindow'
+item = require './item'
 
 inputManager = new input.InputManager()
 
@@ -41,8 +44,21 @@ resize = ->
 window.addEventListener('resize', resize)
 resize()
 
-network = require './network'
-conn = new network.Connection('ws://96.40.72.113:10000/player')
+if location.search != '?offline'
+  network = require './network'
+  conn = new network.Connection('ws://96.40.72.113:10000/player')
+else
+  # offline stuff goes here...
+
+  # test container
+  w = new container.ContainerWindow(null, 10, 10)
+  w.show()
+  w.updateContainer([
+    new item.Item('wood', 1000),
+    new item.Item('rocks', 9999)
+    new item.Item('a meat popcicle')
+    new item.Item('a MULTIPASS&trade; for "Leeloo Dallas"')
+  ])
 
 module.exports =
   stage: stage

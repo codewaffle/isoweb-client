@@ -19,5 +19,7 @@ class InputManager
   onMouseDown: (evt) ->
     require('./main').menuManager.hideContextMenu()
 
+
+
 module.exports =
   InputManager: InputManager
