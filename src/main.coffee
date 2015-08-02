@@ -84,8 +84,8 @@ requestAnimationFrame(update)
 w = new container.ContainerWindow(null, 10, 10)
 w.show()
 w.updateContainer([
-  new item.Item('wood'),
-  new item.Item('rocks')
+  new item.Item('wood', 1000),
+  new item.Item('rocks', 9999)
   new item.Item('a meat popcicle')
   new item.Item('a MULTIPASS&trade; for "Leeloo Dallas"')
 ])

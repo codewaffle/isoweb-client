@@ -28,7 +28,7 @@ class ContainerWindow extends gameWindow.Window
     @containerItems = items || []
     html = """<tr class="container-header">
   <th class="item-name">Name</th>
-  <th class="item-quantity">Quantity</th>
+  <th class="item-quantity">Qty</th>
   <th class="item-weight">Weight</th>
   <th class="item-volume">Volume</th>
 </tr>"""

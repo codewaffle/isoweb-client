@@ -22,6 +22,7 @@
         .toggle {
             color: white;
             background-color: transparent;
+            cursor: pointer;
         }
 
         .toggle.active {
@@ -101,6 +102,9 @@
             text-align: left;
             padding: 4px 8px;
         }
+        .container tr {
+            cursor: pointer;
+        }
         .container .container-item:hover {
             background-color: rgb(52, 52, 52);
         }
@@ -114,12 +118,14 @@
             border-right: none;
         }
         .container .item-name {
-            width: 160pt;
+            /*width: 160pt;*/
         }
-        .container .item-quantity,
+        .container .item-quantity {
+            width: 30pt;
+        }
         .container .item-volume,
         .container .item-weight {
-            width: 40pt;
+            width: 50pt;
         }
     </style>
 </head>
