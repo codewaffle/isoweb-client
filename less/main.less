@@ -7,4 +7,32 @@ html, body {
   color: #ff0;
 }
 
+input {
+  color: white;
+  background: transparent;
+  border: 1px solid rgb(127, 127, 127);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 9pt;
+}
+
+.toggle {
+  color: white;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.toggle.active {
+  color: black;
+  background-color: white;
+}
+
+.toolbar {
+  overflow: auto;
+  padding-bottom: 8px;
+}
+
+.left { float: left; }
+.right { float: right; }
+
 @import "menu";
+@import "window";

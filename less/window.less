@@ -1,0 +1,71 @@
+@window-bg: rgba(0, 0, 0, 0.8);
+@window-border-pri: rgb(127, 127, 127);
+@window-border-sec: rgb(92, 92, 92);
+@window-highlight: rgb(52, 52, 52);
+@window-header-bg: rgb(0, 0, 52);
+
+@window-font: "courier new", courier, monospace;
+
+.window {
+  position: absolute;
+  background: @window-bg;
+  border: 2px solid @window-border-pri;
+  padding: 8px;
+  cursor: move;
+  resize: both;
+}
+
+// container window styles
+.container {
+  padding: 0;
+  margin: 0;
+  border-collapse: collapse;
+  border: 1px solid @window-border-sec;
+  color: white;
+  font-family: @window-font;
+  font-size: 9pt;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  th {
+    background-color: @window-header-bg;
+    border-bottom: 1px dotted @window-border-sec;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: left;
+    padding: 4px 8px;
+  }
+
+  tr {
+    cursor: pointer;
+  }
+
+  td {
+    padding: 4px 8px;
+
+    border-right: 1px dotted @window-border-sec;
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  .container-item:hover {
+    background-color: @window-highlight;
+  }
+
+  .item-name {
+    /*width: 160pt;*/
+  }
+
+  .item-quantity {
+    width: 30pt;
+  }
+
+  .item-volume, .item-weight {
+    width: 50pt;
+  }
+}

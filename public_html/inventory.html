@@ -11,32 +11,6 @@
             overflow: hidden;
         }
 
-        input {
-            color: white;
-            background: transparent;
-            border: 1px solid rgb(127, 127, 127);
-            font-family: "Courier New", Courier, monospace;
-            font-size: 9pt;
-        }
-
-        .toggle {
-            color: white;
-            background-color: transparent;
-            cursor: pointer;
-        }
-
-        .toggle.active {
-            color: black;
-            background-color: white;
-        }
-
-        .toolbar {
-            overflow: auto;
-            padding-bottom: 8px;
-        }
-
-        .left { float: left; }
-        .right { float: right; }
 
         /* context menu stuff */
 
@@ -64,68 +38,6 @@
         }
         .menu li:hover {
             background-color: rgb(92, 92, 92);
-        }
-
-        /* window styles */
-        div.window {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid rgb(127, 127, 127);
-            padding: 8px;
-            cursor: move;
-            resize: both;
-        }
-
-        /* container styles */
-        table.container {
-            padding: 0;
-            margin: 0;
-            border-collapse: collapse;
-            border: 1px solid rgb(92, 92, 92);
-        }
-        .container {
-            color: white;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 9pt;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        .container th {
-            background-color: rgb(0, 0, 52);
-            border-bottom: 1px dotted rgb(92, 92, 92);
-            font-weight: bold;
-            cursor: pointer;
-            text-align: left;
-            padding: 4px 8px;
-        }
-        .container tr {
-            cursor: pointer;
-        }
-        .container .container-item:hover {
-            background-color: rgb(52, 52, 52);
-        }
-
-        .container td {
-            border-right: 1px dotted rgb(92, 92, 92);
-            padding: 4px 8px;
-
-        }
-        .container td:last-child {
-            border-right: none;
-        }
-        .container .item-name {
-            /*width: 160pt;*/
-        }
-        .container .item-quantity {
-            width: 30pt;
-        }
-        .container .item-volume,
-        .container .item-weight {
-            width: 50pt;
         }
     </style>
 </head>

@@ -44,8 +44,9 @@ resize = ->
 window.addEventListener('resize', resize)
 resize()
 
-network = require './network'
-#conn = new network.Connection('ws://96.40.72.113:10000/player')
+if location.search != '?offline'
+  network = require './network'
+  conn = new network.Connection('ws://96.40.72.113:10000/player')
 
 module.exports =
   stage: stage
