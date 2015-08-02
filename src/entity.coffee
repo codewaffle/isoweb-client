@@ -20,9 +20,14 @@ class Entity extends pixi.Container
     @anchor_y = 0.5
     @sprite_cbs = []
     @hidden = true
+    @name = 'Entity'
 
     require('./main').stage.addChild(@)
     # console.log "ENTITY", entCount++
+
+  update_name: (@name) ->
+  update_mass: (@mass) ->
+  update_volume: (@volume) ->
 
   update_scale: (scale) ->
     @meshScale = scale
