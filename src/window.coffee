@@ -1,27 +1,31 @@
 pixi = require 'pixi'
-
-WINDOW_TYPE_CONTAINER = 0
+entity = require './entity'
 
 class Window
-  constructor: (type, ownerId, x, y) ->
-    @type = type
+  constructor: (ownerId, x, y) ->
     @position = new pixi.Point(x || 0, y || 0)
     @ownerId  = null # entity id
     @visible = false
 
-    # create DOM
-    el = document.createElement('div')
-    el.className = 'ui window'
+    # create window DOM
+    @domElement = el = document.createElement('div')
+    @domElement.className = 'window ui'
 
-    document.appendChild(el)
-    el.style.left = x + 'px'
-    el.style.top = y + 'px'
-
-
+    document.body.appendChild(@domElement)
+    @domElement.style.left = x + 'px'
+    @domElement.style.top = y + 'px'
     return @
 
-
   show: ->
-    @domElement.style.display = 'visible';
+    @domElement.style.display = 'visible'
     @visible = true
 
+  hide: ->
+    @domElement.style.display = 'none'
+    @visible = false
+
+  close: ->
+    document.body.removeChild(@domElement)
+
+module.exports =
+  Window: Window

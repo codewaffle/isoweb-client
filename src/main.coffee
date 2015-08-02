@@ -3,6 +3,9 @@ input = require './input'
 entity = require './entity'
 config = require './config'
 menu = require './menu_manager'
+gameWindow = require './window'
+container = require './containerWindow'
+item = require './item'
 
 inputManager = new input.InputManager()
 
@@ -42,7 +45,7 @@ window.addEventListener('resize', resize)
 resize()
 
 network = require './network'
-conn = new network.Connection('ws://96.40.72.113:10000/player')
+#conn = new network.Connection('ws://96.40.72.113:10000/player')
 
 module.exports =
   stage: stage
@@ -77,3 +80,12 @@ update = ->
   renderer.render(stage)
   requestAnimationFrame(update)
 requestAnimationFrame(update)
+
+w = new container.ContainerWindow(null, 10, 10)
+w.show()
+w.updateContainer([
+  new item.Item('wood'),
+  new item.Item('rocks')
+  new item.Item('a meat popcicle')
+  new item.Item('a MULTIPASS&trade; for "Leeloo Dallas"')
+])
