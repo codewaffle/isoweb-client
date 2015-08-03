@@ -35,9 +35,20 @@ class ContainerWindow extends gameWindow.Window
         _this.setLayout(value)
       )
 
-    @domContainerGridElement.addEventListener('click', ->
-      if @.classList.contains('container-item')
-        _this.selectItem(@.getAttribute('container-item-id'))
+    @domContainerGridElement.addEventListener('click', (ev) ->
+      el = ev.target
+      if el.classList.contains('container-item')
+        if !ev.ctrlKey
+          _this.deselectItems()
+        _this.selectItems([el.getAttribute('data-item-id')])
+    )
+
+    @domContainerTableElement.addEventListener('click', (ev) ->
+      el = if ev.target.tagName == 'TD' then ev.target.parentElement else ev.target
+      if el.classList.contains('container-item')
+        if !ev.ctrlKey
+          _this.deselectItems()
+        _this.selectItems([el.getAttribute('data-item-id')])
     )
 
     @setLayout(@layout)
@@ -79,50 +90,51 @@ class ContainerWindow extends gameWindow.Window
 
     for item in @containerItems
       # table entry
-      tableHtml += '<tr class="container-item" id="container-item-id-' + item.id + '" data-item-id-"' + item.id + '">' +
+      tableHtml += '<tr class="container-item" data-item-id="' + item.id + '">' +
       '<td class="item-name">' + item.name + '</td>' +
       '<td class="item-quantity">' + item.quantity + '</td>' +
       '<td class="item-weight">' + item.getTotalWeight() + ' kg</td>' +
       '<td class="item-volume">' + item.getTotalVolume() + ' ltr</td></tr>'
 
       # grid entry
-      gridHtml += '<div class="container-item" id="container-item-id-' + item.id + '" data-item-id-"' + item.id +
+      gridHtml += '<div class="container-item" data-item-id="' + item.id +
         '" style="background-image: url(\'' + item.iconURL + '\')"></div>'
 
     @domContainerTableElement.innerHTML = tableHtml
     @domContainerGridElement.innerHTML = gridHtml
 
   deselectItems: (ids) ->
-    if ids == null
+    if ids is undefined
       @selectedItemIds = []
     else
-      for i in [@selectedItemIds.length..0] by -1
-        if ids.contains(@selectedItemIds[i])
+      for i in [@selectedItemIds.length-1..0] by -1
+        if @selectedItemIds[i] in ids
           @selectedItemIds.pop()
 
-    for i in [@selectedItems.length..0] by -1
-      if ids == null or ids.contains(@selectedItems[i].getAttribute('data-item-id'))
-        @selectedItems[i].classList.remove('selected')
-        @selectedItems[i].pop()
+    for i in [@selectedItems.length-1..0] by -1
+      if ids is undefined or @selectedItems[i].getAttribute('data-item-id') in ids
+        @selectedItems.pop().classList.remove('selected')
 
   selectItems: (ids) ->
     # add grid elements
     for el in @domContainerGridElement.getElementsByTagName('div')
       if el.classList.contains('container-item')
         id = el.getAttribute('data-item-id')
-        if ids.contains(id) and !@selectedItemIds.contains(id)
+        if id in ids and id not in @selectedItemIds
+          el.classList.add('selected')
           @selectedItems.push(el)
 
     # add list elements
     for el in @domContainerTableElement.getElementsByTagName('tr')
       if el.classList.contains('container-item')
         id = el.getAttribute('data-item-id')
-        if ids.contains(id) and !@selectedItemIds.contains(id)
+        if id in ids and id not in @selectedItemIds
+          el.classList.add('selected')
           @selectedItems.push(el)
 
     # add ids
     for id in ids
-      if !@selectedItemIds.contains(id)
+      if id not in @selectedItemIds
         @selectedItemIds.push(id)
 
 module.exports.ContainerWindow = ContainerWindow

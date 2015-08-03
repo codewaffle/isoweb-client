@@ -54,10 +54,10 @@ else
   w = new container.ContainerWindow(null, 10, 10)
   w.show()
   w.updateContainer([
-    new item.Item('wood', 1000),
-    new item.Item('rocks', 9999)
-    new item.Item('a meat popcicle')
-    new item.Item('a MULTIPASS&trade; for "Leeloo Dallas"')
+    new item.Item(0, 'wood', 1000),
+    new item.Item(1, 'rocks', 9999)
+    new item.Item(2, 'a meat popcicle')
+    new item.Item(3, 'a MULTIPASS&trade; for "Leeloo Dallas"')
   ])
 
 module.exports =

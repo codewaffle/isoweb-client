@@ -1,7 +1,8 @@
 
 
 class Item
-  constructor: (name, quantity, weight, volume) ->
+  constructor: (id, name, quantity, weight, volume) ->
+    @id = id
     @name = name || 'No Name'
     @description = 'No description.'
     @quantity = quantity || 1

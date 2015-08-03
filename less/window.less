@@ -8,6 +8,8 @@
 
 @window-font: "courier new", courier, monospace;
 
+@item-selected-color: rgb(0, 0, 127);
+
 .window {
   position: absolute;
   background: @window-bg;
@@ -54,6 +56,10 @@ div.container {
 
   tr {
     cursor: pointer;
+
+    &.selected {
+      background-color: @item-selected-color;
+    }
   }
 
   td {
@@ -73,10 +79,17 @@ div.container {
     background: no-repeat center;
     background-size: 48px 48px;
     margin: 4px;
+
+    &.selected {
+      border-color: @item-selected-color;
+    }
   }
 
   .container-item:hover {
     background-color: @window-highlight;
+    &.selected {
+      background-color: @item-selected-color;
+    }
   }
 
   .item-name {
