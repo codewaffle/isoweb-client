@@ -6,6 +6,8 @@ class ContainerWindow extends gameWindow.Window
 
     @containerItems = []
     @layout = 'grid' # one of: 'table', 'grid'
+    @selectedItemIds = [] # entity ids
+    @selectedItems = [] # DOM elements
 
     # create container elements
     @domContainerTableElement = document.createElement('table')
@@ -25,13 +27,18 @@ class ContainerWindow extends gameWindow.Window
     @domElement.appendChild(@domContainerGridElement)
 
     # event handlers
+    _this = @
     layoutButtons = @domElement.getElementsByClassName('toggle-container-layout')
     for button in layoutButtons
-      _this = @
       button.addEventListener('click', ->
         value = if @.value == 'L' then 'table' else 'grid'
         _this.setLayout(value)
       )
+
+    @domContainerGridElement.addEventListener('click', ->
+      if @.classList.contains('container-item')
+        _this.selectItem(@.getAttribute('container-item-id'))
+    )
 
     @setLayout(@layout)
 
@@ -85,7 +92,37 @@ class ContainerWindow extends gameWindow.Window
     @domContainerTableElement.innerHTML = tableHtml
     @domContainerGridElement.innerHTML = gridHtml
 
+  deselectItems: (ids) ->
+    if ids == null
+      @selectedItemIds = []
+    else
+      for i in [@selectedItemIds.length..0] by -1
+        if ids.contains(@selectedItemIds[i])
+          @selectedItemIds.pop()
 
-# toggle button handlers
+    for i in [@selectedItems.length..0] by -1
+      if ids == null or ids.contains(@selectedItems[i].getAttribute('data-item-id'))
+        @selectedItems[i].classList.remove('selected')
+        @selectedItems[i].pop()
+
+  selectItems: (ids) ->
+    # add grid elements
+    for el in @domContainerGridElement.getElementsByTagName('div')
+      if el.classList.contains('container-item')
+        id = el.getAttribute('data-item-id')
+        if ids.contains(id) and !@selectedItemIds.contains(id)
+          @selectedItems.push(el)
+
+    # add list elements
+    for el in @domContainerTableElement.getElementsByTagName('tr')
+      if el.classList.contains('container-item')
+        id = el.getAttribute('data-item-id')
+        if ids.contains(id) and !@selectedItemIds.contains(id)
+          @selectedItems.push(el)
+
+    # add ids
+    for id in ids
+      if !@selectedItemIds.contains(id)
+        @selectedItemIds.push(id)
 
 module.exports.ContainerWindow = ContainerWindow
