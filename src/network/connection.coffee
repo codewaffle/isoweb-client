@@ -19,7 +19,7 @@ module.exports = class Connection
     me = @
 
     @conn.onopen = ->
-      @connWindow.close()
+      me.connWindow.close()
       me.requestTimeSync()
 
     @conn.onmessage = (evt) =>
