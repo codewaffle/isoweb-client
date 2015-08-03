@@ -27,5 +27,10 @@ class Window
   close: ->
     document.body.removeChild(@domElement)
 
+  center: ->
+    # centers window horizontally and vertically
+    @domElement.style.left = document.body.clientWidth/2 - @domElement.clientWidth/2 + 'px'
+    @domElement.style.top = document.body.clientHeight/2 - @domElement.clientHeight/2 + 'px'
+
 module.exports =
   Window: Window

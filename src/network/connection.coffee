@@ -5,14 +5,21 @@ packetHandlers = require './packet_handlers'
 
 PacketReader = require './packet_reader'
 packet = new PacketReader()
+windowManager = require '../window'
 
 module.exports = class Connection
   constructor: (@endpoint) ->
+    @connWindow = new windowManager.Window()
+    @connWindow.domElement.innerHTML = '<div class="spinner right">Connecting to server ...</div>'
+    @connWindow.center()
+    @connWindow.show()
+
     @conn = new WebSocket(@endpoint)
     @conn.binaryType = 'arraybuffer'
     me = @
 
     @conn.onopen = ->
+      @connWindow.close()
       me.requestTimeSync()
 
     @conn.onmessage = (evt) =>

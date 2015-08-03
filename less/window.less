@@ -1,8 +1,10 @@
+//@window-bg: rgba(0, 0, 0, 0.8);
 @window-bg: rgba(0, 0, 0, 0.8);
 @window-border-pri: rgb(127, 127, 127);
 @window-border-sec: rgb(92, 92, 92);
 @window-highlight: rgb(52, 52, 52);
 @window-header-bg: rgb(0, 0, 52);
+@window-color: rgb(255, 255, 255);
 
 @window-font: "courier new", courier, monospace;
 
@@ -13,6 +15,14 @@
   padding: 8px;
   cursor: move;
   resize: both;
+  color: @window-color;
+  font-family: @window-font;
+  font-size: 9pt;
+}
+
+.spinner {
+  background: rgba(0, 0, 0, 0.8) url('/assets/spinner.gif') right center no-repeat;
+  padding: 4px 42px 4px 4px;
 }
 
 // container window styles
@@ -26,9 +36,6 @@ div.container {
   margin: 0;
   border-collapse: collapse;
   border: 1px solid @window-border-sec;
-  color: white;
-  font-family: @window-font;
-  font-size: 9pt;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
