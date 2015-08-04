@@ -1,12 +1,10 @@
-
-
 class Item
-  constructor: (id, name, quantity, weight, volume) ->
+  constructor: (id, name, quantity, weight, volume, iconUrl) ->
     @id = id
     @name = name || 'No Name'
     @description = 'No description.'
     @quantity = quantity || 1
-    @iconURL = './assets/sprites/small_rock.png'
+    @iconURL = iconUrl || './assets/icons/other.png'
     @weight = weight || 10
     @volume = volume || 1
     @_items = []
@@ -34,4 +32,13 @@ class Item
         @_items.splice(i, 1)
         @.dispatchEvent(@onItemsUpdated)
 
-module.exports.Item = Item
+TEST_ITEMS = [
+  new Item(0, 'a flaming blade of slaying', 1, 1, 10, './assets/icons/weapon_blade.png'),
+  new Item(1, 'a club', 1, 1, 10, './assets/icons/weapon_club.png'),
+  new Item(2, 'a bow', 1, 1, 10, './assets/icons/weapon_bow.png'),
+  new Item(3, 'an axe', 1, 1, 10, './assets/icons/weapon_axe.png'),
+]
+
+module.exports =
+  Item: Item
+  TEST_ITEMS: TEST_ITEMS

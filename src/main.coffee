@@ -53,12 +53,7 @@ else
   # test container
   w = new container.ContainerWindow(null, 10, 10)
   w.show()
-  w.updateContainer([
-    new item.Item(0, 'wood', 1000),
-    new item.Item(1, 'rocks', 9999)
-    new item.Item(2, 'a meat popcicle')
-    new item.Item(3, 'a MULTIPASS&trade; for "Leeloo Dallas"')
-  ])
+  w.updateContainer(item.TEST_ITEMS)
 
 module.exports =
   stage: stage

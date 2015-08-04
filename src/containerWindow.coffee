@@ -36,19 +36,31 @@ class ContainerWindow extends gameWindow.Window
       )
 
     @domContainerGridElement.addEventListener('click', (ev) ->
+      if ev.target is null then return
       el = ev.target
-      if el.classList.contains('container-item')
-        if !ev.ctrlKey
-          _this.deselectItems()
-        _this.selectItems([el.getAttribute('data-item-id')])
+
+      # get container element in case child element was clicked
+      while !el.classList.contains('container-item')
+        el = el.parentElement
+        if el is null then return
+
+      if !ev.ctrlKey
+        _this.deselectItems()
+      _this.selectItems([el.getAttribute('data-item-id')])
     )
 
     @domContainerTableElement.addEventListener('click', (ev) ->
-      el = if ev.target.tagName == 'TD' then ev.target.parentElement else ev.target
-      if el.classList.contains('container-item')
-        if !ev.ctrlKey
-          _this.deselectItems()
-        _this.selectItems([el.getAttribute('data-item-id')])
+      if ev.target is null then return
+      el = ev.target
+
+      # get container element in case child element was clicked
+      while !el.classList.contains('container-item')
+        el = el.parentElement
+        if el is null then return
+
+      if !ev.ctrlKey
+        _this.deselectItems()
+      _this.selectItems([el.getAttribute('data-item-id')])
     )
 
     @setLayout(@layout)
@@ -98,7 +110,8 @@ class ContainerWindow extends gameWindow.Window
 
       # grid entry
       gridHtml += '<div class="container-item" data-item-id="' + item.id +
-        '" style="background-image: url(\'' + item.iconURL + '\')"></div>'
+          '"><div class="item-icon" style="background-image: url(\'' + item.iconURL +
+          '\')"></div><span>' + item.name + '</span></div>'
 
     @domContainerTableElement.innerHTML = tableHtml
     @domContainerGridElement.innerHTML = gridHtml
