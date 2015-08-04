@@ -15,8 +15,8 @@ renderer = new pixi.autoDetectRenderer(128, 128)
 renderer.backgroundColor = 0xAAFFCC
 
 stage = new pixi.Container()
-stage.scale.x = 1/3.0
-stage.scale.y = 1/3.0
+stage.scale.x = 1/2.0
+stage.scale.y = 1/2.0
 
 document.body.appendChild(renderer.view)
 
