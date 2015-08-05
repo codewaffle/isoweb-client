@@ -32,12 +32,20 @@ class Item
         @_items.splice(i, 1)
         @.dispatchEvent(@onItemsUpdated)
 
-TEST_ITEMS = [
-  new Item(0, 'a flaming blade of slaying', 1, 1, 10, './assets/icons/weapon_blade.png'),
-  new Item(1, 'a club', 1, 1, 10, './assets/icons/weapon_club.png'),
-  new Item(2, 'a bow', 1, 1, 10, './assets/icons/weapon_bow.png'),
-  new Item(3, 'an axe', 1, 1, 10, './assets/icons/weapon_axe.png'),
-]
+TEST_ITEMS = ->
+  i = 0
+  items = [
+    new Item(i++, 'a flaming blade of slaying', 1, 1, 10, './assets/icons/weapon_blade.png'),
+    new Item(i++, 'a club', 1, 1, 10, './assets/icons/weapon_club.png'),
+    new Item(i++, 'a bow', 1, 1, 10, './assets/icons/weapon_bow.png'),
+    new Item(i++, 'an axe', 1, 1, 10, './assets/icons/weapon_axe.png'),
+    new Item(i++, 'a flaming blade of slaying', 5, 1, 10, './assets/icons/weapon_blade.png'),
+    new Item(i++, 'a club', 50, 1, 10, './assets/icons/weapon_club.png'),
+    new Item(i++, 'a bow', 500, 1, 10, './assets/icons/weapon_bow.png'),
+    new Item(i++, 'an axe', 1000, 1, 10, './assets/icons/weapon_axe.png')
+  ]
+
+  return items
 
 module.exports =
   Item: Item

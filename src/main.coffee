@@ -53,7 +53,7 @@ else
   # test container
   w = new container.ContainerWindow(null, 10, 10)
   w.show()
-  w.updateContainer(item.TEST_ITEMS)
+  w.updateContainer(item.TEST_ITEMS())
 
 module.exports =
   stage: stage

@@ -1,14 +1,12 @@
-//@window-bg: rgba(0, 0, 0, 0.8);
-@window-bg: rgba(0, 0, 0, 0.8);
+@window-bg: rgba(0, 0, 0, 0.7);
 @window-border-pri: rgb(127, 127, 127);
 @window-border-sec: rgb(92, 92, 92);
-@window-highlight: rgb(52, 52, 52);
 @window-header-bg: rgb(0, 0, 52);
 @window-color: rgb(255, 255, 255);
+@window-highlight: rgb(48, 48, 48);
+@window-selected: rgb(64, 64, 128);
 
 @window-font: "courier new", courier, monospace;
-
-@item-selected-color: rgb(0, 0, 127);
 
 .window {
   position: absolute;
@@ -19,7 +17,7 @@
   resize: both;
   color: @window-color;
   font-family: @window-font;
-  font-size: 9pt;
+  font-size: 7pt;
 }
 
 .spinner {
@@ -33,7 +31,10 @@ div.container {
 }
 
 .container {
-  width: 400px;
+  &.grid {
+    padding: 4px;
+  }
+  width: 350px;
   padding: 0;
   margin: 0;
   border-collapse: collapse;
@@ -57,45 +58,75 @@ div.container {
   tr {
     cursor: pointer;
 
+    &:hover {
+      background-color: @window-highlight;
+    }
+
     &.selected {
-      background-color: @item-selected-color;
+      background-color: @window-selected;
     }
   }
 
   td {
     padding: 4px 8px;
+    white-space: nowrap;
 
     border-right: 1px dotted @window-border-sec;
     &:last-child {
       border-right: none;
     }
+
+    .item-name {
+      width: 100%;
+      white-space: normal;
+    }
+    .item-quantity,
+    .item-volume,
+    .item-weight {
+      text-align: right;
+    }
   }
 
   div.container-item {
     float: left;
-    margin: 4px;
     text-align: center;
-    height: 120px;
+    height: 112px;
     width: 70px;
 
-    span {
-      display: inline-block;
-      padding: 2px 8px;
-    }
-
-    div.item-icon {
+    .item-icon {
       height: 48px;
       width: 48px;
-      border-style: outset;
       background: no-repeat center;
       background-size: 48px 48px;
-      margin: 8px;
+      margin: auto;
+      border: 2px solid transparent;
+      position: relative;
+    }
+
+    .item-quantity {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      background-color: rgb(92, 92, 92);
+      font-weight: bold;
+    }
+
+    .item-name {
+      display: inline-block;
+      padding: 2px 8px;
+      margin-top: 4px;
     }
 
     &.selected {
-      span,
+      span {
+        background-color: @window-selected;
+      }
       .item-icon {
-        background-color: @item-selected-color;
+        border: 2px solid lighten(@window-selected, 20%);
+        background-color: @window-selected;
+      }
+      span.item-quantity {
+        background-color: lighten(@window-selected, 20%);
       }
     }
   }
@@ -105,17 +136,8 @@ div.container {
     .item-icon {
       background-color: @window-highlight;
     }
-  }
-
-  .item-name {
-    /*width: 160pt;*/
-  }
-
-  .item-quantity {
-    width: 30pt;
-  }
-
-  .item-volume, .item-weight {
-    width: 50pt;
+    span.item-quantity {
+      background-color: lighten(@window-highlight, 20%);
+    }
   }
 }

@@ -111,12 +111,16 @@ class ContainerWindow extends gameWindow.Window
       # grid entry
       gridHtml += '<div class="container-item" data-item-id="' + item.id +
           '"><div class="item-icon" style="background-image: url(\'' + item.iconURL +
-          '\')"></div><span>' + item.name + '</span></div>'
+          '\')"><span class="item-quantity">'
+      if item.quantity > 1
+        gridHtml += 'x' + item.quantity
+      gridHtml += '</span></div><span class="item-name">' + item.name + '</span></div>'
 
     @domContainerTableElement.innerHTML = tableHtml
     @domContainerGridElement.innerHTML = gridHtml
 
   deselectItems: (ids) ->
+    # remove ids
     if ids is undefined
       @selectedItemIds = []
     else
@@ -124,6 +128,7 @@ class ContainerWindow extends gameWindow.Window
         if @selectedItemIds[i] in ids
           @selectedItemIds.pop()
 
+    # remove elements
     for i in [@selectedItems.length-1..0] by -1
       if ids is undefined or @selectedItems[i].getAttribute('data-item-id') in ids
         @selectedItems.pop().classList.remove('selected')
