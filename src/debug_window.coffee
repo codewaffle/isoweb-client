@@ -28,8 +28,6 @@ class DebugWindow extends gameWindow.Window
     html = ''
     for entry in @entries
       value = entry.fn().toString()
-      console.log value
-      console.log entry.lastValue
       html += '<tr><td>' + entry.key + ':</td><td>' + value + '</td></tr>'
       if value == entry.lastValue
         continue
