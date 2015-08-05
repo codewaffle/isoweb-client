@@ -7,6 +7,7 @@ gameWindow = require './window'
 container = require './containerWindow'
 item = require './item'
 entityController = require './entity_controller.coffee'
+camera = require './camera'
 
 pixi.Point.prototype.toString = ->
   return 'x: ' + @.x + ', y: ' + @.y
@@ -15,12 +16,12 @@ inputManager = new input.InputManager()
 
 menuManager = new menu.MenuManager()
 
-renderer = new pixi.autoDetectRenderer(128, 128)
+renderer = new pixi.autoDetectRenderer(1024, 1024)
 renderer.backgroundColor = 0xAAFFCC
 
 stage = new pixi.Container()
-stage.scale.x = 1/2.0
-stage.scale.y = 1/2.0
+
+cam = new camera.Camera(renderer, stage)
 
 document.body.appendChild(renderer.view)
 
@@ -29,34 +30,32 @@ document.addEventListener('contextmenu', (e) ->
   return false
 )
 
+document.addEventListener('mousedown', (e) ->
+  # TODO : clicking on entities still fires this, but don't want to rely on clicking on the bg as it won't always be there.
+  e.preventDefault()
+  point = cam.screenToWorld(e.x, e.y)
+  entityController.current.cmdMove(point.x, point.y)
+  return false
+)
+
 bg = new pixi.extras.TilingSprite(
   pixi.Texture.fromImage(config.asset_base + 'tiles/tile_grass.png'), renderer.width, renderer.height)
-bg.interactive = true
-bg.on('mousedown', (ev) ->
-  # calculate offset
-  pos = new pixi.Point(
-    (ev.data.global.x - stage.position.x) / stage.scale.x,
-    (ev.data.global.y - stage.position.y) / stage.scale.y)
 
-  # move player
-  console.log('moving player: ' + pos)
-  entityController.current.cmdMove(pos.x/256, pos.y/256)
-)
-stage.addChild(bg)
-
+cam.container.addChildAt(bg, 0)
 
 resize = ->
   h = window.innerHeight
   w = window.innerWidth
   bg.width = w / stage.scale.x
   bg.height = h / stage.scale.y
-  stage.position.y = h/2
-  stage.position.x = w/2
-  bg.position.x = -stage.position.x/stage.scale.x
-  bg.position.y = -stage.position.y/stage.scale.y
+  bg.position.x = -cam.container.position.x/stage.scale.x
+  bg.position.y = -cam.container.position.y/stage.scale.y
 
-  renderer.resize(w, h)
+# multiple resize handlers for now.. mostly for the hacked-in bg. bg will not always render this way.
+window.addEventListener('resize', cam.onResize)
 window.addEventListener('resize', resize)
+
+cam.onResize()
 resize()
 
 if location.search != '?offline'
@@ -96,10 +95,10 @@ class LUTFilter extends pixi.AbstractFilter
 
 bla = new LUTFilter()
 
-stage.filters = [bla]
+cam.container.filters = [bla]
 
 update = ->
   entity.update()
-  renderer.render(stage)
+  cam.render()
   requestAnimationFrame(update)
 requestAnimationFrame(update)
