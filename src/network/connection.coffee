@@ -40,6 +40,9 @@ module.exports = class Connection
         when packetTypes.ENTITY_SHOW then packetHandlers.handleEntityShow(@, packet)
         when packetTypes.ENTITY_HIDE then packetHandlers.handleEntityHide(@, packet)
         when packetTypes.ENTITY_DESTROY then packetHandlers.handleEntityDestroy(@, packet)
+        when packetTypes.CONTAINER_UPDATE then packetHandlers.handleContainerUpdate(@, packet)
+        when packetTypes.CONTAINER_SHOW then packetHandlers.handleContainerShow(@, packet)
+        when packetTypes.CONTAINER_HIDE then packetHandlers.handleContainerHide(@, packet)
         else console.log 'UNKNOWN PACKET', pt, evt.data
       pt = packet.getType()
 

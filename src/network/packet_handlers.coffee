@@ -55,3 +55,36 @@ module.exports =
     entId = pr.readEntityId()
     ent = entity.get(entId)
     ent.setDestroyed()
+
+  handleContainerUpdate: (conn, pr) ->
+    entityContainerId = pr.readEntityId()
+    lenContents = pr.readUint16()
+
+    contents = {}
+
+    for x in [0...lenContents]
+      idx = pr.readUint16()
+      contents[idx] =
+        count: pr.readUint32()
+        mass: pr.readFloat32()
+        volume: pr.readFloat32()
+        name: pr.readSmallString()
+        sprite: pr.readSmallString()
+
+    # TODO:
+    console.log 'TODO : do so mething with contents'
+    console.log(contents)
+
+  handleContainerShow: (conn, pr) ->
+    entityContainerId = pr.readEntityId()
+    ent = entity.get(entityContainerId)
+    # TODO: showContainer
+    showContainerForEntity(ent)
+
+  handleContainerHide: (conn, pr) ->
+    entityContainerId = pr.readEntityId()
+    ent = entity.get(entityContainerId)
+    # TODO: hideContainer
+    hideContainerForEntity(ent)
+
+
