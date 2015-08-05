@@ -66,7 +66,7 @@ class Entity extends pixi.Container
     )
 
   pushUpdate: (t, x, y, r) ->
-    @updates.push([t,x*100,y*100,r])
+    @updates.push([t,x*256,y*256,r])
 
     if not @updating
       @updating = true
