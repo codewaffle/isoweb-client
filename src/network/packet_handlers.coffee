@@ -81,7 +81,7 @@ module.exports =
     # TODO: showContainer
     showContainerForEntity(ent)
 
-  handleContainerShow: (conn, pr) ->
+  handleContainerHide: (conn, pr) ->
     entityContainerId = pr.readEntityId()
     ent = entity.get(entityContainerId)
     # TODO: hideContainer
