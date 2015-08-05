@@ -40,7 +40,7 @@ bg.on('mousedown', (ev) ->
 
   # move player
   console.log('moving player: ' + pos)
-  entityController.current.cmdMove(pos.x, pos.y)
+  entityController.current.cmdMove(pos.x/256, pos.y/256)
 )
 stage.addChild(bg)
 
