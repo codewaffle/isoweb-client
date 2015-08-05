@@ -75,10 +75,10 @@ module.exports =
     console.log 'TODO : do so mething with contents'
     console.log(contents)
 
-handleContainerShow: (conn, pr) ->
+  handleContainerShow: (conn, pr) ->
     entityContainerId = pr.readEntityId()
     ent = entity.get(entityContainerId)
-  # TODO: showContainer
+    # TODO: showContainer
     showContainerForEntity(ent)
 
   handleContainerShow: (conn, pr) ->
