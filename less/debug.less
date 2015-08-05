@@ -1,0 +1,24 @@
+.debug-table {
+  background: rgba(32, 32, 32, 0.8);
+  border-collapse: collapse;
+  width: 300px;
+
+  tr {
+    border-bottom: 1px dotted rgb(64, 64, 64);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  td {
+    padding: 4px 8px;
+
+    &:first-child {
+      font-weight: bold;
+      text-align: right;
+      width: 1%;
+      white-space: nowrap;
+    }
+  }
+}

@@ -1,15 +1,14 @@
 pixi = require 'pixi'
+pixiExt = require './pixi_extensions'
 input = require './input'
 entity = require './entity'
 config = require './config'
 menu = require './menu_manager'
 gameWindow = require './window'
-container = require './containerWindow'
+container = require './container_window'
 item = require './item'
 entityController = require './entity_controller.coffee'
-
-pixi.Point.prototype.toString = ->
-  return 'x: ' + @.x + ', y: ' + @.y
+debugWindow = require './debug_window'
 
 inputManager = new input.InputManager()
 
@@ -70,14 +69,18 @@ else
   w.show()
   w.updateContainer(item.TEST_ITEMS())
 
+
+debug = new debugWindow.DebugWindow()
+debug.add('player pos', -> return if entityController.current? then entityController.current.ent.position else '-')
+
 module.exports =
   stage: stage
   inputManager: inputManager
   menuManager: menuManager
+  debugWindow: debug
 
 
 # hacking here :/
-
 
 
 glslify = require 'glslify'
@@ -101,5 +104,6 @@ stage.filters = [bla]
 update = ->
   entity.update()
   renderer.render(stage)
+  debug.update()
   requestAnimationFrame(update)
 requestAnimationFrame(update)
