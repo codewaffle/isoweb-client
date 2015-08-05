@@ -12,7 +12,7 @@ class EntityController
   setConnection: (@conn) ->
     # as a test, send cmdMove immediately
     # TODO : remove this once we have better ways to test
-    @cmdMove(-8.0 + Math.random() * 16.0, -8.0 + Math.random() * 16.0)
+    #@cmdMove(-8.0 + Math.random() * 16.0, -8.0 + Math.random() * 16.0)
 
   takeControl: () ->
     module.exports.current = @

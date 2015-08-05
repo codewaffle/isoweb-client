@@ -155,6 +155,7 @@ class Entity extends pixi.Container
 
     @sprite.on('click', (ev) =>
     # perform default command (or return menu if multiple conflicting default commands [it happens])
+      console.log('entity position: ' + @position)
       console.log('Requesting contextual command')
       entityController.current.cmdContextual(@)
     )

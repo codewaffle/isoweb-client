@@ -6,6 +6,10 @@ menu = require './menu_manager'
 gameWindow = require './window'
 container = require './containerWindow'
 item = require './item'
+entityController = require './entity_controller.coffee'
+
+pixi.Point.prototype.toString = ->
+  return 'x: ' + @.x + ', y: ' + @.y
 
 inputManager = new input.InputManager()
 
@@ -27,6 +31,17 @@ document.addEventListener('contextmenu', (e) ->
 
 bg = new pixi.extras.TilingSprite(
   pixi.Texture.fromImage(config.asset_base + 'tiles/tile_grass.png'), renderer.width, renderer.height)
+bg.interactive = true
+bg.on('mousedown', (ev) ->
+  # calculate offset
+  pos = new pixi.Point(
+    (ev.data.global.x - stage.position.x) / stage.scale.x,
+    (ev.data.global.y - stage.position.y) / stage.scale.y)
+
+  # move player
+  console.log('moving player: ' + pos)
+  entityController.current.cmdMove(pos.x, pos.y)
+)
 stage.addChild(bg)
 
 
