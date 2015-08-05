@@ -93,15 +93,22 @@ class Entity extends pixi.Container
         @updates.unshift(u)
         return true
       else
-        @position.set(@position.x + (u[1] - @position.x) * 0.5, @position.y + (u[2] - @position.y) * 0.5)
-        @rotation = @rotation + (u[3] - @rotation) * 0.5
+        if srv - u[0] > 0.5
+          @position.set(u[1], u[2])
+          @rotation = u[3]
+
+          return false
+
+        @position.set(@position.x + (u[1] - @position.x) * 0.15, @position.y + (u[2] - @position.y) * 0.15)
+        @rotation += (u[3] - @rotation) * 0.15
         @updates.unshift(u)
-        return false
+
+        return true
 
     if @updates.length > 0
       u = @updates[0]
-      @position.set(@position.x + (u[1] - @position.x) * 0.5, @position.y + (u[2] - @position.y) * 0.5)
-      @rotation = @rotation + (u[3] - @rotation) * 0.5
+      @position.set(@position.x + (u[1] - @position.x) * 0.02, @position.y + (u[2] - @position.y) * 0.02)
+      @rotation += (u[3] - @rotation) * 0.02
       return true
 
     return false
