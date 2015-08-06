@@ -120,6 +120,9 @@ class ContainerWindow extends win.Window
         gridHtml += 'x' + item.quantity
       gridHtml += '</span></div><span class="item-name">' + item.name + '</span></div>'
 
+    if @containerItems.length == 0
+      tableHtml += '<tr><td colspan="4"><p style="font-style: italic; text-align: center;">No items.</p></td><tr>'
+
     @domContainerTableElement.innerHTML = tableHtml
     @domContainerGridElement.innerHTML = gridHtml
 

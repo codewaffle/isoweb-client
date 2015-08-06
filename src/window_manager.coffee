@@ -79,10 +79,57 @@ class WindowManager
     #console.log('dragging to %d, %d', x, y)
 
   setFocus: (win) ->
+    if !win.canHaveFocus
+      return
+
     if @focusWindow?
       @focusWindow.blur()
     @focusWindow = win
-    win.focus()
+    win.domElement.classList.add('focus')
+    win.domElement.style.zIndex = '1'
+
+    # focus first input element
+    els = win.domElement.getElementsByTagName('input')
+    if els.length > 0
+      els[0].focus()
+
+  getVisibleWindows: ->
+    list = []
+    for w in WINDOWS
+      if w.visible
+        list.push(w)
+    return list
+
+  getLastWindow: ->
+    list = @getVisibleWindows()
+    return list[0] if list.length > 0
+
+  showWindow: (win) ->
+    win.domElement.style.display = 'block'
+    win.visible = true
+    return win
+
+  hideWindow: (win) ->
+    win.domElement.style.display = 'none'
+    win.visible = false
+    return win
+
+  closeWindow: (win) ->
+    if !win.canClose
+      return
+
+    if @focusWindow == win
+      # focus new window
+      @focusWindow = null
+      for w in @getVisibleWindows().reverse()
+        if w != win and w.canHaveFocus
+          @setFocus(w)
+          break
+    @draggingWindow = null if @draggingWindow == win
+
+    document.body.removeChild(win.domElement)
+    @removeWindow(win)
+
 
 module.exports =
   WindowManager: WindowManager
