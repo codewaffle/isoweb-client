@@ -34,6 +34,7 @@ document.addEventListener('mousedown', (e) ->
   # TODO : clicking on entities still fires this, but don't want to rely on clicking on the bg as it won't always be there.
   e.preventDefault()
   point = cam.screenToWorld(e.x, e.y)
+  console.log point
   entityController.current.cmdMove(point.x, point.y)
   return false
 )
@@ -106,6 +107,7 @@ update = (t) ->
   dt = t - lastUpdate
   lastUpdate = t
   entity.update(dt)
-  cam.render(dt)
+  cam.update(dt)
+  cam.render()
   requestAnimationFrame(update)
 requestAnimationFrame(update)
