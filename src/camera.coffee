@@ -33,8 +33,8 @@ class Camera
 
   update: (dt) ->
     if @trackingObject?
-      @stage.position.x += ((-@trackingObject.position.x/@zoomLevel + window.innerWidth/2) - @stage.position.x) * 0.2
-      @stage.position.y += ((-@trackingObject.position.y/@zoomLevel + window.innerHeight/2) - @stage.position.y) * 0.2
+      @stage.position.x += ((-@trackingObject.position.x/@zoomLevel + window.innerWidth/2) - @stage.position.x) * 0.5
+      @stage.position.y += ((-@trackingObject.position.y/@zoomLevel + window.innerHeight/2) - @stage.position.y) * 0.5
 
 module.exports =
   Camera: Camera
