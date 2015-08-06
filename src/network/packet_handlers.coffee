@@ -1,5 +1,7 @@
 entity = require '../entity'
 packetTypes = require './packet_types'
+main = require '../main'
+item = require '../item'
 
 module.exports =
   handleEntityUpdate: (conn, pr) ->
@@ -56,35 +58,60 @@ module.exports =
     ent = entity.get(entId)
     ent.setDestroyed()
 
+    # close (destroy) container ui if one exists
+    w = main.windowManager.getByOwner(entId)
+    if w?
+      w.close()
+
   handleContainerUpdate: (conn, pr) ->
     entityContainerId = pr.readEntityId()
+    ent = entity.get(entityContainerId)
+
     lenContents = pr.readUint16()
 
     contents = {}
+    items = []
 
     for x in [0...lenContents]
       idx = pr.readUint16()
       contents[idx] =
+        idx: idx
         count: pr.readUint32()
         mass: pr.readFloat32()
         volume: pr.readFloat32()
         name: pr.readSmallString()
         sprite: pr.readSmallString()
+      itm = new item.Item(
+        contents[idx].idx,
+        contents[idx].name,
+        contents[idx].count,
+        contents[idx].weight,
+        contents[idx].volume,
+        contents[idx].sprite)
+      items.push(itm)
 
-    # TODO:
-    console.log 'TODO : do so mething with contents'
-    console.log(contents)
+    items.sort((a, b) -> return a.id - b.id) # id == idx
+
+    # create or update existing container ui
+    w = main.windowManager.getByOwner(entityContainerId) ||
+      main.windowManager.createContainerWindow(ent.name + '\'s Contents', entityContainerId).center()
+    w.show().focus()
+    w.updateContainer(items)
 
   handleContainerShow: (conn, pr) ->
     entityContainerId = pr.readEntityId()
     ent = entity.get(entityContainerId)
-    # TODO: showContainer
-    showContainerForEntity(ent)
+
+    # create/show existing container ui
+    w = main.windowManager.getByOwner(entityContainerId) ||
+      main.windowManager.createContainerWindow(ent.name + '\'s Contents', entityContainerId).center()
+    w.show().focus()
 
   handleContainerHide: (conn, pr) ->
     entityContainerId = pr.readEntityId()
     ent = entity.get(entityContainerId)
-    # TODO: hideContainer
-    hideContainerForEntity(ent)
 
-
+    # hide container ui
+    w = main.windowManager.getByOwner(entityContainerId)
+    if w?
+      w.hide()

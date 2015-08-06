@@ -1,8 +1,9 @@
-gameWindow = require './window'
+win = require './window'
 
-class ContainerWindow extends gameWindow.Window
-  constructor: (ownerId, x, y) ->
-    super(ownerId, x, y)
+class ContainerWindow extends win.Window
+  constructor: (windowManager, name, ownerId, x, y) ->
+    super(windowManager, name, x, y)
+    @ownerId = ownerId
 
     @containerItems = []
     @layout = 'grid' # one of: 'table', 'grid'
@@ -14,13 +15,16 @@ class ContainerWindow extends gameWindow.Window
     @domContainerTableElement.className = 'container table ui'
     @domContainerGridElement = document.createElement('div')
     @domContainerGridElement.className = 'container grid ui'
-    @domElement.innerHTML = """<div class="toolbar">
-<div class="left">
-  <input type="button" class="toggle toggle-container-layout" value="L" />
-  <input type="button" class="toggle toggle-container-layout active" value="G" />
+    @domElement.innerHTML = """<div class="toolbar draggable">
+<div class="left draggable">
+  <p class="title">""" + name + """</p>
+</div>
+<div class="right" style="margin-right: 8px;">
+  <input type="text" class="filter"></input>
 </div>
 <div class="right">
-  <input type="text" class="filter"></input>
+  <input type="button" class="toggle toggle-container-layout" value="L" /><input
+ type="button" class="toggle toggle-container-layout active" value="G" />
 </div>
 </div>"""
     @domElement.appendChild(@domContainerTableElement)
@@ -110,7 +114,7 @@ class ContainerWindow extends gameWindow.Window
 
       # grid entry
       gridHtml += '<div class="container-item" data-item-id="' + item.id +
-          '"><div class="item-icon" style="background-image: url(\'' + item.iconURL +
+          '"><div class="item-icon" style="background-image: url(\'' + item.sprite +
           '\')"><span class="item-quantity">'
       if item.quantity > 1
         gridHtml += 'x' + item.quantity

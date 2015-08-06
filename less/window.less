@@ -13,11 +13,28 @@
   background: @window-bg;
   border: 2px solid @window-border-pri;
   padding: 8px;
-  cursor: move;
   resize: both;
   color: @window-color;
   font-family: @window-font;
   font-size: 9pt;
+
+  .title {
+    margin: 0;
+    font-weight: bold;
+  }
+}
+
+.draggable {
+  cursor: move;
+}
+
+.dragging {
+  border-color: lighten(@window-border-pri, 25%);
+  background-color: lighten(@window-bg, 10%);
+}
+
+.focus {
+  border-color: lighten(@window-border-pri, 25%);
 }
 
 .spinner {
@@ -34,7 +51,8 @@ div.container {
   &.grid {
     padding: 4px;
   }
-  width: 420px;
+  cursor: default;
+  width: 360px;
   padding: 0;
   margin: 0;
   border-collapse: collapse;
@@ -76,13 +94,13 @@ div.container {
       border-right: none;
     }
 
-    .item-name {
+    &.item-name {
       width: 100%;
       white-space: normal;
     }
-    .item-quantity,
-    .item-volume,
-    .item-weight {
+    &.item-quantity,
+    &.item-volume,
+    &.item-weight {
       text-align: right;
     }
   }
@@ -129,6 +147,10 @@ div.container {
         background-color: lighten(@window-selected, 20%);
       }
     }
+  }
+
+  .container-item {
+    cursor: pointer;
   }
 
   .container-item:hover {

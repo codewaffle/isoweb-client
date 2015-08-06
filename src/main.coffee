@@ -1,20 +1,17 @@
 pixi = require 'pixi'
+pixiExt = require './pixi_extensions'
 input = require './input'
 entity = require './entity'
 config = require './config'
 menu = require './menu_manager'
-gameWindow = require './window'
-container = require './containerWindow'
 item = require './item'
 entityController = require './entity_controller.coffee'
 camera = require './camera'
-
-pixi.Point.prototype.toString = ->
-  return 'x: ' + @.x + ', y: ' + @.y
+wm = require './window_manager'
 
 inputManager = new input.InputManager()
-
 menuManager = new menu.MenuManager()
+windowManager = new wm.WindowManager()
 
 renderer = new pixi.autoDetectRenderer(1024, 1024)
 renderer.backgroundColor = 0xAAFFCC
@@ -33,9 +30,34 @@ document.addEventListener('contextmenu', (e) ->
 document.addEventListener('mousedown', (e) ->
   # TODO : clicking on entities still fires this, but don't want to rely on clicking on the bg as it won't always be there.
   e.preventDefault()
+
+  # check if window at point
+  w = windowManager.getAtCoordinates(e.x, e.y)
+  if w?
+    windowManager.setFocus(w)
+    return false
+
   point = cam.screenToWorld(e.x, e.y)
-  console.log point
+  #console.log point
   entityController.current.cmdMove(point.x, point.y)
+  return false
+)
+
+document.addEventListener('mouseup', (e) ->
+  if (e.buttons & 1) == 0 and windowManager.draggingWindow?
+    windowManager.endDrag()
+    return false
+)
+
+document.addEventListener('mousemove', (e) ->
+  if windowManager.draggingWindow?
+    windowManager.dragUpdate(e.x, e.y)
+  else if (e.buttons & 1) == 1 and e.target.classList.contains('draggable')
+    # begin dragging
+    w = windowManager.getAtCoordinates(e.x, e.y)
+    if w?
+      windowManager.beginDrag(w, e.x, e.y)
+
   return false
 )
 
@@ -59,6 +81,14 @@ window.addEventListener('resize', resize)
 cam.onResize()
 resize()
 
+module.exports =
+  stage: stage
+  inputManager: inputManager
+  menuManager: menuManager
+  windowManager: windowManager
+  debugWindow: debug
+
+
 if location.search != '?offline'
   network = require './network'
   conn = new network.Connection('ws://96.40.72.113:10000/player')
@@ -66,18 +96,17 @@ else
   # offline stuff goes here...
 
   # test container
-  w = new container.ContainerWindow(null, 10, 10)
+  w = windowManager.createContainerWindow('test-container', null, 10, 10)
   w.show()
   w.updateContainer(item.TEST_ITEMS())
 
-module.exports =
-  stage: stage
-  inputManager: inputManager
-  menuManager: menuManager
+
+debug = windowManager.createDebugWindow()
+debug.add('player pos', -> return if entityController.current? then entityController.current.ent.position else '-')
+debug.show()
 
 
 # hacking here :/
-
 
 
 glslify = require 'glslify'
@@ -111,5 +140,6 @@ update = (t) ->
   bg.tilePosition.x = stage.position.x
   bg.tilePosition.y = stage.position.y
   cam.render()
+  debug.update()
   requestAnimationFrame(update)
 requestAnimationFrame(update)
