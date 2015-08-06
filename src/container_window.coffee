@@ -16,12 +16,15 @@ class ContainerWindow extends win.Window
     @domContainerGridElement = document.createElement('div')
     @domContainerGridElement.className = 'container grid ui'
     @domElement.innerHTML = """<div class="toolbar draggable">
-<div class="left">
-  <input type="button" class="toggle toggle-container-layout" value="L" />
-  <input type="button" class="toggle toggle-container-layout active" value="G" />
+<div class="left draggable">
+  <p class="title">""" + name + """</p>
+</div>
+<div class="right" style="margin-right: 8px;">
+  <input type="text" class="filter"></input>
 </div>
 <div class="right">
-  <input type="text" class="filter"></input>
+  <input type="button" class="toggle toggle-container-layout" value="L" /><input
+ type="button" class="toggle toggle-container-layout active" value="G" />
 </div>
 </div>"""
     @domElement.appendChild(@domContainerTableElement)

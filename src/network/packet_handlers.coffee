@@ -65,6 +65,8 @@ module.exports =
 
   handleContainerUpdate: (conn, pr) ->
     entityContainerId = pr.readEntityId()
+    ent = entity.get(entityContainerId)
+
     lenContents = pr.readUint16()
 
     contents = {}
@@ -92,7 +94,7 @@ module.exports =
 
     # create or update existing container ui
     w = main.windowManager.getByOwner(entityContainerId) ||
-      main.windowManager.createContainerWindow(entityContainerId, entityContainerId)
+      main.windowManager.createContainerWindow(ent.name + '\'s Contents', entityContainerId).center().show().focus()
     w.updateContainer(items)
 
   handleContainerShow: (conn, pr) ->
@@ -101,8 +103,7 @@ module.exports =
 
     # create/show existing container ui
     w = main.windowManager.getByOwner(entityContainerId) ||
-      main.windowManager.createContainerWindow(entityContainerId, entityContainerId)
-    w.show()
+      main.windowManager.createContainerWindow(ent.name + '\'s Contents', entityContainerId).center().show().focus()
 
   handleContainerHide: (conn, pr) ->
     entityContainerId = pr.readEntityId()

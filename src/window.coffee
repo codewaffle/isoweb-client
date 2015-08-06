@@ -18,14 +18,17 @@ class Window
     document.body.appendChild(@domElement)
     @domElement.style.display = 'none'
     @setPosition(@position.x, @position.y)
+    return @
 
   show: ->
     @domElement.style.display = 'block'
     @visible = true
+    return @
 
   hide: ->
     @domElement.style.display = 'none'
     @visible = false
+    return @
 
   close: ->
     document.body.removeChild(@domElement)
@@ -33,8 +36,10 @@ class Window
 
   center: ->
     # centers window horizontally and vertically
-    @domElement.style.left = document.body.clientWidth/2 - @domElement.clientWidth/2 + 'px'
-    @domElement.style.top = document.body.clientHeight/2 - @domElement.clientHeight/2 + 'px'
+    @setPosition(
+      document.body.clientWidth/2 - @domElement.clientWidth/2,
+      document.body.clientHeight/2 - @domElement.clientHeight/2)
+    return @
 
   beginDrag: (x, y) ->
     @dragOffset.set(x - @position.x, y - @position.y)
@@ -49,6 +54,21 @@ class Window
     @position.set(x, y)
     @domElement.style.left = x + 'px'
     @domElement.style.top = y + 'px'
+    return @
+
+  focus: ->
+    @domElement.classList.add('focus')
+    @domElement.style.zIndex = '1'
+    # focus first input element
+    els = @domElement.getElementsByTagName('input')
+    if els.length > 0
+      els[0].focus()
+    return @
+
+  blur: ->
+    @domElement.classList.remove('focus')
+    @domElement.style.zIndex = '0'
+    return @
 
 module.exports =
   Window: Window

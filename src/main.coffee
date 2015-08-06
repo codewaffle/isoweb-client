@@ -27,15 +27,17 @@ document.addEventListener('contextmenu', (e) ->
   return false
 )
 
+leftButtonDown = false
+
 document.addEventListener('mousedown', (e) ->
+  leftButtonDown = true
   # TODO : clicking on entities still fires this, but don't want to rely on clicking on the bg as it won't always be there.
   e.preventDefault()
 
   # check if window at point
   w = windowManager.getAtCoordinates(e.x, e.y)
   if w?
-    if e.target.classList.contains('draggable')
-      windowManager.beginDrag(w, e.x, e.y)
+    windowManager.setFocus(w)
     return false
 
   point = cam.screenToWorld(e.x, e.y)
@@ -45,6 +47,7 @@ document.addEventListener('mousedown', (e) ->
 )
 
 document.addEventListener('mouseup', (e) ->
+  leftButtonDown = false
   if windowManager.draggingWindow?
     windowManager.endDrag()
     return false
@@ -53,7 +56,13 @@ document.addEventListener('mouseup', (e) ->
 document.addEventListener('mousemove', (e) ->
   if windowManager.draggingWindow?
     windowManager.dragUpdate(e.x, e.y)
-    return false
+  else if leftButtonDown and e.target.classList.contains('draggable')
+    # begin dragging
+    w = windowManager.getAtCoordinates(e.x, e.y)
+    if w?
+      windowManager.beginDrag(w, e.x, e.y)
+
+  return false
 )
 
 bg = new pixi.extras.TilingSprite(

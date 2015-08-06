@@ -7,6 +7,7 @@ WINDOWS = []
 class WindowManager
   constructor: ->
     @draggingWindow = null
+    @focusWindow = null
     return @
 
   createWindow: (name, x, y) ->
@@ -71,6 +72,12 @@ class WindowManager
     y = y - @draggingWindow.dragOffset.y
     @draggingWindow.setPosition(x, y)
     #console.log('dragging to %d, %d', x, y)
+
+  setFocus: (win) ->
+    if @focusWindow?
+      @focusWindow.blur()
+    @focusWindow = win
+    win.focus()
 
 module.exports =
   WindowManager: WindowManager
