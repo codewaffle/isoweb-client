@@ -2,6 +2,7 @@ pixi = require 'pixi'
 
 class Camera
   constructor: (@renderer, @stage) ->
+    module.exports.current ?= @
     @container = new pixi.Container()
     @container.addChild(@stage)
     @position = new pixi.Point()
@@ -28,6 +29,11 @@ class Camera
     @container.position.x = w/2
     @renderer.resize(w, h)
 
+  setTrackingTarget: (@trackingObject) ->
+
+  update: (dt) ->
+
 
 module.exports =
   Camera: Camera
+  current: null

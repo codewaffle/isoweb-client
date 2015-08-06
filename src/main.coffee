@@ -97,8 +97,15 @@ bla = new LUTFilter()
 
 cam.container.filters = [bla]
 
-update = ->
-  entity.update()
-  cam.render()
+
+lastUpdate = null
+update = (t) ->
+  if not lastUpdate? # initialize on first tick
+    lastUpdate = t
+
+  dt = t - lastUpdate
+  lastUpdate = t
+  entity.update(dt)
+  cam.render(dt)
   requestAnimationFrame(update)
 requestAnimationFrame(update)

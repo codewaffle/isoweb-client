@@ -72,7 +72,7 @@ class Entity extends pixi.Container
       @updating = true
       updateList[@id] = @
 
-  update: (srv) ->
+  update: (dt, srv) ->
     srv ?= clock.server_adjusted()
 
     # discard old updates, keeping the last
@@ -169,7 +169,7 @@ class Entity extends pixi.Container
     if @hidden
       @addChild(@sprite)
       @hidden = false
-      @update(clock.server_now()+500)
+      @update(0, clock.server_now()+500)
 
   setHidden: () ->
     if not @hidden
@@ -191,8 +191,8 @@ module.exports =
     registry[id] ?= new Entity(id)
     return registry[id]
   registry: registry
-  update: () ->
+  update: (dt) ->
     for key, ent of updateList
-      if not ent.update()
+      if not ent.update(dt)
         ent.updating = false
         delete updateList[key]
