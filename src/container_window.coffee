@@ -15,7 +15,7 @@ class ContainerWindow extends win.Window
     @domContainerTableElement.className = 'container table ui'
     @domContainerGridElement = document.createElement('div')
     @domContainerGridElement.className = 'container grid ui'
-    @domElement.innerHTML = """<div class="toolbar">
+    @domElement.innerHTML = """<div class="toolbar draggable">
 <div class="left">
   <input type="button" class="toggle toggle-container-layout" value="L" />
   <input type="button" class="toggle toggle-container-layout active" value="G" />

@@ -34,12 +34,26 @@ document.addEventListener('mousedown', (e) ->
   # check if window at point
   w = windowManager.getAtCoordinates(e.x, e.y)
   if w?
+    if e.target.classList.contains('draggable')
+      windowManager.beginDrag(w, e.x, e.y)
     return false
 
   point = cam.screenToWorld(e.x, e.y)
   #console.log point
   entityController.current.cmdMove(point.x, point.y)
   return false
+)
+
+document.addEventListener('mouseup', (e) ->
+  if windowManager.draggingWindow?
+    windowManager.endDrag()
+    return false
+)
+
+document.addEventListener('mousemove', (e) ->
+  if windowManager.draggingWindow?
+    windowManager.dragUpdate(e.x, e.y)
+    return false
 )
 
 bg = new pixi.extras.TilingSprite(

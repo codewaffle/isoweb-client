@@ -13,11 +13,19 @@
   background: @window-bg;
   border: 2px solid @window-border-pri;
   padding: 8px;
-  cursor: move;
   resize: both;
   color: @window-color;
   font-family: @window-font;
   font-size: 9pt;
+}
+
+.draggable {
+  cursor: move;
+}
+
+.dragging {
+  border-color: lighten(@window-border-pri, 25%);
+  background-color: lighten(@window-bg, 10%);
 }
 
 .spinner {
@@ -34,6 +42,7 @@ div.container {
   &.grid {
     padding: 4px;
   }
+  cursor: default;
   width: 420px;
   padding: 0;
   margin: 0;
@@ -129,6 +138,10 @@ div.container {
         background-color: lighten(@window-selected, 20%);
       }
     }
+  }
+
+  .container-item {
+    cursor: pointer;
   }
 
   .container-item:hover {

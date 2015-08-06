@@ -6,7 +6,7 @@ WINDOWS = []
 
 class WindowManager
   constructor: ->
-    # nothing to do...
+    @draggingWindow = null
     return @
 
   createWindow: (name, x, y) ->
@@ -53,6 +53,24 @@ class WindowManager
     for i in [WINDOWS.length-1..0]
       if WINDOWS[i] is win
         WINDOWS.splice(i, 1)
+
+  beginDrag: (win, x, y) ->
+    @draggingWindow = win
+    win.beginDrag(x, y)
+    #console.log('begin drag %s offset %d, %d', win.name, x, y)
+
+  endDrag: () ->
+    win = @draggingWindow
+    @draggingWindow = null
+    win.endDrag()
+    #console.log('end drag %s', win.name)
+
+  dragUpdate: (x, y) ->
+    # apply offset
+    x = x - @draggingWindow.dragOffset.x
+    y = y - @draggingWindow.dragOffset.y
+    @draggingWindow.setPosition(x, y)
+    #console.log('dragging to %d, %d', x, y)
 
 module.exports =
   WindowManager: WindowManager
