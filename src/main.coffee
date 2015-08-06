@@ -61,6 +61,7 @@ module.exports =
   inputManager: inputManager
   menuManager: menuManager
   windowManager: windowManager
+  debugWindow: debug
 
 
 if location.search != '?offline'
@@ -70,12 +71,12 @@ else
   # offline stuff goes here...
 
   # test container
-  w = new windowManager.createContainerWindow('test-container', null, 10, 10)
+  w = windowManager.createContainerWindow('test-container', null, 10, 10)
   w.show()
   w.updateContainer(item.TEST_ITEMS())
 
 
-debug = new windowManager.createDebugWindow()
+debug = windowManager.createDebugWindow()
 debug.add('player pos', -> return if entityController.current? then entityController.current.ent.position else '-')
 
 

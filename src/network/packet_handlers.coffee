@@ -57,6 +57,11 @@ module.exports =
     ent = entity.get(entId)
     ent.setDestroyed()
 
+    # close (destroy) container ui if one exists
+    w = main.windowManager.getByOwner(entId)
+    if w?
+      w.close()
+
   handleContainerUpdate: (conn, pr) ->
     entityContainerId = pr.readEntityId()
     lenContents = pr.readUint16()
@@ -72,15 +77,25 @@ module.exports =
         name: pr.readSmallString()
         sprite: pr.readSmallString()
 
+    # create or update existing container ui
+    w = main.windowManager.getByOwner(entityContainerId) ||
+      main.windowManager.createContainerWindow(entityContainerId, entityContainerId)
+    w.updateContainer(contents)
+
   handleContainerShow: (conn, pr) ->
     entityContainerId = pr.readEntityId()
     ent = entity.get(entityContainerId)
-    # TODO: showContainer
-    showContainerForEntity(ent)
+
+    # create/show existing container ui
+    w = main.windowManager.getByOwner(entityContainerId) ||
+      main.windowManager.createContainerWindow(entityContainerId, entityContainerId)
+    w.show()
 
   handleContainerHide: (conn, pr) ->
     entityContainerId = pr.readEntityId()
     ent = entity.get(entityContainerId)
-    # TODO: hideContainer
-    hideContainerForEntity(ent)
 
+    # hide container ui
+    w = main.windowManager.getByOwner(entityContainerId)
+    if w?
+      w.hide()
