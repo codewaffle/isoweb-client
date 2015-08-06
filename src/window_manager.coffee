@@ -39,11 +39,16 @@ class WindowManager
 
   getAtCoordinates: (x, y) ->
     # return visible window containing coordinates
+    list = []
     for w in WINDOWS
       rect = w.domElement.getBoundingClientRect()
       if w.visible and (rect.left <= x and x <= rect.right) and (rect.top <= y and y <= rect.bottom)
-        return w
-    return null
+        # give priority to focus window
+        if w == @focusWindow
+          return w
+        list.push(w)
+
+    return list[0] if list.length > 0
 
   addWindow: (win) ->
     # add window to global list

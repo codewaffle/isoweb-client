@@ -27,10 +27,7 @@ document.addEventListener('contextmenu', (e) ->
   return false
 )
 
-leftButtonDown = false
-
 document.addEventListener('mousedown', (e) ->
-  leftButtonDown = true
   # TODO : clicking on entities still fires this, but don't want to rely on clicking on the bg as it won't always be there.
   e.preventDefault()
 
@@ -47,8 +44,7 @@ document.addEventListener('mousedown', (e) ->
 )
 
 document.addEventListener('mouseup', (e) ->
-  leftButtonDown = false
-  if windowManager.draggingWindow?
+  if (e.buttons & 1) == 0 and windowManager.draggingWindow?
     windowManager.endDrag()
     return false
 )
@@ -56,7 +52,7 @@ document.addEventListener('mouseup', (e) ->
 document.addEventListener('mousemove', (e) ->
   if windowManager.draggingWindow?
     windowManager.dragUpdate(e.x, e.y)
-  else if leftButtonDown and e.target.classList.contains('draggable')
+  else if (e.buttons & 1) == 1 and e.target.classList.contains('draggable')
     # begin dragging
     w = windowManager.getAtCoordinates(e.x, e.y)
     if w?
