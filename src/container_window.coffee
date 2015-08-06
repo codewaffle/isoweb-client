@@ -30,15 +30,14 @@ class ContainerWindow extends win.Window
     @domElement.appendChild(@domContainerGridElement)
 
     # event handlers
-    _this = @
     layoutButtons = @domElement.getElementsByClassName('toggle-container-layout')
     for button in layoutButtons
-      button.addEventListener('click', ->
-        value = if @.value == 'L' then 'table' else 'grid'
-        _this.setLayout(value)
+      button.addEventListener('click', (ev) =>
+        value = if ev.target.value == 'L' then 'table' else 'grid'
+        @setLayout(value)
       )
 
-    @domContainerGridElement.addEventListener('click', (ev) ->
+    @domContainerGridElement.addEventListener('click', (ev) =>
       if ev.target is null then return
       el = ev.target
 
@@ -48,11 +47,11 @@ class ContainerWindow extends win.Window
         if el is null then return
 
       if !ev.ctrlKey
-        _this.deselectItems()
-      _this.selectItems([el.getAttribute('data-item-id')])
+        @deselectItems()
+      @selectItems([el.getAttribute('data-item-id')])
     )
 
-    @domContainerTableElement.addEventListener('click', (ev) ->
+    @domContainerTableElement.addEventListener('click', (ev) =>
       if ev.target is null then return
       el = ev.target
 
@@ -62,8 +61,8 @@ class ContainerWindow extends win.Window
         if el is null then return
 
       if !ev.ctrlKey
-        _this.deselectItems()
-      _this.selectItems([el.getAttribute('data-item-id')])
+        @deselectItems()
+      @selectItems([el.getAttribute('data-item-id')])
     )
 
     @setLayout(@layout)
