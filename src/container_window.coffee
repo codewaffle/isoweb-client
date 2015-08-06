@@ -1,8 +1,9 @@
-gameWindow = require './window'
+win = require './window'
 
-class ContainerWindow extends gameWindow.Window
-  constructor: (ownerId, x, y) ->
-    super(ownerId, x, y)
+class ContainerWindow extends win.Window
+  constructor: (windowManager, name, ownerId, x, y) ->
+    super(windowManager, name, x, y)
+    @ownerId = ownerId
 
     @containerItems = []
     @layout = 'grid' # one of: 'table', 'grid'

@@ -1,9 +1,9 @@
-gameWindow = require './window'
+win = require './window'
 
 
-class DebugWindow extends gameWindow.Window
-  constructor: ->
-    super(null, document.body.clientWidth - 324, 4)
+class DebugWindow extends win.Window
+  constructor: (windowManager) ->
+    super(windowManager, 'debug-window', document.body.clientWidth - 324, 4)
     @entries = []
     @tableElement = document.createElement('table')
     @tableElement.className = 'debug-table'

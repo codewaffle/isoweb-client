@@ -1,10 +1,12 @@
 pixi = require 'pixi'
-entity = require './entity'
+
 
 class Window
-  constructor: (ownerId, x, y) ->
+  constructor: (windowManager, name, x, y) ->
+    @windowManager = windowManager
+    @name = name
     @position = new pixi.Point(x || 0, y || 0)
-    @ownerId  = null # entity id
+
     @visible = false
 
     # create window DOM
@@ -14,7 +16,6 @@ class Window
     document.body.appendChild(@domElement)
     @domElement.style.left = x + 'px'
     @domElement.style.top = y + 'px'
-    return @
 
   show: ->
     @domElement.style.display = 'visible'
@@ -26,6 +27,7 @@ class Window
 
   close: ->
     document.body.removeChild(@domElement)
+    @windowManager.removeWindow(@)
 
   center: ->
     # centers window horizontally and vertically

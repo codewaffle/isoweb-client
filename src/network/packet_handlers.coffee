@@ -1,5 +1,6 @@
 entity = require '../entity'
 packetTypes = require './packet_types'
+main = require '../main'
 
 module.exports =
   handleEntityUpdate: (conn, pr) ->
@@ -71,10 +72,6 @@ module.exports =
         name: pr.readSmallString()
         sprite: pr.readSmallString()
 
-    # TODO:
-    console.log 'TODO : do so mething with contents'
-    console.log(contents)
-
   handleContainerShow: (conn, pr) ->
     entityContainerId = pr.readEntityId()
     ent = entity.get(entityContainerId)
@@ -86,5 +83,4 @@ module.exports =
     ent = entity.get(entityContainerId)
     # TODO: hideContainer
     hideContainerForEntity(ent)
-
 

@@ -1,3 +1,4 @@
+main = require '../main'
 clock = require '../clock'
 
 packetTypes = require './packet_types'
@@ -5,11 +6,10 @@ packetHandlers = require './packet_handlers'
 
 PacketReader = require './packet_reader'
 packet = new PacketReader()
-windowManager = require '../window'
 
 module.exports = class Connection
   constructor: (@endpoint) ->
-    @connWindow = new windowManager.Window()
+    @connWindow = main.windowManager.createWindow('connect')
     @connWindow.domElement.innerHTML = '<div class="spinner right">Connecting to server ...</div>'
     @connWindow.center()
     @connWindow.show()

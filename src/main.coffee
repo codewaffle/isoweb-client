@@ -4,16 +4,14 @@ input = require './input'
 entity = require './entity'
 config = require './config'
 menu = require './menu_manager'
-gameWindow = require './window'
-container = require './container_window'
 item = require './item'
 entityController = require './entity_controller.coffee'
-debugWindow = require './debug_window'
 camera = require './camera'
+wm = require './window_manager'
 
 inputManager = new input.InputManager()
-
 menuManager = new menu.MenuManager()
+windowManager = new wm.WindowManager()
 
 renderer = new pixi.autoDetectRenderer(1024, 1024)
 renderer.backgroundColor = 0xAAFFCC
@@ -58,6 +56,13 @@ window.addEventListener('resize', resize)
 cam.onResize()
 resize()
 
+module.exports =
+  stage: stage
+  inputManager: inputManager
+  menuManager: menuManager
+  windowManager: windowManager
+
+
 if location.search != '?offline'
   network = require './network'
   conn = new network.Connection('ws://96.40.72.113:10000/player')
@@ -65,19 +70,13 @@ else
   # offline stuff goes here...
 
   # test container
-  w = new container.ContainerWindow(null, 10, 10)
+  w = new windowManager.createContainerWindow('test-container', null, 10, 10)
   w.show()
   w.updateContainer(item.TEST_ITEMS())
 
 
-debug = new debugWindow.DebugWindow()
+debug = new windowManager.createDebugWindow()
 debug.add('player pos', -> return if entityController.current? then entityController.current.ent.position else '-')
-
-module.exports =
-  stage: stage
-  inputManager: inputManager
-  menuManager: menuManager
-  debugWindow: debug
 
 
 # hacking here :/
