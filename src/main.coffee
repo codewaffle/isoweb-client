@@ -27,8 +27,11 @@ document.addEventListener('contextmenu', (e) ->
   return false
 )
 
+lastClickTarget = null
 document.addEventListener('mousedown', (e) ->
-  # TODO : clicking on entities still fires this, but don't want to rely on clicking on the bg as it won't always be there.
+  lastClickTarget = e.target
+
+  # TODO : clicking on entities still fires this. fix it.
   e.preventDefault()
 
   # check if window at point
@@ -52,7 +55,7 @@ document.addEventListener('mouseup', (e) ->
 document.addEventListener('mousemove', (e) ->
   if windowManager.draggingWindow?
     windowManager.dragUpdate(e.x, e.y)
-  else if (e.buttons & 1) == 1 and e.target.classList.contains('draggable')
+  else if (e.buttons & 1) == 1 and lastClickTarget == e.target and e.target.classList.contains('draggable')
     # begin dragging
     w = windowManager.getAtCoordinates(e.x, e.y)
     if w?
@@ -60,6 +63,7 @@ document.addEventListener('mousemove', (e) ->
 
   return false
 )
+
 
 bg = new pixi.extras.TilingSprite(
   pixi.Texture.fromImage(config.asset_base + 'tiles/tile_grass.png'), renderer.width, renderer.height)

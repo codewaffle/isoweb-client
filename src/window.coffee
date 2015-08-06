@@ -2,9 +2,7 @@ pixi = require 'pixi'
 
 
 class Window
-  constructor: (windowManager, name, x, y) ->
-    @windowManager = windowManager
-    @name = name
+  constructor: (@windowManager, @name, x, y) ->
     @position = new pixi.Point(x || 0, y || 0)
 
     @visible = false

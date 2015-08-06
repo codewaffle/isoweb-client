@@ -3,9 +3,7 @@ entityController = require './entity_controller'
 
 
 class Menu
-  constructor: (items, entityId) ->
-    @items = items
-    @entityId = entityId
+  constructor: (@items, @entityId) ->
     @domElement = null
 
   show: (x, y) ->

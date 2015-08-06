@@ -1,9 +1,8 @@
 win = require './window'
 
 class ContainerWindow extends win.Window
-  constructor: (windowManager, name, ownerId, x, y) ->
+  constructor: (windowManager, name, @ownerId, x, y) ->
     super(windowManager, name, x, y)
-    @ownerId = ownerId
 
     @containerItems = []
     @layout = 'grid' # one of: 'table', 'grid'
