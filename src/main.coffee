@@ -114,7 +114,6 @@ update = (t) ->
   bg.tilePosition.x = stage.position.x
   bg.tilePosition.y = stage.position.y
   cam.render()
-  renderer.render(stage)
   debug.update()
   requestAnimationFrame(update)
 requestAnimationFrame(update)
