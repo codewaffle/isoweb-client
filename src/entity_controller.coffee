@@ -1,4 +1,5 @@
 packetTypes = require './network/packet_types'
+camera = require './camera'
 
 _setSmallString = (buf, idx, str) ->
   buf.setUint8(idx, str.length)
@@ -16,6 +17,7 @@ class EntityController
 
   takeControl: () ->
     module.exports.current = @
+    camera.current?.setTrackingTarget(@ent)
     # TODO : set this controller as our main controller. follow this entity, use it for HUDs, etc...
     # TODO : input should pipe through here to the server
     # TODO : the server may send a TakeControl request at any time to switch the player to a different entity.

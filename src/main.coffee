@@ -33,6 +33,7 @@ document.addEventListener('mousedown', (e) ->
   # TODO : clicking on entities still fires this, but don't want to rely on clicking on the bg as it won't always be there.
   e.preventDefault()
   point = cam.screenToWorld(e.x, e.y)
+  console.log point
   entityController.current.cmdMove(point.x, point.y)
   return false
 )
@@ -100,8 +101,18 @@ bla = new LUTFilter()
 
 cam.container.filters = [bla]
 
-update = ->
-  entity.update()
+
+lastUpdate = null
+update = (t) ->
+  if not lastUpdate? # initialize on first tick
+    lastUpdate = t
+
+  dt = t - lastUpdate
+  lastUpdate = t
+  entity.update(dt)
+  cam.update(dt)
+  bg.tilePosition.x = stage.position.x
+  bg.tilePosition.y = stage.position.y
   cam.render()
   renderer.render(stage)
   debug.update()
