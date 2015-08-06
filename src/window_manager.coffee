@@ -79,6 +79,9 @@ class WindowManager
     #console.log('dragging to %d, %d', x, y)
 
   setFocus: (win) ->
+    if win == @focusWindow
+      return
+
     if @focusWindow?
       @focusWindow.blur()
     @focusWindow = win
