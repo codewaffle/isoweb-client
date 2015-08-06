@@ -108,6 +108,8 @@ update = (t) ->
   lastUpdate = t
   entity.update(dt)
   cam.update(dt)
+  bg.tilePosition.x = stage.position.x
+  bg.tilePosition.y = stage.position.y
   cam.render()
   requestAnimationFrame(update)
 requestAnimationFrame(update)
