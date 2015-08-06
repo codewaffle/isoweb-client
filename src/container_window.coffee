@@ -111,7 +111,7 @@ class ContainerWindow extends win.Window
 
       # grid entry
       gridHtml += '<div class="container-item" data-item-id="' + item.id +
-          '"><div class="item-icon" style="background-image: url(\'' + item.iconURL +
+          '"><div class="item-icon" style="background-image: url(\'' + item.sprite +
           '\')"><span class="item-quantity">'
       if item.quantity > 1
         gridHtml += 'x' + item.quantity

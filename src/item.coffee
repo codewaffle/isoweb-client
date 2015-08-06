@@ -1,12 +1,14 @@
+SPRITE_LOCATION = './assets/'
+
 class Item
-  constructor: (id, name, quantity, weight, volume, iconUrl) ->
+  constructor: (id, name, quantity, weight, volume, sprite) ->
     @id = id
     @name = name || 'No Name'
     @description = 'No description.'
     @quantity = quantity || 1
-    @iconURL = iconUrl || './assets/icons/other.png'
-    @weight = weight || 10
-    @volume = volume || 1
+    @sprite = SPRITE_LOCATION + sprite || './assets/sprites/bad_crate.png'
+    @weight = weight || 0
+    @volume = volume || 0
     @_items = []
 
     # events

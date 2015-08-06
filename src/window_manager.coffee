@@ -36,6 +36,14 @@ class WindowManager
         return w
     return null
 
+  getAtCoordinates: (x, y) ->
+    # return visible window containing coordinates
+    for w in WINDOWS
+      rect = w.domElement.getBoundingClientRect()
+      if w.visible and (rect.left <= x and x <= rect.right) and (rect.top <= y and y <= rect.bottom)
+        return w
+    return null
+
   addWindow: (win) ->
     # add window to global list
     WINDOWS.push(win)
@@ -45,7 +53,6 @@ class WindowManager
     for i in [WINDOWS.length-1..0]
       if WINDOWS[i] is win
         WINDOWS.splice(i, 1)
-
 
 module.exports =
   WindowManager: WindowManager

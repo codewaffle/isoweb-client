@@ -30,8 +30,14 @@ document.addEventListener('contextmenu', (e) ->
 document.addEventListener('mousedown', (e) ->
   # TODO : clicking on entities still fires this, but don't want to rely on clicking on the bg as it won't always be there.
   e.preventDefault()
+
+  # check if window at point
+  w = windowManager.getAtCoordinates(e.x, e.y)
+  if w?
+    return false
+
   point = cam.screenToWorld(e.x, e.y)
-  console.log point
+  #console.log point
   entityController.current.cmdMove(point.x, point.y)
   return false
 )
@@ -78,6 +84,7 @@ else
 
 debug = windowManager.createDebugWindow()
 debug.add('player pos', -> return if entityController.current? then entityController.current.ent.position else '-')
+debug.show()
 
 
 # hacking here :/

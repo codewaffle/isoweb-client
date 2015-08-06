@@ -1,6 +1,7 @@
 entity = require '../entity'
 packetTypes = require './packet_types'
 main = require '../main'
+item = require '../item'
 
 module.exports =
   handleEntityUpdate: (conn, pr) ->
@@ -67,20 +68,32 @@ module.exports =
     lenContents = pr.readUint16()
 
     contents = {}
+    items = []
 
     for x in [0...lenContents]
       idx = pr.readUint16()
       contents[idx] =
+        idx: idx
         count: pr.readUint32()
         mass: pr.readFloat32()
         volume: pr.readFloat32()
         name: pr.readSmallString()
         sprite: pr.readSmallString()
+      itm = new item.Item(
+        contents[idx].idx,
+        contents[idx].name,
+        contents[idx].count,
+        contents[idx].weight,
+        contents[idx].volume,
+        contents[idx].sprite)
+      items.push(itm)
+
+    items.sort((a, b) -> return a.id - b.id) # id == idx
 
     # create or update existing container ui
     w = main.windowManager.getByOwner(entityContainerId) ||
       main.windowManager.createContainerWindow(entityContainerId, entityContainerId)
-    w.updateContainer(contents)
+    w.updateContainer(items)
 
   handleContainerShow: (conn, pr) ->
     entityContainerId = pr.readEntityId()

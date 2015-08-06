@@ -14,11 +14,12 @@ class Window
     @domElement.className = 'window ui'
 
     document.body.appendChild(@domElement)
+    @domElement.style.display = 'none'
     @domElement.style.left = @position.x + 'px'
     @domElement.style.top = @position.y + 'px'
 
   show: ->
-    @domElement.style.display = 'visible'
+    @domElement.style.display = 'block'
     @visible = true
 
   hide: ->
