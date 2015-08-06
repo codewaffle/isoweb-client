@@ -22,6 +22,9 @@ cam = new camera.Camera(renderer, stage)
 
 document.body.appendChild(renderer.view)
 
+
+# TODO: all this event handling really needs to get organized somewhere else...
+
 document.addEventListener('contextmenu', (e) ->
   e.preventDefault()
   return false
@@ -42,8 +45,9 @@ document.addEventListener('mousedown', (e) ->
 
   point = cam.screenToWorld(e.x, e.y)
   #console.log point
-  entityController.current.cmdMove(point.x, point.y)
-  return false
+  if conn? and conn.online
+    entityController.current.cmdMove(point.x, point.y)
+    return false
 )
 
 document.addEventListener('mouseup', (e) ->
@@ -99,8 +103,12 @@ if location.search != '?offline'
 else
   # offline stuff goes here...
 
-  # test container
-  w = windowManager.createContainerWindow('test-container', null, 10, 10)
+  # test container 1
+  w = windowManager.createContainerWindow('foo', null, 10, 10)
+  w.show()
+  w.updateContainer(item.TEST_ITEMS())
+
+  w = windowManager.createContainerWindow('bar', null, 400, 10)
   w.show()
   w.updateContainer(item.TEST_ITEMS())
 
