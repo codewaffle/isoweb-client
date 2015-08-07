@@ -68,5 +68,11 @@ class Window
     @domElement.style.zIndex = '0'
     return @
 
+  beginDragItem: (id) ->
+    @windowManager.beginDragItem(@, id)
+
+  endDragItem: ->
+    @windowManager.endDragItem()
+
 module.exports =
   Window: Window

@@ -8,6 +8,8 @@ class WindowManager
   constructor: ->
     @draggingWindow = null
     @focusWindow = null
+    @draggingItem = null
+    @cursorElement = null
     return @
 
   createWindow: (name, x, y) ->
@@ -86,6 +88,36 @@ class WindowManager
       @focusWindow.blur()
     @focusWindow = win
     win.focus()
+
+  beginDragItem: (win, itemElement) ->
+    @draggingItem = itemElement
+    # create cursor element for drag effect
+    el = document.createElement('div')
+    el.classList.add('cursor-item')
+    rect = itemElement.getBoundingClientRect()
+    el.style.left = rect.left + 'px'
+    el.style.top = rect.top + 'px'
+
+    id = itemElement.getAttribute('data-item-id')
+    item = win.findItemById(Number(id))
+    el.innerHTML = '<p>' + item.name + '</p>'
+    document.body.appendChild(el)
+    @cursorElement = el
+
+  endDragItem: ->
+    @draggingItem = null
+    if @cursorElement?
+      document.body.removeChild(@cursorElement)
+    @cursorElement = null
+
+  dragItemUpdate: (x, y) ->
+    @cursorElement.style.left = x + 'px'
+    @cursorElement.style.top = y + 'px'
+
+  dropItem: (x, y) ->
+    # TODO: make sure we dropped the item in a valid location, then do something with it
+
+    @endDragItem()
 
 module.exports =
   WindowManager: WindowManager

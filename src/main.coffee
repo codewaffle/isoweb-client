@@ -51,19 +51,35 @@ document.addEventListener('mousedown', (e) ->
 )
 
 document.addEventListener('mouseup', (e) ->
-  if (e.buttons & 1) == 0 and windowManager.draggingWindow?
-    windowManager.endDrag()
+  if (e.buttons & 1) == 0
+    if windowManager.draggingWindow?
+      windowManager.endDrag()
+    else if windowManager.draggingItem?
+      windowManager.dropItem()
     return false
 )
 
 document.addEventListener('mousemove', (e) ->
   if windowManager.draggingWindow?
     windowManager.dragUpdate(e.x, e.y)
-  else if (e.buttons & 1) == 1 and lastClickTarget == e.target and e.target.classList.contains('draggable')
-    # begin dragging
+  else if windowManager.draggingItem?
+    windowManager.dragItemUpdate(e.x, e.y)
+  # click and drag on a draggable element
+  else if (e.buttons & 1) == 1 and lastClickTarget == e.target
+    # check if we're in a window
     w = windowManager.getAtCoordinates(e.x, e.y)
     if w?
-      windowManager.beginDrag(w, e.x, e.y)
+      # check if we're dragging an item
+      el = e.target
+      while el?
+        if el.classList.contains('container-item')
+          w.beginDragItem(el)
+          return false
+        el = el.parentElement
+
+      # make sure we're clicking on a draggable window element
+      if e.target.classList.contains('draggable')
+        windowManager.beginDrag(w, e.x, e.y)
 
   return false
 )
