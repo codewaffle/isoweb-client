@@ -8,6 +8,15 @@ entCount = 0
 
 updateList = {}
 
+lerp_bearing = (a, b, t) ->
+  diff = b - a
+  if diff > Math.PI
+    a += 2*Math.PI
+  else if diff < -Math.PI
+    a -= 2*Math.PI
+
+  return a + (b - a) * t
+
 class Entity extends pixi.Container
   constructor: (@id) ->
     super()
@@ -89,7 +98,7 @@ class Entity extends pixi.Container
         # console.log t
 
         @position.set(u[1] + (@updates[0][1] - u[1]) * t, u[2] + (@updates[0][2] - u[2]) * t)
-        @rotation = u[3] + (@updates[0][3] - u[3]) * t
+        @rotation = lerp_bearing(u[3], @updates[0][3], t)
         @updates.unshift(u)
         return true
       else
@@ -100,7 +109,7 @@ class Entity extends pixi.Container
           return false
 
         @position.set(@position.x + (u[1] - @position.x) * 0.15, @position.y + (u[2] - @position.y) * 0.15)
-        @rotation += (u[3] - @rotation) * 0.15
+        @rotation = lerp_bearing(@rotation, u[3], 0.15)
         @updates.unshift(u)
 
         return true
@@ -108,7 +117,7 @@ class Entity extends pixi.Container
     if @updates.length > 0
       u = @updates[0]
       @position.set(@position.x + (u[1] - @position.x) * 0.02, @position.y + (u[2] - @position.y) * 0.02)
-      @rotation += (u[3] - @rotation) * 0.02
+      @rotation = lerp_bearing(@rotation, u[3], 0.02)
       return true
 
     return false
