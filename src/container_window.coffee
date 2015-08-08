@@ -93,6 +93,9 @@ class ContainerWindow extends win.Window
 </tr>"""
 
     for item in @containerItems
+      # set owner
+      item.ownerId = @ownerId
+
       # table entry
       tableHtml += '<tr class="container-item draggable" data-item-id="' + item.id + '">' +
       '<td class="item-name">' + item.name + '</td>' +

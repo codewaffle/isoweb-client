@@ -1,5 +1,6 @@
 @window-bg: rgba(0, 0, 0, 0.6);
 @window-bg-focus: rgba(0, 0, 0, 0.8);
+@window-bg-item-hover: rgba(0, 48, 0, 0.8);
 @window-border-pri: rgb(92, 92, 92);
 @window-border-sec: rgb(92, 92, 92);
 @window-header-bg: rgb(0, 0, 52);
@@ -22,6 +23,12 @@
   &.focus {
     border-color: lighten(@window-border-pri, 20%);
     background-color: @window-bg-focus;
+  }
+
+  &.item-hovering {
+    .container {
+      background-color: @window-bg-item-hover;
+    }
   }
 
   .title {
@@ -48,6 +55,7 @@
   margin-top: 12px;
   margin-left: 12px;
   background-color: rgba(52, 52, 127, 0.6);
+  z-index: 2;
 
   p {
     padding: 0.5em;

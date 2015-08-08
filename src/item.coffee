@@ -5,6 +5,7 @@ class Item
     @description = 'No description.'
     @sprite = SPRITE_LOCATION + sprite || './assets/sprites/bad_crate.png'
     @_items = []
+    @ownerId = null # set by window when items are added
 
     # events
     @onItemsUpdated = new Event('itemsUpdated')

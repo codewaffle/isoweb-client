@@ -55,7 +55,7 @@ document.addEventListener('mouseup', (e) ->
     if windowManager.draggingWindow?
       windowManager.endDrag()
     else if windowManager.draggingItem?
-      windowManager.dropItem()
+      windowManager.dropItem(e.x, e.y)
     return false
 )
 
@@ -64,6 +64,14 @@ document.addEventListener('mousemove', (e) ->
     windowManager.dragUpdate(e.x, e.y)
   else if windowManager.draggingItem?
     windowManager.dragItemUpdate(e.x, e.y)
+
+    # add window hover effects when dragging an item around
+    w = windowManager.getAtCoordinates(e.x, e.y)
+    if w? and w.ownerId != windowManager.draggingItem.ownerId # origin
+      windowManager.beginItemHover(w)
+    else if windowManager.itemHoverWindow?
+      windowManager.endItemHover()
+
   # click and drag on a draggable element
   else if (e.buttons & 1) == 1 and lastClickTarget == e.target
     # check if we're in a window
@@ -73,7 +81,7 @@ document.addEventListener('mousemove', (e) ->
       el = e.target
       while el?
         if el.classList.contains('container-item')
-          w.beginDragItem(el)
+          w.beginDragItem(el, e.x, e.y)
           return false
         el = el.parentElement
 
@@ -120,11 +128,11 @@ else
   # offline stuff goes here...
 
   # test container 1
-  w = windowManager.createContainerWindow('foo', null, 10, 10)
+  w = windowManager.createContainerWindow('foo', 0, 10, 10)
   w.show()
   w.updateContainer(item.TEST_ITEMS())
 
-  w = windowManager.createContainerWindow('bar', null, 400, 10)
+  w = windowManager.createContainerWindow('bar', 1, 400, 10)
   w.show()
   w.updateContainer(item.TEST_ITEMS())
 
