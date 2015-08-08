@@ -9,6 +9,8 @@ entityController = require './entity_controller.coffee'
 camera = require './camera'
 wm = require './window_manager'
 
+
+
 inputManager = new input.InputManager()
 menuManager = new menu.MenuManager()
 windowManager = new wm.WindowManager()
@@ -36,6 +38,7 @@ document.addEventListener('mousedown', (e) ->
 
   # TODO : clicking on entities still fires this. fix it.
   e.preventDefault()
+  e.stopPropagation()
 
   # check if window at point
   w = windowManager.getAtCoordinates(e.x, e.y)
@@ -44,16 +47,8 @@ document.addEventListener('mousedown', (e) ->
       windowManager.setFocus(w)
     else if (e.buttons & 2) == 2 # right-click
       windowManager.closeWindow(w)
-  else
-    point = cam.screenToWorld(e.x, e.y)
-    #console.log point
-    entityController.current.cmdMove(point.x, point.y)
 
-  point = cam.screenToWorld(e.x, e.y)
-  #console.log point
-  if conn? and conn.online
-    entityController.current.cmdMove(point.x, point.y)
-    return false
+  return false
 )
 
 document.addEventListener('mouseup', (e) ->
@@ -104,10 +99,21 @@ document.addEventListener('keydown', (e) ->
       windowManager.closeWindow(windowManager.focusWindow)
 )
 
+
 bg = new pixi.extras.TilingSprite(
   pixi.Texture.fromImage(config.asset_base + 'tiles/tile_grass.png'), renderer.width, renderer.height)
 
 cam.container.addChildAt(bg, 0)
+
+bgHitArea = new pixi.Container()
+bgHitArea.hitArea = new pixi.Rectangle(0, 0, renderer.width, renderer.height)
+bgHitArea.interactive = true
+cam.container.addChildAt(bgHitArea, 0)
+
+bgHitArea.on('click', (ev) ->
+  point = cam.screenToWorld(ev.data.global.x, ev.data.global.y)
+  entityController.current.cmdMove(point.x, point.y)
+)
 
 resize = ->
   h = window.innerHeight
@@ -116,6 +122,8 @@ resize = ->
   bg.height = h / stage.scale.y
   bg.position.x = -cam.container.position.x/stage.scale.x
   bg.position.y = -cam.container.position.y/stage.scale.y
+  bgHitArea.hitArea.width = renderer.width
+  bgHitArea.hitArea.height = renderer.height
 
 # multiple resize handlers for now.. mostly for the hacked-in bg. bg will not always render this way.
 window.addEventListener('resize', cam.onResize)
