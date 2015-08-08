@@ -2,9 +2,7 @@ pixi = require 'pixi'
 
 
 class Window
-  constructor: (windowManager, name, x, y) ->
-    @windowManager = windowManager
-    @name = name
+  constructor: (@windowManager, @name, x, y) ->
     @position = new pixi.Point(x || 0, y || 0)
 
     @visible = false
@@ -69,6 +67,18 @@ class Window
     @domElement.classList.remove('focus')
     @domElement.style.zIndex = '0'
     return @
+
+  beginDragItem: (id, x, y) ->
+    @windowManager.beginDragItem(@, id, x, y)
+
+  endDragItem: ->
+    @windowManager.endDragItem()
+
+  beginItemHover: ->
+    @windowManager.beginItemHover(@)
+
+  endItemHover: ->
+    @windowManager.endItemHover()
 
 module.exports =
   Window: Window

@@ -1,5 +1,7 @@
-@window-bg: rgba(0, 0, 0, 0.7);
-@window-border-pri: rgb(127, 127, 127);
+@window-bg: rgba(0, 0, 0, 0.6);
+@window-bg-focus: rgba(0, 0, 0, 0.8);
+@window-bg-item-hover: rgba(0, 48, 0, 0.8);
+@window-border-pri: rgb(92, 92, 92);
 @window-border-sec: rgb(92, 92, 92);
 @window-header-bg: rgb(0, 0, 52);
 @window-color: rgb(255, 255, 255);
@@ -10,13 +12,24 @@
 
 .window {
   position: absolute;
-  background: @window-bg;
+  background-color: @window-bg;
   border: 2px solid @window-border-pri;
   padding: 8px;
   resize: both;
   color: @window-color;
   font-family: @window-font;
   font-size: 9pt;
+
+  &.focus {
+    border-color: lighten(@window-border-pri, 20%);
+    background-color: @window-bg-focus;
+  }
+
+  &.item-hovering {
+    .container {
+      background-color: @window-bg-item-hover;
+    }
+  }
 
   .title {
     margin: 0;
@@ -29,17 +42,25 @@
 }
 
 .dragging {
-  border-color: lighten(@window-border-pri, 25%);
-  background-color: lighten(@window-bg, 10%);
-}
-
-.focus {
-  border-color: lighten(@window-border-pri, 25%);
+  border-color: lighten(@window-border-pri, 50%) !important;
 }
 
 .spinner {
   background: rgba(0, 0, 0, 0.8) url('/assets/spinner.gif') right center no-repeat;
   padding: 4px 42px 4px 4px;
+}
+
+.cursor-item {
+  position: absolute;
+  margin-top: 12px;
+  margin-left: 12px;
+  background-color: rgba(52, 52, 127, 0.6);
+  z-index: 2;
+
+  p {
+    padding: 0.5em;
+    margin: 0;
+  }
 }
 
 // container window styles

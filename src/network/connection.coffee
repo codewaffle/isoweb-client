@@ -9,6 +9,7 @@ packet = new PacketReader()
 
 module.exports = class Connection
   constructor: (@endpoint) ->
+    @online = false
     @connWindow = main.windowManager.createWindow('connect')
     @connWindow.domElement.innerHTML = '<div class="spinner right">Connecting to server ...</div>'
     @connWindow.center()
@@ -21,6 +22,7 @@ module.exports = class Connection
     @conn.onopen = ->
       me.connWindow.close()
       me.requestTimeSync()
+      me.online = true
 
     @conn.onmessage = (evt) =>
       @onMessage(evt)

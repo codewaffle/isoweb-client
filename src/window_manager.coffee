@@ -8,6 +8,9 @@ class WindowManager
   constructor: ->
     @draggingWindow = null
     @focusWindow = null
+    @draggingItem = null
+    @cursorElement = null
+    @itemHoverWindow = null
     return @
 
   createWindow: (name, x, y) ->
@@ -79,10 +82,78 @@ class WindowManager
     #console.log('dragging to %d, %d', x, y)
 
   setFocus: (win) ->
+    if win == @focusWindow
+      return
+
     if @focusWindow?
       @focusWindow.blur()
     @focusWindow = win
     win.focus()
+
+  beginDragItem: (win, itemElement, x, y) ->
+    #@draggingItem = itemElement
+    id = itemElement.getAttribute('data-item-id')
+    item = win.findItemById(Number(id))
+    @draggingItem = item
+
+    # create cursor element for drag effect
+    el = document.createElement('div')
+    el.classList.add('cursor-item')
+    rect = itemElement.getBoundingClientRect()
+
+    el.innerHTML = '<p>' + item.name + '</p>'
+    document.body.appendChild(el)
+    @cursorElement = el
+    @dragItemUpdate(x, y)
+
+  endDragItem: ->
+    @draggingItem = null
+    if @cursorElement?
+      document.body.removeChild(@cursorElement)
+    @cursorElement = null
+    if @itemHoverWindow?
+      @endItemHover()
+
+  dragItemUpdate: (x, y) ->
+    @cursorElement.style.left = x + 'px'
+    @cursorElement.style.top = y + 'px'
+
+  dropItem: (x, y) ->
+    # TODO: do network stuffs
+
+    w = @getAtCoordinates(x, y)
+    if w?
+      # see if we're dropping on a different container window
+      if w.ownerId != @draggingItem.ownerId and Array.isArray(w.containerItems)
+        console.log('item (%o) dropped on "%s" (%o)', @draggingItem, @itemHoverWindow.name, @itemHoverWindow)
+      else
+        console.log('item (%o) dropped on invalid window (%o)', @draggingItem, w)
+    else
+      console.log('item (%o) dropped at (%d, %d)', @draggingItem, x, y)
+
+    @endDragItem()
+
+  beginItemHover: (win) ->
+    if win == @itemHoverWindow
+      return
+
+    if @itemHoverWindow
+      @endItemHover()
+    @itemHoverWindow = win
+    @itemHoverWindow.domElement.classList.add('item-hovering')
+
+  endItemHover: ->
+    @itemHoverWindow.domElement.classList.remove('item-hovering')
+    @itemHoverWindow = null
+
+  # utility functions
+
+  #getWindowByChildElement: (el) ->
+  #  # walk hierarchy until we find a window or null
+  #  while el? and !el.classList.contains('window')
+  #    el = el.parentElement
+  #  return el
+
 
 module.exports =
   WindowManager: WindowManager

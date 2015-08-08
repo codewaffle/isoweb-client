@@ -1,9 +1,8 @@
 win = require './window'
 
 class ContainerWindow extends win.Window
-  constructor: (windowManager, name, ownerId, x, y) ->
+  constructor: (windowManager, name, @ownerId, x, y) ->
     super(windowManager, name, x, y)
-    @ownerId = ownerId
 
     @containerItems = []
     @layout = 'grid' # one of: 'table', 'grid'
@@ -19,59 +18,48 @@ class ContainerWindow extends win.Window
 <div class="left draggable">
   <p class="title">""" + name + """</p>
 </div>
-<div class="right" style="margin-right: 8px;">
-  <input type="text" class="filter"></input>
-</div>
 <div class="right">
   <input type="button" class="toggle toggle-container-layout" value="L" /><input
  type="button" class="toggle toggle-container-layout active" value="G" />
+</div>
+<div class="right" style="margin-right: 8px;">
+  <span class="filter-summary"></span>
+  <input type="text" class="filter"></input>
 </div>
 </div>"""
     @domElement.appendChild(@domContainerTableElement)
     @domElement.appendChild(@domContainerGridElement)
 
     # event handlers
-    _this = @
     layoutButtons = @domElement.getElementsByClassName('toggle-container-layout')
     for button in layoutButtons
-      button.addEventListener('click', ->
-        value = if @.value == 'L' then 'table' else 'grid'
-        _this.setLayout(value)
+      button.addEventListener('click', (ev) =>
+        value = if ev.target.value == 'L' then 'table' else 'grid'
+        @setLayout(value)
       )
 
-    @domContainerGridElement.addEventListener('click', (ev) ->
-      if ev.target is null then return
-      el = ev.target
-
-      # get container element in case child element was clicked
-      while !el.classList.contains('container-item')
-        el = el.parentElement
-        if el is null then return
-
-      if !ev.ctrlKey
-        _this.deselectItems()
-      _this.selectItems([el.getAttribute('data-item-id')])
-    )
-
-    @domContainerTableElement.addEventListener('click', (ev) ->
-      if ev.target is null then return
-      el = ev.target
-
-      # get container element in case child element was clicked
-      while !el.classList.contains('container-item')
-        el = el.parentElement
-        if el is null then return
-
-      if !ev.ctrlKey
-        _this.deselectItems()
-      _this.selectItems([el.getAttribute('data-item-id')])
-    )
+    @domContainerGridElement.addEventListener('mousedown', (ev) => @mouseDownHandler(ev) )
+    @domContainerTableElement.addEventListener('mousedown', (ev) => @mouseDownHandler(ev) )
 
     @setLayout(@layout)
 
     # TODO: subscribe to entity updates
 
     @updateContainer()
+
+  mouseDownHandler: (ev) ->
+    if ev.target is null then return
+    el = ev.target
+
+    # get container element in case child element was clicked
+    while !el.classList.contains('container-item')
+      el = el.parentElement
+      if el is null then return
+
+    #if !ev.ctrlKey
+    #@deselectItems()
+    @deselectItems()
+    @selectItems([el.getAttribute('data-item-id')])
 
   setLayout: (value) ->
     @layout = value
@@ -105,15 +93,18 @@ class ContainerWindow extends win.Window
 </tr>"""
 
     for item in @containerItems
+      # set owner
+      item.ownerId = @ownerId
+
       # table entry
-      tableHtml += '<tr class="container-item" data-item-id="' + item.id + '">' +
+      tableHtml += '<tr class="container-item draggable" data-item-id="' + item.id + '">' +
       '<td class="item-name">' + item.name + '</td>' +
       '<td class="item-quantity">' + item.quantity + '</td>' +
       '<td class="item-weight">' + item.getTotalWeight() + ' kg</td>' +
       '<td class="item-volume">' + item.getTotalVolume() + ' ltr</td></tr>'
 
       # grid entry
-      gridHtml += '<div class="container-item" data-item-id="' + item.id +
+      gridHtml += '<div class="container-item draggable" data-item-id="' + item.id +
           '"><div class="item-icon" style="background-image: url(\'' + item.sprite +
           '\')"><span class="item-quantity">'
       if item.quantity > 1
@@ -158,5 +149,17 @@ class ContainerWindow extends win.Window
     for id in ids
       if id not in @selectedItemIds
         @selectedItemIds.push(id)
+
+  isItemSelected: (id) ->
+    for x in @selectedItemIds
+      if x == id
+        return true
+    return false
+
+  findItemById: (id) ->
+    for x in @containerItems
+      if id == x.id
+        return x
+
 
 module.exports.ContainerWindow = ContainerWindow

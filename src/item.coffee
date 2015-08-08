@@ -1,15 +1,11 @@
 SPRITE_LOCATION = './assets/'
 
 class Item
-  constructor: (id, name, quantity, weight, volume, sprite) ->
-    @id = id
-    @name = name || 'No Name'
+  constructor: (@id, @name, @quantity, @weight, @volume, sprite) ->
     @description = 'No description.'
-    @quantity = quantity || 1
     @sprite = SPRITE_LOCATION + sprite || './assets/sprites/bad_crate.png'
-    @weight = weight || 0
-    @volume = volume || 0
     @_items = []
+    @ownerId = null # set by window when items are added
 
     # events
     @onItemsUpdated = new Event('itemsUpdated')
