@@ -4,6 +4,11 @@ win = require './window'
 class DebugWindow extends win.Window
   constructor: (windowManager) ->
     super(windowManager, 'debug-window', document.body.clientWidth - 324, 4)
+
+    # override base values
+    @canHaveFocus = false
+    @canClose = false
+
     @entries = []
     @tableElement = document.createElement('table')
     @tableElement.className = 'debug-table'

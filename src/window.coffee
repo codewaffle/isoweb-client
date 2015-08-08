@@ -8,6 +8,8 @@ class Window
     @visible = false
     @isDragging = false
     @dragOffset = new pixi.Point()
+    @canHaveFocus = true
+    @canClose = true
 
     # create window DOM
     @domElement = el = document.createElement('div')
@@ -19,18 +21,13 @@ class Window
     return @
 
   show: ->
-    @domElement.style.display = 'block'
-    @visible = true
-    return @
+    return @windowManager.showWindow(@)
 
   hide: ->
-    @domElement.style.display = 'none'
-    @visible = false
-    return @
+    return @windowManager.hideWindow(@)
 
   close: ->
-    document.body.removeChild(@domElement)
-    @windowManager.removeWindow(@)
+    @windowManager.closeWindow(@)
 
   center: ->
     # centers window horizontally and vertically
@@ -55,12 +52,7 @@ class Window
     return @
 
   focus: ->
-    @domElement.classList.add('focus')
-    @domElement.style.zIndex = '1'
-    # focus first input element
-    els = @domElement.getElementsByTagName('input')
-    if els.length > 0
-      els[0].focus()
+    @windowManager.setFocus(@)
     return @
 
   blur: ->

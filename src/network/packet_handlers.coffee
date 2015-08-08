@@ -61,7 +61,7 @@ module.exports =
     # close (destroy) container ui if one exists
     w = main.windowManager.getByOwner(entId)
     if w?
-      w.close()
+      main.windowManager.closeWindow(w)
 
   handleContainerUpdate: (conn, pr) ->
     entityContainerId = pr.readEntityId()

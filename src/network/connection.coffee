@@ -12,15 +12,14 @@ module.exports = class Connection
     @online = false
     @connWindow = main.windowManager.createWindow('connect')
     @connWindow.domElement.innerHTML = '<div class="spinner right">Connecting to server ...</div>'
-    @connWindow.center()
-    @connWindow.show()
+    @connWindow.show().center()
 
     @conn = new WebSocket(@endpoint)
     @conn.binaryType = 'arraybuffer'
     me = @
 
     @conn.onopen = ->
-      me.connWindow.close()
+      main.windowManager.closeWindow(me.connWindow)
       me.requestTimeSync()
       me.online = true
 

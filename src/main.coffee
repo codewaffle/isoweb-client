@@ -40,8 +40,14 @@ document.addEventListener('mousedown', (e) ->
   # check if window at point
   w = windowManager.getAtCoordinates(e.x, e.y)
   if w?
-    windowManager.setFocus(w)
-    return false
+    if (e.buttons & 1) == 1 # left-click
+      windowManager.setFocus(w)
+    else if (e.buttons & 2) == 2 # right-click
+      windowManager.closeWindow(w)
+  else
+    point = cam.screenToWorld(e.x, e.y)
+    #console.log point
+    entityController.current.cmdMove(point.x, point.y)
 
   point = cam.screenToWorld(e.x, e.y)
   #console.log point
@@ -92,6 +98,11 @@ document.addEventListener('mousemove', (e) ->
   return false
 )
 
+document.addEventListener('keydown', (e) ->
+  if e.keyCode == 27 # ESC
+    if windowManager.focusWindow?
+      windowManager.closeWindow(windowManager.focusWindow)
+)
 
 bg = new pixi.extras.TilingSprite(
   pixi.Texture.fromImage(config.asset_base + 'tiles/tile_grass.png'), renderer.width, renderer.height)
