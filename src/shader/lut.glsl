@@ -18,6 +18,6 @@ void main(void)
    vec4 fg = texture2D(uSampler, vTextureCoord);
 
 
-   gl_FragColor = transform(fg, fireLut);
+   gl_FragColor = transform(fg, morningLut);
 
 }
