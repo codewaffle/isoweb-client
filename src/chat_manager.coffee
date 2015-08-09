@@ -1,5 +1,8 @@
 entity = require './entity'
 
+MSG_TYPE_CHAT = 0
+MSG_TYPE_ACTION = 1
+
 class ChatManager
   constructor: ->
     @buffer = []
@@ -19,7 +22,7 @@ class ChatManager
       if ev.keyCode == 13 # enter
         msg = @value
         if msg.length > 0
-          me.sendMessage(msg)
+          me.addChat(msg)
         me.closeChat()
         ev.preventDefault()
         return false
@@ -38,33 +41,56 @@ class ChatManager
     @inputElement.blur()
     @isOpen = false
 
-  addMessage: (entId, msg) ->
-    if entId >= 0
-      ent = entity.get(entId)
-      if ent?
-        name = ent.name
-      else
-        console.error('Chat message received from invalid entity "%d".', entId)
-        return
-    else
-      name = 'Server'
+  addChat: (entId, text) ->
+    # adds a chat message from an entity
 
-    @buffer.push
-      entId: entId,
-      name: name,
-      msg: msg
+    # look up entity
+    name = if entId >= 0 then entity.get(entId).name else 'Server'
 
-    @chatLogElement.innerHTML += '<div class="entry"><span class="from">' + name +
-        '</span><span class="message">' + msg + '</span></div>'
+    entry =
+      entId: entId
+      type: MSG_TYPE_CHAT
+      name: name
+      text: text
+      timestamp: Date.now()
+    @buffer.push(entry)
+
+    @chatLogElement.innerHTML += '<div class="entry"><span class="chat-from"><span class="entity">' + name +
+        '</span> chats:</span><span class="chat-message">&quot;' + text + '&quot;</span></div>'
 
     # scroll to bottom
     @chatLogElement.scrollTop = @chatLogElement.scrollHeight
 
 
-  sendMessage: (msg) ->
+  addAction: (text) ->
+    # adds an action message containing entity references (ids).
+    # e.g. "{{ent:1}} salvages {{ent:2}} from {{ent:3}}." or
+    #      "Foo salvages a bar from a destroyed baz."
+
+    entry =
+      type: MSG_TYPE_ACTION
+      text: text
+      timestamp: Date.now()
+    @buffer.push(entry)
+
+    # replace entity identifiers
+    html = text.replace(/\{\{ent:[0-9]+\}\}/g, (value) ->
+      id = value.split(':')[1]
+      # look up entity
+      ent = entity.get(id)
+      return '<span class="entity" data-entity-id="' + id + '">' + ent.name + '</span>'
+    )
+
+    @chatLogElement.innerHTML += '<div class="entry">' + html + '</div>'
+
+    # scroll to bottom
+    @chatLogElement.scrollTop = @chatLogElement.scrollHeight
+
+  sendChat: (text) ->
     # TODO : send message to server...
+
     # add message directly to log for testing purposes
-    @addMessage(-1, msg)
+    @addChat(-1, text)
 
 module.exports =
   ChatManager: ChatManager
