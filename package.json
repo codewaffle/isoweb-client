@@ -9,7 +9,8 @@
   },
   "browserify-shim": {
     "three": "global:THREE",
-    "pixi": "global:PIXI"
+    "pixi": "global:PIXI",
+    "jquery": "global:$"
   },
   "devDependencies": {
     "browserify": "^10.2.4",
