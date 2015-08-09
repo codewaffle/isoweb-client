@@ -115,3 +115,28 @@ module.exports =
     w = main.windowManager.getByOwner(entityContainerId)
     if w?
       w.hide()
+
+  handleMessage: (conn, pr) ->
+    messageType = pr.readUint8()
+
+    switch messageType
+      when 0
+        # system
+        message = pr.readString()
+        SHOW_SYSTEM_MESSAGE(message)
+      when 1
+        # chat
+        sender = pr.readSmallString()
+        message = pr.readString()
+        SHOW_CHAT_MESSAGE(sender, message)
+      when 2
+        # positional
+        x = pr.readFloat32()
+        y = pr.readFloat32()
+        duration = pr.readFloat32() # in seconds
+        message = pr.readString()
+
+        # TODO : support for animation types? not sure if 1 animation suits all popup
+        SHOW_POSITIONAL_TEXT(x, y, duration, message)
+      else
+        console.error("invalid message type")
