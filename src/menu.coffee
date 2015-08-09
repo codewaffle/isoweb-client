@@ -16,8 +16,8 @@ class Menu
     document.body.appendChild(@domElement)
 
     # add event handler
-    @domElement.addEventListener('click', (e) ->
-      target = e.target || e.srcElement
+    $(@domElement).on('click', (ev) ->
+      target = ev.target || ev.srcElement
       entityId = target.getAttribute('data-entity-id')
       cmd = target.getAttribute('data-command')
       if entityId && cmd

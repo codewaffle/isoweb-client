@@ -4,22 +4,14 @@ class InputManager
   constructor: () ->
     @mousePos = new pixi.Point()
 
-    document.addEventListener(
-      'mousemove',
-      (evt) => @onMouseMove(evt)
-    )
-    document.addEventListener(
-      'click',
-      (evt) => @onMouseDown(evt)
-    )
+    $(document).on('mousemove', (ev) => @onMouseMove(ev))
+    $(document).on('click', (ev) => @onMouseDown(ev))
 
-  onMouseMove: (evt) ->
-    @mousePos.set(evt.clientX, evt.clientY)
+  onMouseMove: (ev) ->
+    @mousePos.set(ev.clientX, ev.clientY)
 
-  onMouseDown: (evt) ->
+  onMouseDown: (ev) ->
     require('./main').menuManager.hideContextMenu()
-
-
 
 module.exports =
   InputManager: InputManager
