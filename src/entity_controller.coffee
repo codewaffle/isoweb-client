@@ -11,9 +11,9 @@ _setSmallString = (buf, idx, str) ->
 _setString = (buf, idx, str) ->
   buf.setUint16(idx, str.length)
   for i in [0...str.length]
-    buf.setUint8(i+idx+1, str.charCodeAt(i))
+    buf.setUint8(i+idx+2, str.charCodeAt(i))
 
-  return idx + 1 + str.length
+  return idx + 2 + str.length
 
 class EntityController
   constructor: (@ent) ->
@@ -21,6 +21,7 @@ class EntityController
     # as a test, send cmdMove immediately
     # TODO : remove this once we have better ways to test
     #@cmdMove(-8.0 + Math.random() * 16.0, -8.0 + Math.random() * 16.0)
+    @cmdChat("HELLO IT IS ME")
 
   takeControl: () ->
     module.exports.current = @
