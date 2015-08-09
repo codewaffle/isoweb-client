@@ -91,10 +91,11 @@ class WindowManager
     win.domElement.classList.add('focus')
     win.domElement.style.zIndex = '1'
 
-    # focus first input element
-    els = win.domElement.getElementsByTagName('input')
-    if els.length > 0
-      els[0].focus()
+    # focus first text input element
+    for el in win.domElement.getElementsByTagName('input')
+      if el.getAttribute('type') == 'text'
+        el.focus()
+        break
 
   getVisibleWindows: ->
     list = []
