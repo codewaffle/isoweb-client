@@ -8,6 +8,13 @@ _setSmallString = (buf, idx, str) ->
 
   return idx + 1 + str.length
 
+_setString = (buf, idx, str) ->
+  buf.setUint16(idx, str.length)
+  for i in [0...str.length]
+    buf.setUint8(i+idx+1, str.charCodeAt(i))
+
+  return idx + 1 + str.length
+
 class EntityController
   constructor: (@ent) ->
   setConnection: (@conn) ->
@@ -51,6 +58,12 @@ class EntityController
     pkt.setUint8(0, packetTypes.CMD_MENU_EXEC_ENTITY)
     pkt.setUint32(1, targetEnt.id)
     _setSmallString(pkt, 5, action)
+    @conn.sendBinary(pkt.buffer)
+
+  cmdChat: (message) ->
+    pkt = new DataView(new ArrayBuffer(1+2+message.length))
+    pkt.setUint8(0, packetTypes.MESSAGE)
+    _setString(pkt, 1, message)
     @conn.sendBinary(pkt.buffer)
 
 module.exports =

@@ -44,6 +44,7 @@ module.exports = class Connection
         when packetTypes.CONTAINER_UPDATE then packetHandlers.handleContainerUpdate(@, packet)
         when packetTypes.CONTAINER_SHOW then packetHandlers.handleContainerShow(@, packet)
         when packetTypes.CONTAINER_HIDE then packetHandlers.handleContainerHide(@, packet)
+        when packetTypes.MESSAGE then packetHandlers.handleMessage(@, packet)
         else console.log 'UNKNOWN PACKET', pt, evt.data
       pt = packet.getType()
 

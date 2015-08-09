@@ -1,6 +1,7 @@
 module.exports =
   PING: 1
   PONG: 2
+  MESSAGE: 3
 
   CMD_CONTEXTUAL_ENTITY: 10
   CMD_CONTEXTUAL_POSITION: 11
