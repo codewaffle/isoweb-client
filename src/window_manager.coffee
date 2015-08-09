@@ -9,6 +9,7 @@ class WindowManager
     @draggingWindow = null
     @focusWindow = null
     @draggingItem = null
+    @draggingItemSourceElement = null
     @cursorElement = null
     @itemHoverWindow = null
     return @
@@ -134,19 +135,28 @@ class WindowManager
     document.body.removeChild(win.domElement)
     @removeWindow(win)
 
-
   beginDragItem: (win, itemElement, x, y) ->
-    #@draggingItem = itemElement
+    # mark source element as invalid
+    @draggingItemSourceElement = itemElement
+    @draggingItemSourceElement.classList.add('invalid')
+
+    # get item object reference
     id = itemElement.getAttribute('data-item-id')
     item = win.findItemById(Number(id))
     @draggingItem = item
 
-    # create cursor element for drag effect
-    el = document.createElement('div')
-    el.classList.add('cursor-item')
-    rect = itemElement.getBoundingClientRect()
+    # deselect item from source window
+    win.deselectItems([item.id])
 
-    el.innerHTML = '<p>' + item.name + '</p>'
+    # create element as cursor element
+    el = document.createElement('div')
+    el.className = 'container-item cursor-item'
+    html = '<div class="item-icon" style="background-image: url(\'' + item.sprite +
+        '\')"><span class="item-quantity">'
+    if item.quantity > 1
+      html += 'x' + item.quantity
+    html += '</span></div><span class="item-name">' + item.name + '</span>'
+    el.innerHTML = html
     document.body.appendChild(el)
     @cursorElement = el
     @dragItemUpdate(x, y)

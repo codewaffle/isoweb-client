@@ -128,7 +128,7 @@ class ContainerWindow extends win.Window
 
     # remove elements
     for i in [@selectedItems.length-1..0] by -1
-      if ids is undefined or @selectedItems[i].getAttribute('data-item-id') in ids
+      if ids is undefined or Number(@selectedItems[i].getAttribute('data-item-id')) in ids
         @selectedItems.pop().classList.remove('selected')
 
   selectItems: (ids) ->
@@ -151,7 +151,7 @@ class ContainerWindow extends win.Window
     # add ids
     for id in ids
       if id not in @selectedItemIds
-        @selectedItemIds.push(id)
+        @selectedItemIds.push(Number(id))
 
   isItemSelected: (id) ->
     for x in @selectedItemIds
@@ -163,6 +163,5 @@ class ContainerWindow extends win.Window
     for x in @containerItems
       if id == x.id
         return x
-
 
 module.exports.ContainerWindow = ContainerWindow
