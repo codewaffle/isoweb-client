@@ -1,4 +1,5 @@
 entity = require './entity'
+entityController = require './entity_controller'
 
 MSG_TYPE_CHAT = 0
 MSG_TYPE_ACTION = 1
@@ -41,14 +42,10 @@ class ChatManager
     @inputElement.blur()
     @isOpen = false
 
-  addChat: (entId, text) ->
-    # adds a chat message from an entity
-
-    # look up entity
-    name = if entId >= 0 then entity.get(entId).name else 'Server'
+  addChat: (name, text) ->
+    # adds a chat message
 
     entry =
-      entId: entId
       type: MSG_TYPE_CHAT
       name: name
       text: text
@@ -87,10 +84,7 @@ class ChatManager
     @chatLogElement.scrollTop = @chatLogElement.scrollHeight
 
   sendChat: (text) ->
-    # TODO : send message to server...
-
-    # add message directly to log for testing purposes
-    @addChat(-1, text)
+    entityController.current.cmdChat(text)
 
 module.exports =
   ChatManager: ChatManager

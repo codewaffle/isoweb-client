@@ -147,6 +147,7 @@ module.exports =
   menuManager: menuManager
   windowManager: windowManager
   debugWindow: debug
+  chatManager: chatManager
 
 
 if location.search != '?offline'

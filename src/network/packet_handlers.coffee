@@ -123,12 +123,12 @@ module.exports =
       when 0
         # system
         message = pr.readString()
-        SHOW_SYSTEM_MESSAGE(message)
+        main.chatManager.addAction(message)
       when 1
         # chat
         sender = pr.readSmallString()
         message = pr.readString()
-        SHOW_CHAT_MESSAGE(sender, message)
+        main.chatManager.addChat(sender, message)
       when 2
         # positional
         x = pr.readFloat32()
