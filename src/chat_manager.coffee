@@ -18,7 +18,7 @@ class ChatManager
     @inputElement.style.display = 'none'
 
     me = @
-    @inputElement.addEventListener('keydown', (ev) ->
+    $(@inputElement).on('keydown', (ev) ->
       if ev.keyCode == 13 # enter
         msg = @value
         if msg.length > 0

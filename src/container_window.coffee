@@ -30,16 +30,14 @@ class ContainerWindow extends win.Window
     @domElement.appendChild(@domContainerTableElement)
     @domElement.appendChild(@domContainerGridElement)
 
-    # event handlers
-    layoutButtons = @domElement.getElementsByClassName('toggle-container-layout')
-    for button in layoutButtons
-      button.addEventListener('click', (ev) =>
-        value = if ev.target.value == 'L' then 'table' else 'grid'
-        @setLayout(value)
-      )
+    # wire window layout buttons
+    $('.toggle-container-layout', @domElement).on('click', (ev) =>
+      value = if ev.target.value == 'L' then 'table' else 'grid'
+      @setLayout(value)
+    )
 
-    @domContainerGridElement.addEventListener('mousedown', (ev) => @mouseDownHandler(ev) )
-    @domContainerTableElement.addEventListener('mousedown', (ev) => @mouseDownHandler(ev) )
+    $(@domContainerGridElement).on('mousedown', (ev) => @mouseDownHandler(ev) )
+    $(@domContainerTableElement).on('mousedown', (ev) => @mouseDownHandler(ev) )
 
     @setLayout(@layout)
 
