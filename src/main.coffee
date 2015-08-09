@@ -8,12 +8,14 @@ item = require './item'
 entityController = require './entity_controller.coffee'
 camera = require './camera'
 wm = require './window_manager'
+chat = require './chat_manager'
 
 
 
 inputManager = new input.InputManager()
 menuManager = new menu.MenuManager()
 windowManager = new wm.WindowManager()
+chatManager = new chat.ChatManager()
 
 renderer = new pixi.autoDetectRenderer(1024, 1024)
 renderer.backgroundColor = 0xAAFFCC
@@ -95,8 +97,15 @@ document.addEventListener('mousemove', (e) ->
 
 document.addEventListener('keydown', (e) ->
   if e.keyCode == 27 # ESC
-    if windowManager.focusWindow?
+    if chatManager.isOpen
+      chatManager.closeChat()
+    else if windowManager.focusWindow?
       windowManager.closeWindow(windowManager.focusWindow)
+
+  if e.keyCode == 84 and !chatManager.isOpen # 'T'
+    chatManager.openChat()
+    e.preventDefault()
+    return false
 )
 
 
