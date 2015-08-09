@@ -22,7 +22,7 @@ class ChatManager
       if ev.keyCode == 13 # enter
         msg = @value
         if msg.length > 0
-          me.addChat(msg)
+          me.sendChat(msg)
         me.closeChat()
         ev.preventDefault()
         return false
@@ -74,7 +74,7 @@ class ChatManager
     @buffer.push(entry)
 
     # replace entity identifiers
-    html = text.replace(/\{\{ent:[0-9]+\}\}/g, (value) ->
+    html = text.replace(/\{\{ent:[0-9]+}}/g, (value) ->
       id = value.split(':')[1]
       # look up entity
       ent = entity.get(id)
