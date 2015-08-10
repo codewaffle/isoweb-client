@@ -1,0 +1,47 @@
+.chat-input {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  height: 1em;
+  width: 40em;
+  border: 1px solid rgb(52, 52, 127, 0.8);
+  background-color: rgba(28, 28, 28, 0.6);
+  padding: 0.25em;
+}
+
+.chat-log {
+  position: absolute;
+  bottom: 48px;
+  left: 16px;
+  width: 40em;
+  height: 30%;
+  overflow: scroll;
+  border: none;
+  font-family: "Arvo", Courier, monospace;
+  font-size: 9pt;
+  color: white;
+  //background-color: rgba(28, 28, 28, 0.2);
+
+  .entry {
+    vertical-align: bottom;
+
+    .entity {
+      color: yellow;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .chat-from {
+      display: inline-block;
+      width: 9em;
+      padding-right: 1em;
+      text-align: right;
+      vertical-align: top;
+    }
+
+    .chat-message {
+      display: inline-block;
+      width: 30em;
+    }
+  }
+}

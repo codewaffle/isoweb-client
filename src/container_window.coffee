@@ -30,16 +30,14 @@ class ContainerWindow extends win.Window
     @domElement.appendChild(@domContainerTableElement)
     @domElement.appendChild(@domContainerGridElement)
 
-    # event handlers
-    layoutButtons = @domElement.getElementsByClassName('toggle-container-layout')
-    for button in layoutButtons
-      button.addEventListener('click', (ev) =>
-        value = if ev.target.value == 'L' then 'table' else 'grid'
-        @setLayout(value)
-      )
+    # wire window layout buttons
+    $('.toggle-container-layout', @domElement).on('click', (ev) =>
+      value = if ev.target.value == 'L' then 'table' else 'grid'
+      @setLayout(value)
+    )
 
-    @domContainerGridElement.addEventListener('mousedown', (ev) => @mouseDownHandler(ev) )
-    @domContainerTableElement.addEventListener('mousedown', (ev) => @mouseDownHandler(ev) )
+    $(@domContainerGridElement).on('mousedown', (ev) => @mouseDownHandler(ev) )
+    $(@domContainerTableElement).on('mousedown', (ev) => @mouseDownHandler(ev) )
 
     @setLayout(@layout)
 
@@ -128,7 +126,7 @@ class ContainerWindow extends win.Window
 
     # remove elements
     for i in [@selectedItems.length-1..0] by -1
-      if ids is undefined or @selectedItems[i].getAttribute('data-item-id') in ids
+      if ids is undefined or Number(@selectedItems[i].getAttribute('data-item-id')) in ids
         @selectedItems.pop().classList.remove('selected')
 
   selectItems: (ids) ->
@@ -151,7 +149,7 @@ class ContainerWindow extends win.Window
     # add ids
     for id in ids
       if id not in @selectedItemIds
-        @selectedItemIds.push(id)
+        @selectedItemIds.push(Number(id))
 
   isItemSelected: (id) ->
     for x in @selectedItemIds
@@ -163,6 +161,5 @@ class ContainerWindow extends win.Window
     for x in @containerItems
       if id == x.id
         return x
-
 
 module.exports.ContainerWindow = ContainerWindow

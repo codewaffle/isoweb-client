@@ -52,9 +52,9 @@
 
 .cursor-item {
   position: absolute;
-  margin-top: 12px;
-  margin-left: 12px;
-  background-color: rgba(52, 52, 127, 0.6);
+  //margin-top: 12px;
+  //margin-left: 12px;
+  background-color: transparent;
   z-index: 2;
 
   p {
@@ -126,62 +126,66 @@ div.container {
       text-align: right;
     }
   }
+}
 
-  div.container-item {
-    float: left;
-    text-align: center;
-    height: 112px;
-    width: 84px;
+div.container-item {
+  float: left;
+  text-align: center;
+  height: 112px;
+  width: 84px;
 
-    .item-icon {
-      height: 48px;
-      width: 48px;
-      background: no-repeat center;
-      background-size: 48px 48px;
-      margin: auto;
-      border: 2px solid transparent;
-      position: relative;
-    }
-
-    .item-quantity {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      background-color: rgb(92, 92, 92);
-      font-weight: bold;
-    }
-
-    .item-name {
-      display: inline-block;
-      padding: 2px 8px;
-      margin-top: 4px;
-    }
-
-    &.selected {
-      span {
-        background-color: @window-selected;
-      }
-      .item-icon {
-        border: 2px solid lighten(@window-selected, 20%);
-        background-color: @window-selected;
-      }
-      span.item-quantity {
-        background-color: lighten(@window-selected, 20%);
-      }
-    }
+  .item-icon {
+    height: 48px;
+    width: 48px;
+    background: no-repeat center;
+    background-size: 48px 48px;
+    margin: auto;
+    border: 2px solid transparent;
+    position: relative;
   }
 
-  .container-item {
-    cursor: pointer;
+  .item-quantity {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(92, 92, 92);
+    font-weight: bold;
   }
 
-  .container-item:hover {
-    span,
+  .item-name {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-top: 4px;
+  }
+
+  &.selected {
+    span {
+      background-color: @window-selected;
+    }
     .item-icon {
-      background-color: @window-highlight;
+      border: 2px solid lighten(@window-selected, 20%);
+      background-color: @window-selected;
     }
     span.item-quantity {
-      background-color: lighten(@window-highlight, 20%);
+      background-color: lighten(@window-selected, 20%);
     }
+  }
+}
+
+.container-item {
+  cursor: pointer;
+
+  &.invalid {
+    opacity: 0.2;
+  }
+}
+
+.container-item:hover {
+  span,
+  .item-icon {
+    background-color: @window-highlight;
+  }
+  span.item-quantity {
+    background-color: lighten(@window-highlight, 20%);
   }
 }

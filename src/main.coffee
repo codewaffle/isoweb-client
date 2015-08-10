@@ -8,12 +8,14 @@ item = require './item'
 entityController = require './entity_controller.coffee'
 camera = require './camera'
 wm = require './window_manager'
+chat = require './chat_manager'
 
 
 
 inputManager = new input.InputManager()
 menuManager = new menu.MenuManager()
 windowManager = new wm.WindowManager()
+chatManager = new chat.ChatManager()
 
 renderer = new pixi.autoDetectRenderer(1024, 1024)
 renderer.backgroundColor = 0xAAFFCC
@@ -27,76 +29,83 @@ document.body.appendChild(renderer.view)
 
 # TODO: all this event handling really needs to get organized somewhere else...
 
-document.addEventListener('contextmenu', (e) ->
-  e.preventDefault()
+$(document).on('contextmenu', (ev) ->
+  ev.preventDefault()
   return false
 )
 
 lastClickTarget = null
-document.addEventListener('mousedown', (e) ->
-  lastClickTarget = e.target
+$(document).on('mousedown', (ev) ->
+  lastClickTarget = ev.target
 
   # TODO : clicking on entities still fires this. fix it.
-  e.preventDefault()
-  e.stopPropagation()
+  ev.preventDefault()
+  ev.stopPropagation()
 
   # check if window at point
-  w = windowManager.getAtCoordinates(e.x, e.y)
+  w = windowManager.getAtCoordinates(ev.clientX, ev.clientY)
   if w?
-    if (e.buttons & 1) == 1 # left-click
+    if (ev.buttons & 1) == 1 # left-click
       windowManager.setFocus(w)
-    else if (e.buttons & 2) == 2 # right-click
+    else if (ev.buttons & 2) == 2 # right-click
       windowManager.closeWindow(w)
 
   return false
 )
 
-document.addEventListener('mouseup', (e) ->
-  if (e.buttons & 1) == 0
+$(document).on('mouseup', (ev) ->
+  if (ev.buttons & 1) == 0
     if windowManager.draggingWindow?
       windowManager.endDrag()
     else if windowManager.draggingItem?
-      windowManager.dropItem(e.x, e.y)
+      windowManager.dropItem(ev.clientX, ev.clientY)
     return false
 )
 
-document.addEventListener('mousemove', (e) ->
+$(document).on('mousemove', (ev) ->
   if windowManager.draggingWindow?
-    windowManager.dragUpdate(e.x, e.y)
+    windowManager.dragUpdate(ev.clientX, ev.clientY)
   else if windowManager.draggingItem?
-    windowManager.dragItemUpdate(e.x, e.y)
+    windowManager.dragItemUpdate(ev.clientX, ev.clientY)
 
     # add window hover effects when dragging an item around
-    w = windowManager.getAtCoordinates(e.x, e.y)
+    w = windowManager.getAtCoordinates(ev.clientX, ev.clientY)
     if w? and w.ownerId != windowManager.draggingItem.ownerId # origin
       windowManager.beginItemHover(w)
     else if windowManager.itemHoverWindow?
       windowManager.endItemHover()
 
   # click and drag on a draggable element
-  else if (e.buttons & 1) == 1 and lastClickTarget == e.target
+  else if (ev.buttons & 1) == 1 and lastClickTarget == ev.target
     # check if we're in a window
-    w = windowManager.getAtCoordinates(e.x, e.y)
+    w = windowManager.getAtCoordinates(ev.clientX, ev.clientY)
     if w?
       # check if we're dragging an item
-      el = e.target
+      el = ev.target
       while el?
         if el.classList.contains('container-item')
-          w.beginDragItem(el, e.x, e.y)
+          w.beginDragItem(el, ev.clientX, ev.clientY)
           return false
         el = el.parentElement
 
       # make sure we're clicking on a draggable window element
-      if e.target.classList.contains('draggable')
-        windowManager.beginDrag(w, e.x, e.y)
+      if ev.target.classList.contains('draggable')
+        windowManager.beginDrag(w, ev.clientX, ev.clientY)
 
   return false
 )
 
-document.addEventListener('keydown', (e) ->
-  if e.keyCode == 27 # ESC
-    if windowManager.focusWindow?
+$(document).on('keydown', (ev) ->
+  if ev.keyCode == 27 # ESC
+    if chatManager.isOpen
+      chatManager.closeChat()
+    else if windowManager.focusWindow?
       windowManager.closeWindow(windowManager.focusWindow)
+
+  if ev.keyCode == 84 and !chatManager.isOpen # 'T'
+    chatManager.openChat()
+    ev.preventDefault()
+    return false
 )
 
 
@@ -126,8 +135,8 @@ resize = ->
   bgHitArea.hitArea.height = renderer.height
 
 # multiple resize handlers for now.. mostly for the hacked-in bg. bg will not always render this way.
-window.addEventListener('resize', cam.onResize)
-window.addEventListener('resize', resize)
+$(window).on('resize', cam.onResize)
+$(window).on('resize', resize)
 
 cam.onResize()
 resize()
@@ -138,6 +147,7 @@ module.exports =
   menuManager: menuManager
   windowManager: windowManager
   debugWindow: debug
+  chatManager: chatManager
 
 
 if location.search != '?offline'

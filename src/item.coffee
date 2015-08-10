@@ -6,6 +6,7 @@ class Item
     @sprite = SPRITE_LOCATION + sprite || './assets/sprites/bad_crate.png'
     @_items = []
     @ownerId = null # set by window when items are added
+    @isValid = true # false if in the middle of an operation (e.g. dropping)
 
     # events
     @onItemsUpdated = new Event('itemsUpdated')
@@ -33,14 +34,14 @@ class Item
 TEST_ITEMS = ->
   i = 0
   items = [
-    new Item(i++, 'a flaming blade of slaying', 1, 1, 10, './assets/icons/weapon_blade.png'),
-    new Item(i++, 'a club', 1, 1, 10, './assets/icons/weapon_club.png'),
-    new Item(i++, 'a bow', 1, 1, 10, './assets/icons/weapon_bow.png'),
-    new Item(i++, 'an axe', 1, 1, 10, './assets/icons/weapon_axe.png'),
-    new Item(i++, 'a flaming blade of slaying', 5, 1, 10, './assets/icons/weapon_blade.png'),
-    new Item(i++, 'a club', 50, 1, 10, './assets/icons/weapon_club.png'),
-    new Item(i++, 'a bow', 500, 1, 10, './assets/icons/weapon_bow.png'),
-    new Item(i++, 'an axe', 1000, 1, 10, './assets/icons/weapon_axe.png')
+    new Item(i++, 'a flaming blade of slaying', 1, 1, 10, './sprites/axe.png'),
+    new Item(i++, 'a club', 1, 1, 10, './sprites/axe.png'),
+    new Item(i++, 'a bow', 1, 1, 10, './sprites/axe.png'),
+    new Item(i++, 'an axe', 1, 1, 10, './sprites/axe.png'),
+    new Item(i++, 'a flaming blade of slaying', 5, 1, 10, './sprites/axe.png'),
+    new Item(i++, 'a club', 50, 1, 10, './sprites/axe.png'),
+    new Item(i++, 'a bow', 500, 1, 10, './sprites/axe.png'),
+    new Item(i++, 'an axe', 1000, 1, 10, './sprites/axe.png')
   ]
 
   return items
