@@ -60,7 +60,7 @@ class WindowManager
 
   removeWindow: (win) ->
     # remove window from global list
-    for i in [WINDOWS.length-1..0]
+    for i in [WINDOWS.length-1..0] by -1
       if WINDOWS[i] is win
         WINDOWS.splice(i, 1)
 

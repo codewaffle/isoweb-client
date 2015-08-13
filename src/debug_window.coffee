@@ -23,7 +23,7 @@ class DebugWindow extends win.Window
     @update()
 
   remove: (key) ->
-    for i in [@entries.length-1..0]
+    for i in [@entries.length-1..0] by -1
       if @entries[i].key == key
         @entries.splice(i, 1)
     @update()
