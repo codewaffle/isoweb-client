@@ -84,7 +84,11 @@ class ChatManager
     @chatLogElement.scrollTop = @chatLogElement.scrollHeight
 
   sendChat: (text) ->
-    entityController.current.cmdChat(text)
+    if entityController.current?
+      entityController.current.cmdChat(text)
+    else
+      main = require './main'
+      main.floatingTextManager.floatText(text, null, 4000, 600)
 
 module.exports =
   ChatManager: ChatManager
