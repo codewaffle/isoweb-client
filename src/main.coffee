@@ -9,6 +9,7 @@ entityController = require './entity_controller.coffee'
 camera = require './camera'
 wm = require './window_manager'
 chat = require './chat_manager'
+ft = require './floating_text_manager'
 
 
 
@@ -23,6 +24,7 @@ renderer.backgroundColor = 0xAAFFCC
 stage = new pixi.Container()
 
 cam = new camera.Camera(renderer, stage)
+ftm = new ft.FloatingTextManager(stage, cam)
 
 document.body.appendChild(renderer.view)
 
@@ -148,6 +150,7 @@ module.exports =
   windowManager: windowManager
   debugWindow: debug
   chatManager: chatManager
+  floatingTextManager: ftm
 
 
 if location.search != '?offline'
@@ -206,5 +209,6 @@ update = (t) ->
   bg.tilePosition.y = stage.position.y
   cam.render()
   debug.update()
+  ftm.update(dt)
   requestAnimationFrame(update)
 requestAnimationFrame(update)

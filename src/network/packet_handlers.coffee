@@ -2,6 +2,7 @@ entity = require '../entity'
 packetTypes = require './packet_types'
 main = require '../main'
 item = require '../item'
+entityController = require '../entity_controller'
 
 module.exports =
   handleEntityUpdate: (conn, pr) ->
@@ -124,11 +125,13 @@ module.exports =
         # system
         message = pr.readString()
         main.chatManager.addAction(message)
+        main.floatingTextManager.floatText(message, entityController.current.ent)
       when 1
         # chat
         sender = pr.readSmallString()
         message = pr.readString()
         main.chatManager.addChat(sender, message)
+        main.floatingTextManager.floatText(message, entityController.current.ent)
       when 2
         # positional
         x = pr.readFloat32()
@@ -137,6 +140,6 @@ module.exports =
         message = pr.readString()
 
         # TODO : support for animation types? not sure if 1 animation suits all popup
-        SHOW_POSITIONAL_TEXT(x, y, duration, message)
+        main.floatingTextManager.floatText(message, entityController.current.ent, x, y, duration)
       else
         console.error("invalid message type")
