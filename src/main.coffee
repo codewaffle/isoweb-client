@@ -126,9 +126,28 @@ bgHitArea.hitArea = new pixi.Rectangle(0, 0, renderer.width, renderer.height)
 bgHitArea.interactive = true
 cam.container.addChildAt(bgHitArea, 0)
 
-bgHitArea.on('click', (ev) ->
-  point = cam.screenToWorld(ev.data.global.x, ev.data.global.y)
-  entityController.current.cmdMove(point.x, point.y)
+cursorWorldPoint = null
+dragMoveTimer = null
+beginDragMoving = ->
+  if dragMoveTimer?
+    return
+  entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
+  dragMoveTimer = window.setInterval(->
+    entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
+  , 50)
+
+endDragMoving = ->
+  window.clearInterval(dragMoveTimer)
+  dragMoveTimer = null
+
+bgHitArea.on('mousedown', (ev) ->
+  beginDragMoving()
+)
+bgHitArea.on('mouseup', (ev) ->
+  endDragMoving()
+)
+bgHitArea.on('mousemove', (ev) ->
+  cursorWorldPoint = cam.screenToWorld(ev.data.global.x, ev.data.global.y)
 )
 
 resize = ->
