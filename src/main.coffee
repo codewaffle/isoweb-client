@@ -160,7 +160,7 @@ module.exports =
 
 if location.search != '?offline'
   network = require './network'
-  conn = new network.Connection('ws://96.40.72.113:10000/player')
+  conn = new network.Connection('ws://codewaffle.com:10000/player')
 else
   # offline stuff goes here...
 
