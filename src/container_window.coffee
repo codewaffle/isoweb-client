@@ -56,6 +56,9 @@ class ContainerWindow extends win.Window
 
     #if !ev.ctrlKey
     #@deselectItems()
+    if el.classList.contains('invalid')
+      return
+
     @deselectItems()
     @selectItems([el.getAttribute('data-item-id')])
 
@@ -157,9 +160,12 @@ class ContainerWindow extends win.Window
         return true
     return false
 
-  findItemById: (id) ->
+  findItem: (id) ->
     for x in @containerItems
       if id == x.id
         return x
+
+  findItemElements: (id) ->
+    return $('.container-item[data-item-id='+id+']', @domElement)
 
 module.exports.ContainerWindow = ContainerWindow

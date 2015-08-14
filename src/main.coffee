@@ -59,7 +59,7 @@ $(document).on('mouseup', (ev) ->
   if (ev.buttons & 1) == 0
     if windowManager.draggingWindow?
       windowManager.endDrag()
-    else if windowManager.draggingItem?
+    else if windowManager.draggingItemData?
       windowManager.dropItem(ev.clientX, ev.clientY)
     return false
 )
@@ -67,12 +67,12 @@ $(document).on('mouseup', (ev) ->
 $(document).on('mousemove', (ev) ->
   if windowManager.draggingWindow?
     windowManager.dragUpdate(ev.clientX, ev.clientY)
-  else if windowManager.draggingItem?
+  else if windowManager.draggingItemData?
     windowManager.dragItemUpdate(ev.clientX, ev.clientY)
 
     # add window hover effects when dragging an item around
     w = windowManager.getAtCoordinates(ev.clientX, ev.clientY)
-    if w? and w.ownerId != windowManager.draggingItem.ownerId # origin
+    if w? and w != windowManager.draggingItemData.window # origin
       windowManager.beginItemHover(w)
     else if windowManager.itemHoverWindow?
       windowManager.endItemHover()
@@ -86,7 +86,8 @@ $(document).on('mousemove', (ev) ->
       el = ev.target
       while el?
         if el.classList.contains('container-item')
-          w.beginDragItem(el, ev.clientX, ev.clientY)
+          if !el.classList.contains('invalid')
+            w.beginDragItem(el, ev.clientX, ev.clientY)
           return false
         el = el.parentElement
 
