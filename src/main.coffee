@@ -104,9 +104,13 @@ $(document).on('keydown', (ev) ->
     else if windowManager.focusWindow?
       windowManager.closeWindow(windowManager.focusWindow)
 
-  if ev.keyCode == 84 and !chatManager.isOpen # 'T'
+  if ev.keyCode == 84 and ev.target.tagName != 'INPUT' # 'T'
     chatManager.openChat()
     ev.preventDefault()
+    return false
+
+  if ev.keyCode == 8 and ev.target == document.body # backspace
+    # prevent backspace from navigating
     return false
 )
 
