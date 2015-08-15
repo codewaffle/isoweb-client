@@ -132,6 +132,9 @@ dragMoveTimer = null
 isDragMoving = false
 beginDragMoving = ->
   #console.log 'beginDragMoving'
+  if isDragMoving
+    return
+
   isDragMoving = true
   cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
   entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
