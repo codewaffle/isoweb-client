@@ -7,11 +7,12 @@ class FloatingText
     @duration = @ttl = duration || 2000 # milliseconds
 
     @textObj = new pixi.Text(@text,
-      font: '16px Courier New'
+      font: '16px monospace'
       fill: 'white'
       wordWrap: true
       wordWrapWidth: 200
     )
+    @textObj.resolution = window.devicePixelRatio
     @textObj.scale = @scale
     @textObj.anchor.set(0.5, 0.5)
 
