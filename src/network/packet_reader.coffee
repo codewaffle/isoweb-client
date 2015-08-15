@@ -36,6 +36,11 @@ module.exports = class PacketReader
     # I don't want to recycle ids. This will probably end up as 2 ints, with the 1st int indicating what made the item.
     return @readUint32()
 
+  readHash64: ->
+    slice = @buffer.slice(@pos, @pos+4)
+    @pos += 4
+    return texdec.decode(slice)
+
   readUint16: ->
     val = @dv.getUint16(@pos)
     @pos += 2
