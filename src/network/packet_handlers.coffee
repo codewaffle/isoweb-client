@@ -141,5 +141,9 @@ module.exports =
 
         # TODO : support for animation types? not sure if 1 animation suits all popup
         main.floatingTextManager.floatText(message, entityController.current.ent, x, y, duration)
+      when 3
+        ent = pr.readEntityId()
+        message = pr.readString()
+        main.floatingTextManager.floatText(message, ent)
       else
         console.error("invalid message type")
