@@ -126,28 +126,40 @@ bgHitArea.hitArea = new pixi.Rectangle(0, 0, renderer.width, renderer.height)
 bgHitArea.interactive = true
 cam.container.addChildAt(bgHitArea, 0)
 
+cursorPoint = new pixi.Point()
 cursorWorldPoint = null
 dragMoveTimer = null
+isDragMoving = false
 beginDragMoving = ->
-  if dragMoveTimer?
-    return
+  #console.log 'beginDragMoving'
+  isDragMoving = true
+  cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
   entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
+
   dragMoveTimer = window.setInterval(->
+    cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
     entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
   , 50)
 
 endDragMoving = ->
+  #console.log 'endDragMoving'
+  isDragMoving = false
   window.clearInterval(dragMoveTimer)
-  dragMoveTimer = null
 
 bgHitArea.on('mousedown', (ev) ->
+  cursorPoint.set(ev.data.global.x, ev.data.global.y)
   beginDragMoving()
 )
 bgHitArea.on('mouseup', (ev) ->
+  cursorPoint.set(ev.data.global.x, ev.data.global.y)
   endDragMoving()
 )
 bgHitArea.on('mousemove', (ev) ->
-  cursorWorldPoint = cam.screenToWorld(ev.data.global.x, ev.data.global.y)
+  cursorPoint.set(ev.data.global.x, ev.data.global.y)
+  if (ev.data.originalEvent.buttons & 1) == 1 & !isDragMoving # left-mouse down
+    beginDragMoving()
+  else if (ev.data.originalEvent.buttons & 1) == 0 & isDragMoving # left-mouse up
+    endDragMoving()
 )
 
 resize = ->
