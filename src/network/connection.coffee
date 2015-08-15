@@ -54,11 +54,7 @@ module.exports = class Connection
     @conn.send(data)
 
   # what a mess.. most of this should either be in clock or most of clock should be here.
-  requestTimeSync: (count) ->
-    if not count?
-      clock.reset_latency()
-      count = 0
-
+  requestTimeSync: () ->
     time_req = new DataView(new ArrayBuffer(3))
     now = Date.now() / 1000.0
     num = Math.floor(Math.random() * 65536.0)
@@ -70,10 +66,7 @@ module.exports = class Connection
     @outgoingSync[num] = now
     @sendBinary(time_req.buffer)
 
-    if count < 10
-      setTimeout((=> @requestTimeSync(count+1)), 200)
-    else
-      clock.calculate_latency()
+    setTimeout((=> @requestTimeSync()), 500)
 
   handleTimeSync: (packet) ->
     num = packet.readUint16()

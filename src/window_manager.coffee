@@ -8,8 +8,6 @@ class WindowManager
   constructor: ->
     @draggingWindow = null
     @focusWindow = null
-    @draggingItem = null
-    @draggingItemSourceElement = null
     @cursorElement = null
     @itemHoverWindow = null
     return @
@@ -60,7 +58,7 @@ class WindowManager
 
   removeWindow: (win) ->
     # remove window from global list
-    for i in [WINDOWS.length-1..0]
+    for i in [WINDOWS.length-1..0] by -1
       if WINDOWS[i] is win
         WINDOWS.splice(i, 1)
 
@@ -136,17 +134,22 @@ class WindowManager
     @removeWindow(win)
 
   beginDragItem: (win, itemElement, x, y) ->
-    # mark source element as invalid
-    @draggingItemSourceElement = itemElement
-    @draggingItemSourceElement.classList.add('invalid')
+    console.log('began dragging')
+    # get item reference
+    id = Number(itemElement.getAttribute('data-item-id'))
+    item = win.findItem(id)
 
-    # get item object reference
-    id = itemElement.getAttribute('data-item-id')
-    item = win.findItemById(Number(id))
-    @draggingItem = item
+    @draggingItemData =
+      id: id
+      item: item
+      itemElements: win.findItemElements(id)
+      window: win
+
+    # mark item as invalid
+    $(@draggingItemData.itemElements).addClass('invalid')
 
     # deselect item from source window
-    win.deselectItems([item.id])
+    win.deselectItems([id])
 
     # create element as cursor element
     el = document.createElement('div')
@@ -162,7 +165,7 @@ class WindowManager
     @dragItemUpdate(x, y)
 
   endDragItem: ->
-    @draggingItem = null
+    @draggingItemData = null
     if @cursorElement?
       document.body.removeChild(@cursorElement)
     @cursorElement = null
@@ -179,10 +182,12 @@ class WindowManager
     w = @getAtCoordinates(x, y)
     if w?
       # see if we're dropping on a different container window
-      if w.ownerId != @draggingItem.ownerId and Array.isArray(w.containerItems)
-        console.log('item (%o) dropped on "%s" (%o)', @draggingItem, @itemHoverWindow.name, @itemHoverWindow)
+      if w != @draggingItemData.window and Array.isArray(w.containerItems)
+        console.log('item (%o) dropped on "%s" (%o)', @draggingItemData, @itemHoverWindow.name, @itemHoverWindow)
       else
-        console.log('item (%o) dropped on invalid window (%o)', @draggingItem, w)
+        console.log('item (%o) dropped on invalid window (%o)', @draggingItemData, w)
+        # mark item valid
+        $(@draggingItemData.itemElements).removeClass('invalid')
     else
       console.log('item (%o) dropped at (%d, %d)', @draggingItem, x, y)
 

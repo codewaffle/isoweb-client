@@ -9,6 +9,7 @@ entityController = require './entity_controller.coffee'
 camera = require './camera'
 wm = require './window_manager'
 chat = require './chat_manager'
+ft = require './floating_text_manager'
 
 
 
@@ -17,12 +18,13 @@ menuManager = new menu.MenuManager()
 windowManager = new wm.WindowManager()
 chatManager = new chat.ChatManager()
 
-renderer = new pixi.autoDetectRenderer(1024, 1024)
+renderer = new pixi.autoDetectRenderer(1024, 1024, { antialias: true })
 renderer.backgroundColor = 0xAAFFCC
 
 stage = new pixi.Container()
 
 cam = new camera.Camera(renderer, stage)
+ftm = new ft.FloatingTextManager(stage, cam)
 
 document.body.appendChild(renderer.view)
 
@@ -57,7 +59,7 @@ $(document).on('mouseup', (ev) ->
   if (ev.buttons & 1) == 0
     if windowManager.draggingWindow?
       windowManager.endDrag()
-    else if windowManager.draggingItem?
+    else if windowManager.draggingItemData?
       windowManager.dropItem(ev.clientX, ev.clientY)
     return false
 )
@@ -65,12 +67,12 @@ $(document).on('mouseup', (ev) ->
 $(document).on('mousemove', (ev) ->
   if windowManager.draggingWindow?
     windowManager.dragUpdate(ev.clientX, ev.clientY)
-  else if windowManager.draggingItem?
+  else if windowManager.draggingItemData?
     windowManager.dragItemUpdate(ev.clientX, ev.clientY)
 
     # add window hover effects when dragging an item around
     w = windowManager.getAtCoordinates(ev.clientX, ev.clientY)
-    if w? and w.ownerId != windowManager.draggingItem.ownerId # origin
+    if w? and w != windowManager.draggingItemData.window # origin
       windowManager.beginItemHover(w)
     else if windowManager.itemHoverWindow?
       windowManager.endItemHover()
@@ -84,7 +86,8 @@ $(document).on('mousemove', (ev) ->
       el = ev.target
       while el?
         if el.classList.contains('container-item')
-          w.beginDragItem(el, ev.clientX, ev.clientY)
+          if !el.classList.contains('invalid')
+            w.beginDragItem(el, ev.clientX, ev.clientY)
           return false
         el = el.parentElement
 
@@ -102,9 +105,13 @@ $(document).on('keydown', (ev) ->
     else if windowManager.focusWindow?
       windowManager.closeWindow(windowManager.focusWindow)
 
-  if ev.keyCode == 84 and !chatManager.isOpen # 'T'
+  if ev.keyCode == 84 and ev.target.tagName != 'INPUT' # 'T'
     chatManager.openChat()
     ev.preventDefault()
+    return false
+
+  if ev.keyCode == 8 and ev.target == document.body # backspace
+    # prevent backspace from navigating
     return false
 )
 
@@ -119,9 +126,43 @@ bgHitArea.hitArea = new pixi.Rectangle(0, 0, renderer.width, renderer.height)
 bgHitArea.interactive = true
 cam.container.addChildAt(bgHitArea, 0)
 
-bgHitArea.on('click', (ev) ->
-  point = cam.screenToWorld(ev.data.global.x, ev.data.global.y)
-  entityController.current.cmdMove(point.x, point.y)
+cursorPoint = new pixi.Point()
+cursorWorldPoint = null
+dragMoveTimer = null
+isDragMoving = false
+beginDragMoving = ->
+  #console.log 'beginDragMoving'
+  if isDragMoving
+    return
+
+  isDragMoving = true
+  cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
+  entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
+
+  dragMoveTimer = window.setInterval(->
+    cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
+    entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
+  , 50)
+
+endDragMoving = ->
+  #console.log 'endDragMoving'
+  isDragMoving = false
+  window.clearInterval(dragMoveTimer)
+
+bgHitArea.on('mousedown', (ev) ->
+  cursorPoint.set(ev.data.global.x, ev.data.global.y)
+  beginDragMoving()
+)
+bgHitArea.on('mouseup', (ev) ->
+  cursorPoint.set(ev.data.global.x, ev.data.global.y)
+  endDragMoving()
+)
+bgHitArea.on('mousemove', (ev) ->
+  cursorPoint.set(ev.data.global.x, ev.data.global.y)
+  if (ev.data.originalEvent.buttons & 1) == 1 & !isDragMoving # left-mouse down
+    beginDragMoving()
+  else if (ev.data.originalEvent.buttons & 1) == 0 & isDragMoving # left-mouse up
+    endDragMoving()
 )
 
 resize = ->
@@ -148,11 +189,12 @@ module.exports =
   windowManager: windowManager
   debugWindow: debug
   chatManager: chatManager
+  floatingTextManager: ftm
 
 
 if location.search != '?offline'
   network = require './network'
-  conn = new network.Connection('ws://96.40.72.113:10000/player')
+  conn = new network.Connection('ws://codewaffle.com:10000/player')
 else
   # offline stuff goes here...
 
@@ -206,5 +248,6 @@ update = (t) ->
   bg.tilePosition.y = stage.position.y
   cam.render()
   debug.update()
+  ftm.update(dt)
   requestAnimationFrame(update)
 requestAnimationFrame(update)

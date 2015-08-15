@@ -53,7 +53,7 @@ class ChatManager
     @buffer.push(entry)
 
     @chatLogElement.innerHTML += '<div class="entry"><span class="chat-from"><span class="entity">' + name +
-        '</span> chats:</span><span class="chat-message">&quot;' + text + '&quot;</span></div>'
+        '</span> chats:</span><span class="chat-message">' + text + '</span></div>'
 
     # scroll to bottom
     @chatLogElement.scrollTop = @chatLogElement.scrollHeight
@@ -84,7 +84,11 @@ class ChatManager
     @chatLogElement.scrollTop = @chatLogElement.scrollHeight
 
   sendChat: (text) ->
-    entityController.current.cmdChat(text)
+    if entityController.current?
+      entityController.current.cmdChat(text)
+    else
+      main = require './main'
+      main.floatingTextManager.floatText(text, null, 4000, 600)
 
 module.exports =
   ChatManager: ChatManager
