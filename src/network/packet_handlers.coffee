@@ -142,8 +142,10 @@ module.exports =
         # TODO : support for animation types? not sure if 1 animation suits all popup
         main.floatingTextManager.floatText(message, entityController.current.ent, x, y, duration)
       when 3
-        ent = pr.readEntityId()
+        entId = pr.readEntityId()
+        ent = entity.get(entId)
         message = pr.readString()
+        main.chatManager.addChat(ent.name, message)
         main.floatingTextManager.floatText(message, ent)
       else
         console.error("invalid message type")
