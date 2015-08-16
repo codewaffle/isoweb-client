@@ -53,11 +53,11 @@ class EntityController
     pkt.setUint32(1, targetEnt.id)
     @conn.sendBinary(pkt.buffer)
 
-  cmdMenuExec: (targetEnt, action) ->
+  cmdMenuExec: (menuId, action) ->
     # try to execute menu action actionId on entity targetEnt
     pkt = new DataView(new ArrayBuffer(1+4+1+action.length))
     pkt.setUint8(0, packetTypes.CMD_MENU_EXEC_ENTITY)
-    pkt.setUint32(1, targetEnt.id)
+    pkt.setUint32(1, menuId)
     _setSmallString(pkt, 5, action)
     @conn.sendBinary(pkt.buffer)
 
