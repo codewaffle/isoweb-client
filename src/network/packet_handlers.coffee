@@ -23,6 +23,14 @@ module.exports =
         when packetTypes.BYTE_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readUint8())
 
       updateType = pr.readUint8()
+
+  handleEntityDefUpdate: (conn, pr) ->
+    defKey = pr.readHash64()
+    defData = JSON.parse(pr.readString())
+
+    console.log 'Data for entDef:', defKey
+    console.log defData
+
   handleAssignControl: (conn, pr) ->
     entId = pr.readEntityId()
 

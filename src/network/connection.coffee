@@ -36,6 +36,7 @@ module.exports = class Connection
       switch pt
         when packetTypes.PONG then @handleTimeSync(packet)
         when packetTypes.DO_ASSIGN_CONTROL then packetHandlers.handleAssignControl(@, packet)
+        when packetTypes.ENTITYDEF_UPDATE then packetHandlers.handleEntityDefUpdate(@, packet)
         when packetTypes.ENTITY_UPDATE then packetHandlers.handleEntityUpdate(@, packet)
         when packetTypes.CMD_MENU_REQ_ENTITY then packetHandlers.handleEntityMenu(@, packet)
         when packetTypes.ENTITY_SHOW then packetHandlers.handleEntityShow(@, packet)
