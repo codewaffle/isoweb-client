@@ -23,7 +23,8 @@ push_sample = (sample) ->
     offset_avg = history.map((t) -> t.off).reduce((t, s) -> t + s) / history.length
     rt_avg = history.map( (t) -> t.rt ).reduce((t, s) -> t + s) / history.length
 
-  console.log 'ping: ' + rt_avg + '  offset: ' + offset_avg
+  # TODO : show ping in the HUD, not the log
+  # console.log 'ping: ' + rt_avg + '  offset: ' + offset_avg
 
 module.exports =
   ntp_sync: (t0, t1, t2, t3) ->
