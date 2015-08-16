@@ -1,4 +1,5 @@
-texdec = new require('text-encoding').TextDecoder('utf-8')
+te = require('text-encoding')
+texdec = new te.TextDecoder('utf-8')
 
 module.exports = class PacketReader
   setBuffer: (@buffer) ->
