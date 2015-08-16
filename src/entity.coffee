@@ -65,18 +65,20 @@ class Entity extends pixi.Container
       pr.timestamp,
       pr.readFloat32(),
       pr.readFloat32(),
+      pr.readFloat32(),
+      pr.readFloat32(),
       pr.readFloat32()
     )
 
-  pushUpdate: (t, x, y, r) ->
-    @updates.push([t,x*256,y*256,r])
+  pushUpdate: (t, x, y, r, vx, vy) ->
+    @updates.push([t,x*256,y*256,r, vx*256, vy*256])
 
     if not @updating
       @updating = true
       updateList[@id] = @
 
-  update: (dt, srv) ->
-    srv ?= clock.server_adjusted()
+  update: (dt, init) ->
+    srv = clock.server_adjusted()
 
     # discard old updates, keeping the last
     while @updates.length > 0 and @updates[0][0] <= srv
@@ -96,22 +98,25 @@ class Entity extends pixi.Container
         @updates.unshift(u)
         return true
       else
-        if srv - u[0] > 0.5
+        if srv - u[0] > 0.5 # no movement packet for 500ms
           @position.set(u[1], u[2])
           @rotation = u[3]
 
           return false
 
-        @position.set(@position.x + (u[1] - @position.x) * 0.15, @position.y + (u[2] - @position.y) * 0.15)
+        # we have a past position but no future position is waiting.. extrapolate with position
+        over = srv - u[0]
+        @position.set(u[1] + u[4] * over, u[2] + u[5] * over)
         @rotation = lerp_bearing(@rotation, u[3], 0.15)
         @updates.unshift(u)
 
         return true
 
     if @updates.length > 0
-      u = @updates[0]
-      @position.set(@position.x + (u[1] - @position.x) * 0.02, @position.y + (u[2] - @position.y) * 0.02)
-      @rotation = lerp_bearing(@rotation, u[3], 0.02)
+      if init? # set position from the future
+        u = @updates[0]
+        @position.set(u[1], u[2])
+        @rotation = u[3]
       return true
 
     return false
@@ -155,7 +160,6 @@ class Entity extends pixi.Container
     if not (@sprite? and @meshScale?)
       return
 
-    #@sprite = new pixi.Sprite(@model_map)
     @sprite.scale.x = @meshScale
     @sprite.scale.y = @meshScale
     @sprite.anchor.x = @anchor_x
@@ -185,7 +189,7 @@ class Entity extends pixi.Container
     if @hidden
       @addChild(@sprite)
       @hidden = false
-      @update(0, clock.server_now()+500)
+      @update(0, true)
 
   setHidden: () ->
     if not @hidden
