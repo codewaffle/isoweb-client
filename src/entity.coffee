@@ -3,6 +3,7 @@ asset = require './asset'
 clock = require './clock'
 pixi = require 'pixi'
 entityController = require('./entity_controller')
+entityDef = require './entity_def'
 
 entCount = 0
 
@@ -34,10 +35,6 @@ class Entity extends pixi.Container
     require('./main').stage.addChild(@)
     # console.log "ENTITY", entCount++
 
-  update_name: (@name) ->
-  update_mass: (@mass) ->
-  update_volume: (@volume) ->
-
   update_scale: (scale) ->
     @meshScale = scale
     @updateModel()
@@ -46,9 +43,6 @@ class Entity extends pixi.Container
     asset.getSprite(val, (spr) =>
       @setSprite(spr)
     )
-
-  update_z: (val) ->
-    # @position.z = val
 
   update_anchor_x: (val) ->
     @anchor_x = val
@@ -122,6 +116,21 @@ class Entity extends pixi.Container
 
     return false
 
+  updateEntityDef: (defHash) ->
+    if @entityDef?
+      console.error("no support for reassigning entityDefs yet.. but whatever")
+
+    @entityDef = entityDef.get(defHash)
+
+    if @entityDef.components.Sprite?
+      @update_anchor_x(@entityDef.components.Sprite.anchor.x)
+      @update_anchor_y(@entityDef.components.Sprite.anchor.y)
+      @update_scale(@entityDef.components.Sprite.scale)
+      @update_sprite(@entityDef.components.Sprite.sprite)
+
+    if @entityDef.components.Interactive?
+      @update_hit_area(@entityDef.components.Interactive.hit_area)
+
   updateAttribute: (attrName, attrVal) ->
     @attrs[attrName] = attrVal
 
@@ -141,8 +150,6 @@ class Entity extends pixi.Container
     ec = new entityController.EntityController(@)
     ec.setConnection(@conn)
     ec.takeControl()
-
-
 
   updateModel: ->
     if not (@sprite? and @meshScale?)

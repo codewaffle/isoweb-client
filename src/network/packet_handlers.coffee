@@ -1,5 +1,5 @@
 entity = require '../entity'
-entitydef = require '../entitydef'
+entityDef = require '../entity_def'
 packetTypes = require './packet_types'
 main = require '../main'
 item = require '../item'
@@ -22,6 +22,7 @@ module.exports =
         when packetTypes.FLOAT_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readFloat32())
         when packetTypes.INT_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readUint32())
         when packetTypes.BYTE_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readUint8())
+        when packetTypes.ENTITYDEF_HASH_UPDATE then ent.updateEntityDef(pr.readHash64())
 
       updateType = pr.readUint8()
 
@@ -29,7 +30,7 @@ module.exports =
     defKey = pr.readHash64()
     defData = JSON.parse(pr.readString())
 
-    entitydef.get(defKey).update(defData)
+    entityDef.get(defKey).update(defData)
 
   handleAssignControl: (conn, pr) ->
     entId = pr.readEntityId()
