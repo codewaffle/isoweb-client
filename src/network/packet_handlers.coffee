@@ -1,4 +1,5 @@
 entity = require '../entity'
+entitydef = require '../entitydef'
 packetTypes = require './packet_types'
 main = require '../main'
 item = require '../item'
@@ -28,14 +29,14 @@ module.exports =
     defKey = pr.readHash64()
     defData = JSON.parse(pr.readString())
 
-    console.log 'Data for entDef:', defKey
-    console.log defData
+    entitydef.get(defKey).update(defData)
 
   handleAssignControl: (conn, pr) ->
     entId = pr.readEntityId()
 
     ent = entity.get(entId)
     ent.takeControl(conn)
+
   handleEntityMenu: (conn, pr) ->
     entId = pr.readEntityId()
 
