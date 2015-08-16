@@ -1,4 +1,5 @@
 pixi = require 'pixi'
+spine = require 'pixi-spine';
 pixiExt = require './pixi_extensions'
 input = require './input'
 entity = require './entity'
@@ -27,6 +28,17 @@ cam = new camera.Camera(renderer, stage)
 ftm = new ft.FloatingTextManager(stage, cam)
 
 document.body.appendChild(renderer.view)
+
+clicker = {}
+pixi.loader.add('clicker', 'assets/sprites/clicker.json')
+pixi.loader.add('assets/sprites/clicker.atlas')
+pixi.loader.once('complete', ->
+  # assets loaded
+  clicker = new spine.Spine.fromAtlas('clicker')
+  clicker.scale.set(0.2, 0.2)
+  stage.addChild(clicker)
+)
+pixi.loader.load()
 
 
 # TODO: all this event handling really needs to get organized somewhere else...
@@ -139,8 +151,12 @@ beginDragMoving = ->
   cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
   entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
 
+  clicker.position.set(cursorWorldPoint.x * 256, cursorWorldPoint.y * 256)
+  clicker.state.setAnimationByName(0, "animation", false)
+
   dragMoveTimer = window.setInterval(->
     cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
+    clicker.position.set(cursorWorldPoint.x * 256, cursorWorldPoint.y * 256)
     entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
   , 50)
 
@@ -194,7 +210,8 @@ module.exports =
 
 if location.search != '?offline'
   network = require './network'
-  conn = new network.Connection('ws://codewaffle.com:10000/player')
+  #conn = new network.Connection('ws://codewaffle.com:10000/player')
+  conn = new network.Connection('ws://96.40.72.113:10000/player')
 else
   # offline stuff goes here...
 
