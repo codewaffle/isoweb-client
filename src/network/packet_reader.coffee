@@ -38,9 +38,7 @@ module.exports = class PacketReader
     return @readUint32()
 
   readHash64: ->
-    slice = @buffer.slice(@pos, @pos+4)
-    @pos += 4
-    return texdec.decode(slice)
+    return [@readUint32().toString(16),@readUint32().toString(16)].join('/')
 
   readUint16: ->
     val = @dv.getUint16(@pos)
