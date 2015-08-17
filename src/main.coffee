@@ -30,8 +30,8 @@ ftm = new ft.FloatingTextManager(stage, cam)
 document.body.appendChild(renderer.view)
 
 clicker = {}
-pixi.loader.add('clicker', 'assets/sprites/clicker.json')
-pixi.loader.add('assets/sprites/clicker.atlas')
+pixi.loader.add('clicker', config.asset_base + 'spine/json/clicker.json')
+pixi.loader.add(config.asset_base + 'spine/sheets/clicker.atlas')
 pixi.loader.once('complete', ->
   # assets loaded
   clicker = new spine.Spine.fromAtlas('clicker')
