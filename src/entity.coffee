@@ -4,6 +4,7 @@ clock = require './clock'
 pixi = require 'pixi'
 entityController = require('./entity_controller')
 entityDef = require './entity_def'
+spine = require 'pixi-spine'
 
 entCount = 0
 
@@ -135,6 +136,17 @@ class Entity extends pixi.Container
 
     if @entityDef.components.Interactive?
       @update_hit_area(@entityDef.components.Interactive.hit_area)
+
+    if @entityDef.components.Spine?
+      @entityDef.addAttribCallback('spineCharacter', (spineCharacter) =>
+        @sprite = new spine.Spine(spineCharacter)
+        setTimeout =>
+          @sprite.state.setAnimationByName(0, "idle", true)
+        , Math.random() * 1000
+
+        if not @hidden
+          @addChild(@sprite)
+      )
 
   updateAttribute: (attrName, attrVal) ->
     @attrs[attrName] = attrVal
