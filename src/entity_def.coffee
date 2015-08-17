@@ -4,6 +4,8 @@ registry = module.exports.registry = {}
 pixi = require 'pixi'
 config = require './config'
 
+spineRegistry = {}
+
 class EntityDef
   constructor: (@keyHash) ->
     @components = {}
@@ -25,12 +27,16 @@ class EntityDef
 
   postUpdate: ->
     if @components.Spine?
-      loader = new pixi.loaders.Loader()
-      loader.add(
-        @keyHash, config.asset_base + @components.Spine.character
-      ).load( (loader, resources) =>
-        @asyncUpdate('spineCharacter', resources[@keyHash].spineData)
-      )
+      if spineRegistry[@components.Spine.character]?
+        @asyncUpdate('spineCharacter', spineRegistry[@components.Spine.character])
+      else
+        loader = new pixi.loaders.Loader()
+        loader.add(
+          @keyHash, config.asset_base + @components.Spine.character
+        ).load( (loader, resources) =>
+          spineRegistry[@components.Spine.character] = resources[@keyHash].spineData
+          @asyncUpdate('spineCharacter', resources[@keyHash].spineData)
+        )
 
   addAttribCallback: (attrib, func) ->
     if not @attribCallbacks[attrib]?
