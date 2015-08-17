@@ -39,7 +39,7 @@ module.exports =
     ent.takeControl(conn)
 
   handleEntityMenu: (conn, pr) ->
-    entId = pr.readEntityId()
+    menuId = pr.readUint32()
 
     numItems = pr.readUint8()
 
@@ -52,7 +52,7 @@ module.exports =
         pr.readSmallString()
       ])
 
-    require('../main').menuManager.showContextMenu(menu, entId)
+    require('../main').menuManager.showContextMenu(menuId, menu)
 
   handleEntityShow: (conn, pr) ->
     entId = pr.readEntityId()

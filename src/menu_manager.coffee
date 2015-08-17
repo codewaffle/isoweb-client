@@ -5,12 +5,12 @@ class MenuManager
   constructor: ->
     @currentMenu = null
 
-  showContextMenu: (items, entityId) ->
+  showContextMenu: (menuId, items) ->
     if @currentMenu
       @hideContextMenu()
 
     pos = require('./main').inputManager.mousePos
-    @currentMenu = new menu.Menu(items, entityId)
+    @currentMenu = new menu.Menu(menuId, items)
     @currentMenu.show(pos.x, pos.y)
 
   hideContextMenu: ->

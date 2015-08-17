@@ -3,7 +3,7 @@ entityController = require './entity_controller'
 
 
 class Menu
-  constructor: (@items, @entityId) ->
+  constructor: (@menuId, @items) ->
     @domElement = null
 
   show: (x, y) ->
@@ -11,18 +11,17 @@ class Menu
     @domElement = document.createElement('div')
     @domElement.className = 'menu'
     for item in @items
-      @domElement.innerHTML += '<li data-entity-id="'+@entityId+'" data-command="' + item[0] + '">' + item[1] + '</li>'
+      @domElement.innerHTML += '<li data-menu-id="'+@menuId+'" data-command="' + item[0] + '">' + item[1] + '</li>'
 
     document.body.appendChild(@domElement)
 
     # add event handler
     $(@domElement).on('click', (ev) ->
       target = ev.target || ev.srcElement
-      entityId = target.getAttribute('data-entity-id')
+      menuId = target.getAttribute('data-menu-id')
       cmd = target.getAttribute('data-command')
-      if entityId && cmd
-        ent = entity.get(entityId)
-        entityController.current.cmdMenuExec(ent, cmd)
+      if menuId && cmd
+        entityController.current.cmdMenuExec(menuId, cmd)
     )
 
     # set position
