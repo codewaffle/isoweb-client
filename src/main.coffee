@@ -19,7 +19,7 @@ menuManager = new menu.MenuManager()
 windowManager = new wm.WindowManager()
 chatManager = new chat.ChatManager()
 
-renderer = new pixi.autoDetectRenderer(1024, 1024, { antialias: true })
+renderer = new pixi.autoDetectRenderer(1024, 1024)
 renderer.backgroundColor = 0xAAFFCC
 
 stage = new pixi.Container()
@@ -110,6 +110,22 @@ $(document).on('mousemove', (ev) ->
   return false
 )
 
+glslify = require 'glslify'
+
+class LUTFilter extends pixi.AbstractFilter
+  constructor: ->
+    tmp = glslify('./shader/lut.glsl')
+    fragmentSrc = tmp
+    console.log(tmp)
+    super(null, fragmentSrc, {
+      nightLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'night_lut.png')}
+      morningLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'morning_lut.png')}
+      fireLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'fire_lut.png')}
+    })
+
+bla = new LUTFilter()
+cam.container.filters = [bla]
+
 $(document).on('keydown', (ev) ->
   if ev.keyCode == 27 # ESC
     if chatManager.isOpen
@@ -121,6 +137,12 @@ $(document).on('keydown', (ev) ->
     chatManager.openChat()
     ev.preventDefault()
     return false
+
+  if ev.keyCode == 70
+    if cam.container.filters
+      cam.container.filters = null
+    else
+      cam.container.filters = [bla]
 
   if ev.keyCode == 8 and ev.target == document.body # backspace
     # prevent backspace from navigating
@@ -228,28 +250,6 @@ else
 debug = windowManager.createDebugWindow()
 debug.add('player pos', -> return if entityController.current? then entityController.current.ent.position else '-')
 debug.show()
-
-
-# hacking here :/
-
-
-glslify = require 'glslify'
-
-class LUTFilter extends pixi.AbstractFilter
-  constructor: ->
-    tmp = glslify('./shader/lut.glsl')
-    fragmentSrc = tmp
-    console.log(tmp)
-    super(null, fragmentSrc, {
-      nightLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'night_lut.png')}
-      morningLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'morning_lut.png')}
-      fireLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'fire_lut.png')}
-    })
-
-
-bla = new LUTFilter()
-
-cam.container.filters = [bla]
 
 
 lastUpdate = null
