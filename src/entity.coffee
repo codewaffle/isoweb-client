@@ -187,13 +187,15 @@ class Entity extends pixi.Container
 
   setVisible: () ->
     if @hidden
-      @addChild(@sprite)
+      if @sprite?
+        @addChild(@sprite)
       @hidden = false
       @update(0, true)
 
   setHidden: () ->
     if not @hidden
-      @removeChild(@sprite)
+      if @sprite?
+        @removeChild(@sprite)
       @hidden = true
 
   setDestroyed: () ->
