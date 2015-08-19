@@ -11,6 +11,13 @@ class FloatingTextManager
     @scale = new pixi.Point(@camera.zoomLevel, @camera.zoomLevel)
 
   floatText: (text, entity, offsetX, offsetY, duration) ->
+    if entity?
+      # check for existing instance for this entity
+      for instance in @instances
+        if instance.entity == entity
+          instance.addText(text)
+          return
+
     # default duration: 3s + 1s per 10 characters, max 15s
     duration = duration || Math.min(text.length/10 * 1000 + 3000, 15000)
     instance = new ft.FloatingText(@stage, @scale, text, entity, offsetX, offsetY, duration)

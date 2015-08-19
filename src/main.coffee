@@ -1,5 +1,5 @@
 pixi = require 'pixi'
-spine = require 'pixi-spine';
+spine = require 'pixi-spine'
 pixiExt = require './pixi_extensions'
 input = require './input'
 entity = require './entity'

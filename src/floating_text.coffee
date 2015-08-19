@@ -1,10 +1,20 @@
 pixi = require 'pixi'
 entity = require './entity'
 
+FT_MAX_CHAT_LINES = 6
+
 class FloatingText
   constructor: (@stage, @scale, @text, @entity, offsetX, offsetY, duration) ->
+    @originalOffset = new pixi.Point(offsetX || 0, offsetY || 0)
     @offset = new pixi.Point(offsetX || 0, offsetY || 0)
     @duration = @ttl = duration || 2000 # milliseconds
+    @entries = []
+
+    @createObjects()
+
+  createObjects: ->
+    if @obj
+      @stage.removeChild(@obj)
 
     @textObj = new pixi.Text(@text,
       font: '16px monospace'
@@ -33,6 +43,7 @@ class FloatingText
 
     @stage.addChild(@obj)
 
+    @offset.y = @originalOffset.y
     @offset.y += -boxHeight/2
 
     if @entity?
@@ -45,6 +56,18 @@ class FloatingText
     else
       @obj.position.x = @offset.x
       @obj.position.y = @offset.y
+
+  addText: (text) ->
+    @updateText(@text + '\n' + text)
+
+  updateText: (text) ->
+    @text = text
+    @textObj.setText(text)
+    duration = Math.min(text.length/10 * 1000 + 3000, 15000) || 2000
+    @duration += duration
+    @ttl += duration
+
+    @createObjects()
 
   update: (dt) ->
     @ttl -= dt
