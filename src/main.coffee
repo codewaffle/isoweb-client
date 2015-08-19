@@ -36,6 +36,7 @@ pixi.loader.once('complete', ->
   # assets loaded
   clicker = new spine.Spine.fromAtlas('clicker')
   clicker.scale.set(0.2, 0.2)
+  clicker.alpha = 0
   stage.addChild(clicker)
 )
 pixi.loader.load()
@@ -163,6 +164,7 @@ cam.container.addChildAt(bgHitArea, 0)
 cursorPoint = new pixi.Point()
 cursorWorldPoint = null
 dragMoveTimer = null
+clickerTimer = null
 isDragMoving = false
 beginDragMoving = ->
   #console.log 'beginDragMoving'
@@ -173,8 +175,12 @@ beginDragMoving = ->
   cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
   entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
 
+  if clickerTimer?
+    window.clearTimeout(clickerTimer)
+
+  clicker.alpha = 1
   clicker.position.set(cursorWorldPoint.x * 256, cursorWorldPoint.y * 256)
-  clicker.state.setAnimationByName(0, "animation", false)
+  clicker.state.setAnimationByName(0, "animation", true)
 
   dragMoveTimer = window.setInterval(->
     cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
@@ -184,7 +190,16 @@ beginDragMoving = ->
 endDragMoving = ->
   #console.log 'endDragMoving'
   isDragMoving = false
+
   window.clearInterval(dragMoveTimer)
+  if clickerTimer?
+    window.clearTimeout(clickerTimer)
+  # hide clicker in 500ms
+  clickerTimer = window.setTimeout(->
+    clicker.alpha = 0
+    clickerTimer = null
+  , 560)
+
 
 bgHitArea.on('mousedown', (ev) ->
   cursorPoint.set(ev.data.global.x, ev.data.global.y)
