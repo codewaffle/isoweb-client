@@ -1,5 +1,5 @@
 pixi = require 'pixi'
-spine = require 'pixi-spine';
+spine = require 'pixi-spine'
 pixiExt = require './pixi_extensions'
 input = require './input'
 entity = require './entity'
@@ -178,7 +178,6 @@ beginDragMoving = ->
 
   dragMoveTimer = window.setInterval(->
     cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
-    clicker.position.set(cursorWorldPoint.x * 256, cursorWorldPoint.y * 256)
     entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
   , 50)
 
@@ -266,5 +265,11 @@ update = (t) ->
   cam.render()
   debug.update()
   ftm.update(dt)
+
+  # update clicky marker
+  if isDragMoving
+    cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
+    clicker.position.set(cursorWorldPoint.x * 256, cursorWorldPoint.y * 256)
+
   requestAnimationFrame(update)
 requestAnimationFrame(update)
