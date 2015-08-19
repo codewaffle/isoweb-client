@@ -26,6 +26,8 @@ class EntityDef
     @postUpdate()
 
   postUpdate: ->
+    # runs after all update data has been applied, used to do extra processing to prepare assets for use
+
     if @components.Spine?
       if spineRegistry[@components.Spine.character]?
         @asyncUpdate('spineCharacter', spineRegistry[@components.Spine.character])
@@ -37,6 +39,10 @@ class EntityDef
           spineRegistry[@components.Spine.character] = resources[@keyHash].spineData
           @asyncUpdate('spineCharacter', resources[@keyHash].spineData)
         )
+
+    if @components.Structure?
+      console.log @components.Structure
+      console.log "Use tileset #{@components.Structure.tileset} to render a #{@components.Structure.size[0]}x#{@components.Structure.size[1]} grid containing #{@components.Structure.data} where 0 is empty space, 1 is wall and 2 is floor"
 
   addAttribCallback: (attrib, func) ->
     if not @attribCallbacks[attrib]?
