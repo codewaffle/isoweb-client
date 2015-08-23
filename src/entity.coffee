@@ -71,6 +71,11 @@ class Entity extends pixi.Container
       pr.readFloat32()
     )
 
+  updateParent: (pr) ->
+    entId = pr.readEntityId()
+    # TODO : queue it up.. parent changes need to happen inline with position changes.
+    console.log 'update parent, set to:', entId
+
   pushUpdate: (t, x, y, r, vx, vy) ->
     @updates.push([t,x*256,y*256,r, vx*256, vy*256])
 

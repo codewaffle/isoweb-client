@@ -23,6 +23,7 @@ module.exports =
         when packetTypes.INT_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readUint32())
         when packetTypes.BYTE_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readUint8())
         when packetTypes.ENTITYDEF_HASH_UPDATE then ent.updateEntityDef(pr.readHash64())
+        when packetTypes.PARENT_UPDATE then ent.updateParent(pr)
 
       updateType = pr.readUint8()
 
