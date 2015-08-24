@@ -13,6 +13,7 @@ class Camera
   setZoom: (@zoomLevel) ->
     @stage.scale.x = 1/@zoomLevel
     @stage.scale.y = 1/@zoomLevel
+    @onResize()
 
   render: ->
     @renderer.render(@container)
@@ -42,6 +43,7 @@ class Camera
     if @bg?
       @bg.width = @w * @zoomLevel
       @bg.height = @h * @zoomLevel
+      @bg.tileScale.x = @bg.tileScale.y = 1/@zoomLevel
       @bg.position.x = @container.position.x * @zoomLevel * -1
       @bg.position.y = @container.position.y * @zoomLevel * -1
 
