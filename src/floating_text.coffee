@@ -4,13 +4,13 @@ entity = require './entity'
 FT_MAX_CHAT_LINES = 6
 
 class FloatingText
-  constructor: (@stage, @scale, @text, @entity, offsetX, offsetY, duration) ->
+  constructor: (@stage, @scale, text, @entity, offsetX, offsetY, duration) ->
     @originalOffset = new pixi.Point(offsetX || 0, offsetY || 0)
     @offset = new pixi.Point(offsetX || 0, offsetY || 0)
     @duration = @ttl = duration || 2000 # milliseconds
-    @entries = []
+    @lines = []
 
-    @createObjects()
+    @addText(text)
 
   createObjects: ->
     if @obj
@@ -58,14 +58,12 @@ class FloatingText
       @obj.position.y = @offset.y
 
   addText: (text) ->
-    @updateText(@text + '\n' + text)
+    @lines.push(text)
+    if @lines.length > FT_MAX_CHAT_LINES
+      @lines.splice(0, 1)
 
-  updateText: (text) ->
-    @text = text
-    @textObj.setText(text)
-    duration = Math.min(text.length/10 * 1000 + 3000, 15000) || 2000
-    @duration += duration
-    @ttl += duration
+    @text = @lines.join('\n\n')
+    @ttl = @duration = Math.min(@text.length/10 * 1000 + 3000, 15000) || 2000
 
     @createObjects()
 
