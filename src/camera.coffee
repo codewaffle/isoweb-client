@@ -41,15 +41,16 @@ class Camera
     @w = window.innerWidth
 
     if @bg?
-      @bg.width = @w * @zoomLevel
-      @bg.height = @h * @zoomLevel
+      @bg.width = @w
+      @bg.height = @h
       @bg.tileScale.x = @bg.tileScale.y = 1/@zoomLevel
       @bg.position.x = @container.position.x * @zoomLevel * -1
       @bg.position.y = @container.position.y * @zoomLevel * -1
 
     #@container.position.y = h/2
     #@container.position.x = w/2
-    @renderer.resize(@w, @h)
+    if @renderer?
+      @renderer.resize(@w, @h)
 
   setTrackingTarget: (@trackingObject) ->
 
