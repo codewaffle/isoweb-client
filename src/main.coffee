@@ -25,6 +25,8 @@ renderer.backgroundColor = 0xAAFFCC
 stage = new pixi.Container()
 
 cam = new camera.Camera(renderer, stage)
+cam.setBackground('tiles/tile_grass.png')
+
 ftm = new ft.FloatingTextManager(stage, cam)
 
 document.body.appendChild(renderer.view)
@@ -150,11 +152,6 @@ $(document).on('keydown', (ev) ->
 )
 
 
-bg = new pixi.extras.TilingSprite(
-  pixi.Texture.fromImage(config.asset_base + 'tiles/tile_grass.png'), renderer.width, renderer.height)
-
-cam.container.addChildAt(bg, 0)
-
 bgHitArea = new pixi.Container()
 bgHitArea.hitArea = new pixi.Rectangle(0, 0, renderer.width, renderer.height)
 bgHitArea.interactive = true
@@ -205,10 +202,6 @@ bgHitArea.on('mousemove', (ev) ->
 resize = ->
   h = window.innerHeight
   w = window.innerWidth
-  bg.width = w / stage.scale.x
-  bg.height = h / stage.scale.y
-  bg.position.x = -cam.container.position.x/stage.scale.x
-  bg.position.y = -cam.container.position.y/stage.scale.y
   bgHitArea.hitArea.width = renderer.width
   bgHitArea.hitArea.height = renderer.height
 
@@ -251,6 +244,7 @@ debug.add('player pos', -> return if entityController.current? then entityContro
 debug.show()
 
 
+
 lastUpdate = null
 update = (t) ->
   if not lastUpdate? # initialize on first tick
@@ -260,8 +254,6 @@ update = (t) ->
   lastUpdate = t
   entity.update(dt)
   cam.update(dt)
-  bg.tilePosition.x = stage.position.x
-  bg.tilePosition.y = stage.position.y
   cam.render()
   debug.update()
   ftm.update(dt)
