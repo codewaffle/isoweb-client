@@ -27,6 +27,7 @@ class Camera
         config.asset_base + @bgName
       ), @w, @h
     )
+    @bg.texture.baseTexture.mipmap = true
 
     @container.addChildAt(@bg, 0)
 
