@@ -25,7 +25,7 @@ renderer.backgroundColor = 0xAAFFCC
 stage = new pixi.Container()
 
 cam = new camera.Camera(renderer, stage)
-cam.setBackground('tiles/tile_grass.png')
+cam.setBackground('tiles/tile_water.png')
 
 ftm = new ft.FloatingTextManager(stage, cam)
 
@@ -253,6 +253,7 @@ update = (t) ->
   dt = t - lastUpdate
   lastUpdate = t
   entity.update(dt)
+  cam.setZoom(t/1000)
   cam.update(dt)
   cam.render()
   debug.update()
