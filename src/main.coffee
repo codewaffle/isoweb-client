@@ -11,8 +11,9 @@ camera = require './camera'
 wm = require './window_manager'
 chat = require './chat_manager'
 ft = require './floating_text_manager'
-
-
+em = require './effects_manager'
+effects =
+  grassSpray: require('./effects/grass_spray').GrassSprayEffect
 
 inputManager = new input.InputManager()
 menuManager = new menu.MenuManager()
@@ -26,6 +27,7 @@ stage = new pixi.Container()
 
 cam = new camera.Camera(renderer, stage)
 ftm = new ft.FloatingTextManager(stage, cam)
+effectsManager = new em.EffectsManager(stage, cam)
 
 document.body.appendChild(renderer.view)
 
@@ -64,6 +66,9 @@ $(document).on('mousedown', (ev) ->
       windowManager.setFocus(w)
     else if (ev.buttons & 2) == 2 # right-click
       windowManager.closeWindow(w)
+  else
+    # create a sample effect
+    effectsManager.playEffect(new effects.grassSpray, ev.clientX, ev.clientY, 1000)
 
   return false
 )
@@ -278,6 +283,7 @@ update = (t) ->
   bg.tilePosition.x = stage.position.x
   bg.tilePosition.y = stage.position.y
   cam.render()
+  effectsManager.update(dt)
   debug.update()
   ftm.update(dt)
 
