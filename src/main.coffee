@@ -15,6 +15,9 @@ em = require './effects_manager'
 effects =
   grassSpray: require('./effects/grass_spray').GrassSprayEffect
 
+
+offline = not location.search != '?offline'
+
 inputManager = new input.InputManager()
 menuManager = new menu.MenuManager()
 windowManager = new wm.WindowManager()
@@ -68,7 +71,8 @@ $(document).on('mousedown', (ev) ->
       windowManager.closeWindow(w)
   else
     # create a sample effect
-    effectsManager.playEffect(new effects.grassSpray, ev.clientX, ev.clientY, 1000)
+    cursorWorldPoint = cam.screenToWorld(ev.clientX, ev.clientY)
+    effectsManager.playEffect(new effects.grassSpray, cursorWorldPoint.x * 256, cursorWorldPoint.y * 256, 1000)
 
   return false
 )
@@ -205,22 +209,22 @@ endDragMoving = ->
     clickerTimer = null
   , 560)
 
-
-bgHitArea.on('mousedown', (ev) ->
-  cursorPoint.set(ev.data.global.x, ev.data.global.y)
-  beginDragMoving()
-)
-bgHitArea.on('mouseup', (ev) ->
-  cursorPoint.set(ev.data.global.x, ev.data.global.y)
-  endDragMoving()
-)
-bgHitArea.on('mousemove', (ev) ->
-  cursorPoint.set(ev.data.global.x, ev.data.global.y)
-  if (ev.data.originalEvent.buttons & 1) == 1 & !isDragMoving # left-mouse down
+if not offline
+  bgHitArea.on('mousedown', (ev) ->
+    cursorPoint.set(ev.data.global.x, ev.data.global.y)
     beginDragMoving()
-  else if (ev.data.originalEvent.buttons & 1) == 0 & isDragMoving # left-mouse up
+  )
+  bgHitArea.on('mouseup', (ev) ->
+    cursorPoint.set(ev.data.global.x, ev.data.global.y)
     endDragMoving()
-)
+  )
+  bgHitArea.on('mousemove', (ev) ->
+    cursorPoint.set(ev.data.global.x, ev.data.global.y)
+    if (ev.data.originalEvent.buttons & 1) == 1 & !isDragMoving # left-mouse down
+      beginDragMoving()
+    else if (ev.data.originalEvent.buttons & 1) == 0 & isDragMoving # left-mouse up
+      endDragMoving()
+  )
 
 resize = ->
   h = window.innerHeight
@@ -249,7 +253,7 @@ module.exports =
   floatingTextManager: ftm
 
 
-if location.search != '?offline'
+if not offline
   network = require './network'
   #conn = new network.Connection('ws://codewaffle.com:10000/player')
   conn = new network.Connection('ws://96.40.72.113:10000/player')
