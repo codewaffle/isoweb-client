@@ -6,6 +6,12 @@ class EffectsManager
     @instances.push(effect)
     effect.play(@stage, x, y, duration, cb)
 
+  stopEffect: (effect) ->
+    effect.stop()
+
+  getEffects: ->
+    return @instances
+
   update: (dt) ->
     for i in [@instances.length-1..0] by -1
       instance = @instances[i]

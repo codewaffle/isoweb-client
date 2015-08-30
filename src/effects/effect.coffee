@@ -13,30 +13,39 @@ class Effect
     @playing = false
 
     @particles = []
-    for i in [0..@numParticles-1]
-      particle = @createParticle()
-      particle.sprite.anchor.set(0.5, 0.5)
-      particle.sprite.scale.set(particle.scale, particle.scale)
-      particle.sprite.position.set(particle.offsetx, particle.offsety)
-      particle.sprite.rotation = particle.rotation
-      @particles.push(particle)
-      @container.addChild(particle.sprite)
 
-  createParticle: ->
-    # overloaded by inheriting classes
+  createParticle: (particle) ->
+    if not particle?
+      console.error 'Particle must be created in subclass before calling base createParticle'
+      return
 
-    # particle definition:
+    # base particle properties
     #   offsetx - x offset
     #   offsety - y offset
-    #   dx - change in x offset per update
-    #   dy - change in y offset per update
     #   rotation - sprite rotation in radians
     #   scale - sprite scale
+    #   duration - how long particle should live (ttl)
+    particle.ttl = particle.duration = particle.duration or @duration
+    particle.sprite = new pixi.Sprite(@texture)
+    particle.sprite.anchor.set(0.5, 0.5)
+    particle.sprite.scale.set(particle.scale or 1, particle.scale or 1)
+    particle.sprite.position.set(particle.offsetx or 0, particle.offsety or 0)
+    particle.sprite.rotation = particle.rotation or 0
+    @particles.push(particle)
+    @container.addChild(particle.sprite)
+
+  removeParticle: (particle) ->
+    @container.removeChild(particle.sprite)
+    for i in [@particles.length-1..0] by -1
+      if @particles[i] == particle
+        @particles.splice(i, 1)
 
   updateParticle: (particle, dt) ->
-    # overloaded by inheriting class
+    particle.ttl -= dt
+    if particle.ttl <= 0
+      @removeParticle(particle)
 
-  play: (@stage, x, y, @duration, @cb) ->
+  play: (@stage, x, y, @duration, @onComplete) ->
     if not @initialized
       return
 
@@ -45,24 +54,36 @@ class Effect
     @container.position.set(x, y)
     @playing = true
 
+    # create initial particles
+    for i in [0..@numParticles-1]
+      @createParticle()
+    return @
+
+  stop: ->
+    @finished()
+
   finished: ->
     @playing = false
-    @stage.removeChild(@container)
+    # container is removed once all particles are done playing
+    #@stage.removeChild(@container)
 
-    if @cb? then cb(@)
+    if @onComplete? then onComplete(@)
 
   update: (dt) ->
     if not @initialized
       return false
 
-    if @duration > 0
+    # duration <= 0 plays indefinitely
+    if @duration > 0 and @playing
       @ttl -= dt
       if @ttl <= 0
         @finished()
-        return false
 
-    for p in @particles
-      @updateParticle(p, dt)
+    if not @playing and @particles.length == 0
+      return false
+
+    for i in [@particles.length-1..0] by -1
+      @updateParticle(@particles[i], dt)
 
     return true
 

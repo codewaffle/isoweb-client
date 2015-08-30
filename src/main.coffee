@@ -15,6 +15,7 @@ em = require './effects_manager'
 effects =
   grassSpray: require('./effects/grass_spray').GrassSprayEffect
   smokePuff: require('./effects/smoke_puff').SmokePuffEffect
+  fire: require('./effects/fire').FireEffect
 
 
 offline = not location.search != '?offline'
@@ -75,6 +76,7 @@ $(document).on('mousedown', (ev) ->
     cursorWorldPoint = cam.screenToWorld(ev.clientX, ev.clientY)
     effectsManager.playEffect(new effects.grassSpray, cursorWorldPoint.x * 256 - 200, cursorWorldPoint.y * 256, 1000)
     effectsManager.playEffect(new effects.smokePuff, cursorWorldPoint.x * 256 + 200, cursorWorldPoint.y * 256, 1000)
+    effectsManager.playEffect(new effects.fire, cursorWorldPoint.x * 256 + 200, cursorWorldPoint.y * 256 + 200, 10000)
 
   return false
 )

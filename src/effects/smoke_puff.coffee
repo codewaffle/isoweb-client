@@ -8,7 +8,6 @@ class SmokePuffEffect extends effect.Effect
 
   createParticle: ->
     particle =
-      sprite: new pixi.Sprite(@texture)
       offsetx: (Math.random() - 0.5) * 128
       offsety: (Math.random() - 0.5) * 128
       #dx: Math.random()
@@ -18,8 +17,7 @@ class SmokePuffEffect extends effect.Effect
 
     particle.dx = if particle.offsetx > 0 then 1 else -1
     particle.dy = if particle.offsety > 0 then 1 else -1
-
-    return particle
+    super(particle)
 
   update: (dt) ->
     @alpha = @ttl / @duration
@@ -32,5 +30,6 @@ class SmokePuffEffect extends effect.Effect
     p.sprite.position.set(p.offsetx, p.offsety)
     p.sprite.alpha = @alpha
     p.sprite.scale.set(@scale, @scale)
+    super(p, dt)
 
 module.exports.SmokePuffEffect = SmokePuffEffect
