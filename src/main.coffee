@@ -18,7 +18,7 @@ effects =
   fire: require('./effects/fire').FireEffect
 
 
-offline = not location.search != '?offline'
+offline = location.search == '?offline'
 
 inputManager = new input.InputManager()
 menuManager = new menu.MenuManager()
@@ -71,12 +71,6 @@ $(document).on('mousedown', (ev) ->
       windowManager.setFocus(w)
     else if (ev.buttons & 2) == 2 # right-click
       windowManager.closeWindow(w)
-  else
-    # create a sample effect
-    cursorWorldPoint = cam.screenToWorld(ev.clientX, ev.clientY)
-    effectsManager.playEffect(new effects.grassSpray, cursorWorldPoint.x * 256 - 200, cursorWorldPoint.y * 256, 1000)
-    effectsManager.playEffect(new effects.smokePuff, cursorWorldPoint.x * 256 + 200, cursorWorldPoint.y * 256, 1000)
-    effectsManager.playEffect(new effects.fire, cursorWorldPoint.x * 256 + 200, cursorWorldPoint.y * 256 + 200, 10000)
 
   return false
 )
