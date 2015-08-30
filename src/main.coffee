@@ -14,6 +14,7 @@ ft = require './floating_text_manager'
 em = require './effects_manager'
 effects =
   grassSpray: require('./effects/grass_spray').GrassSprayEffect
+  smokePuff: require('./effects/smoke_puff').SmokePuffEffect
 
 
 offline = not location.search != '?offline'
@@ -72,7 +73,8 @@ $(document).on('mousedown', (ev) ->
   else
     # create a sample effect
     cursorWorldPoint = cam.screenToWorld(ev.clientX, ev.clientY)
-    effectsManager.playEffect(new effects.grassSpray, cursorWorldPoint.x * 256, cursorWorldPoint.y * 256, 1000)
+    effectsManager.playEffect(new effects.grassSpray, cursorWorldPoint.x * 256 - 200, cursorWorldPoint.y * 256, 1000)
+    effectsManager.playEffect(new effects.smokePuff, cursorWorldPoint.x * 256 + 200, cursorWorldPoint.y * 256, 1000)
 
   return false
 )
