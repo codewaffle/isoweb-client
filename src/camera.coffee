@@ -27,7 +27,9 @@ class Camera
         config.asset_base + @bgName
       ), @w, @h
     )
-    @bg.texture.baseTexture.mipmap = true
+    # mipmaps and tiles equals yuck.. need to manually mipmap maybe.
+    # more likely will just have crud with a transparent background that overlays on top of a solid color.
+    # @bg.texture.baseTexture.mipmap = true
 
     @container.addChildAt(@bg, 0)
 
@@ -48,8 +50,6 @@ class Camera
       @bg.position.x = @container.position.x * @zoomLevel * -1
       @bg.position.y = @container.position.y * @zoomLevel * -1
 
-    #@container.position.y = h/2
-    #@container.position.x = w/2
     if @renderer?
       @renderer.resize(@w, @h)
 
