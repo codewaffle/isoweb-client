@@ -34,10 +34,6 @@ class Entity extends pixi.Container
     require('./main').stage.addChild(@)
     # console.log "ENTITY", entCount++
 
-  update_hit_area: (txt) ->
-    @interactive = true
-    @hitArea = eval('new pixi.' + txt)
-
   updatePosition: (pr) ->
     @pushUpdate(
       pr.timestamp,
@@ -111,9 +107,6 @@ class Entity extends pixi.Container
 
     @entityDef = entityDef.get(defHash)
     @updateComponents(@entityDef.components)
-
-    if @entityDef.components.Interactive?
-      @update_hit_area(@entityDef.components.Interactive.hit_area)
 
   updateAttribute: (attrName, attrVal) ->
     @attrs[attrName] = attrVal

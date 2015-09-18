@@ -59,7 +59,7 @@ class Spine extends base.ComponentBase
               setTimeout =>
                 @sprite = new spine.Spine(spineLoader.resources[@ent.entityDef.keyHash].spineData)
                 @ent.addChild(@sprite)
-              , 0
+              , 10
           )
       else
         spineLoader.add(
