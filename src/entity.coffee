@@ -22,45 +22,22 @@ lerp_bearing = (a, b, t) ->
 class Entity extends pixi.Container
   constructor: (@id) ->
     super()
+    @isEnabled = null
     @updates = []
     @updating = false
     @attrs = {}
-    @sprite = null
     @model = null
     @anchor_x = 0.5
     @anchor_y = 0.5
-    @sprite_cbs = []
-    @hidden = true
     @name = 'Entity'
     @components = {}
 
     require('./main').stage.addChild(@)
     # console.log "ENTITY", entCount++
 
-  update_scale: (scale) ->
-    @meshScale = scale
-    @updateModel()
-
-  update_sprite: (val) ->
-    asset.getSprite(val, (spr) =>
-      @setSprite(spr)
-    )
-
-  update_anchor_x: (val) ->
-    @anchor_x = val
-
-  update_anchor_y: (val) ->
-    @anchor_y = val
-
   update_hit_area: (txt) ->
-    if @sprite?
-      @sprite.interactive = true
-      @sprite.hitArea = eval('new pixi.' + txt)
-    else
-      @sprite_cbs.push( (spr) ->
-        spr.interactive = true
-        spr.hitArea = eval('new pixi.' + txt)
-      )
+    @interactive = true
+    @hitArea = eval('new pixi.' + txt)
 
   updatePosition: (pr) ->
     @pushUpdate(
@@ -136,20 +113,8 @@ class Entity extends pixi.Container
     @entityDef = entityDef.get(defHash)
     @updateComponents(@entityDef.components)
 
-
     if @entityDef.components.Interactive?
       @update_hit_area(@entityDef.components.Interactive.hit_area)
-
-    if @entityDef.components.Spine?
-      @entityDef.addAttribCallback('spineCharacter', (spineCharacter) =>
-        @sprite = new spine.Spine(spineCharacter)
-        setTimeout =>
-          @sprite.state.setAnimationByName(0, "idle", true)
-        , Math.random() * 1000
-
-        if not @hidden
-          @addChild(@sprite)
-      )
 
   updateAttribute: (attrName, attrVal) ->
     @attrs[attrName] = attrVal
@@ -167,68 +132,51 @@ class Entity extends pixi.Container
   setGeom: (@geom) ->
     @updateModel()
 
-  setSprite: (@sprite) ->
-    @updateModel()
-    if @sprite_cbs.length > 0
-      for cb in @sprite_cbs
-        cb(@sprite)
-
   takeControl: (@conn) ->
     ec = new entityController.EntityController(@)
     ec.setConnection(@conn)
     ec.takeControl()
 
-  updateModel: ->
-    if not (@sprite? and @meshScale?)
-      return
-
-    @sprite.scale.x = @meshScale
-    @sprite.scale.y = @meshScale
-    @sprite.anchor.x = @anchor_x
-    @sprite.anchor.y = @anchor_y
-
-    @sprite.on('mouseover', =>
-      @sprite.tint = 0xAACCFF
+  init: ->
+    @on('mouseover', =>
+      @tint = 0xAACCFF
     )
 
-    @sprite.on('mouseout', =>
-      @sprite.tint = 0xFFFFFF
+    @on('mouseout', =>
+      @tint = 0xFFFFFF
     )
 
-    @sprite.on('click', (ev) =>
+    @on('click', (ev) =>
     # perform default command (or return menu if multiple conflicting default commands [it happens])
       console.log('entity position: ' + @position)
       console.log('Requesting contextual command')
       entityController.current.cmdContextual(@)
     )
 
-    @sprite.on('rightclick', (ev) =>
+    @on('rightclick', (ev) =>
       # get full menu
       entityController.current.cmdMenuReq(@)
     )
 
   setEnabled: () ->
-    if not @isEnabled
-      for key, val of @components
-        val.enable()
-      @isEnabled = true
+    if @isEnabled
+      return
 
-    if @hidden
-      if @sprite?
-        @addChild(@sprite)
-      @hidden = false
-      @update(0, true)
+    if @isEnabled is null
+      @init()
+
+    for key, val of @components
+      val.enable()
+    @isEnabled = true
+    @update(0, true)
 
   setDisabled: () ->
-    if @isEnabled
-      for key, val of @components
-        val.disable()
-      @isEnabled = false
+    if not @isEnabled
+      return
 
-    if not @hidden
-      if @sprite?
-        @removeChild(@sprite)
-      @hidden = true
+    for key, val of @components
+      val.disable()
+    @isEnabled = false
 
   setDestroyed: () ->
     if @parent?
