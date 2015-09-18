@@ -61,12 +61,12 @@ module.exports =
   handleEntityShow: (conn, pr) ->
     entId = pr.readEntityId()
     ent = entity.get(entId)
-    ent.setVisible()
+    ent.setEnabled()
 
   handleEntityHide: (conn, pr) ->
     entId = pr.readEntityId()
     ent = entity.get(entId)
-    ent.setHidden()
+    ent.setDisabled()
 
   handleEntityDestroy: (conn, pr) ->
     entId = pr.readEntityId()

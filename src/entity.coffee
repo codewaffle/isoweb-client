@@ -212,16 +212,24 @@ class Entity extends pixi.Container
       entityController.current.cmdMenuReq(@)
     )
 
-  setVisible: () ->
-    # TODO : check if this is the first time going 'visible'
-    # TODO : rename this stuff from 'visible' to 'enabled'
+  setEnabled: () ->
+    if not @isEnabled
+      for key, val of @components
+        val.enable()
+      @isEnabled = true
+
     if @hidden
       if @sprite?
         @addChild(@sprite)
       @hidden = false
       @update(0, true)
 
-  setHidden: () ->
+  setDisabled: () ->
+    if @isEnabled
+      for key, val of @components
+        val.disable()
+      @isEnabled = false
+
     if not @hidden
       if @sprite?
         @removeChild(@sprite)
