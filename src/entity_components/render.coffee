@@ -1,5 +1,10 @@
-base = require './base'
+pixi = require 'pixi'
+spine = require 'pixi-spine'
+
 asset = require '../asset'
+config = require '../config'
+
+base = require './base'
 
 class Sprite extends base.ComponentBase
   @sprite: 'NONE'
@@ -30,18 +35,38 @@ class Sprite extends base.ComponentBase
   hide: ->
     @ent.removeChild(@loaded_sprite)
 
-class Spine extends base.ComponentBase
-#  if @entityDef.components.Spine?
-#    @entityDef.addAttribCallback('spineCharacter', (spineCharacter) =>
-#      @sprite = new spine.Spine(spineCharacter)
-#      setTimeout =>
-#        @sprite.state.setAnimationByName(0, "idle", true)
-#      , Math.random() * 1000
-#
-#      if not @hidden
-#        @addChild(@sprite)
-#    )
+spineLoader = new pixi.loaders.Loader()
 
+class Spine extends base.ComponentBase
+  @character: 'NONE'
+  @scale: 1
+  @atlas: 'NONE'
+
+  # TODO : lotta long variables in here.. make them shorter. MUAHAHAHA
+  enable: ->
+    if not @sprite?
+      if spineLoader.resources[@ent.entityDef.keyHash]?
+        if spineLoader.resources[@ent.entityDef.keyHash].spineData?
+          @sprite = new spine.Spine(spineLoader.resources[@ent.entityDef.keyHash].spineData)
+          @ent.addChild(@sprite)
+        else
+          spineLoader.resources[@ent.entityDef.keyHash].on(
+            'complete', =>
+              setTimeout =>
+                @sprite = new spine.Spine(spineLoader.resources[@ent.entityDef.keyHash].spineData)
+                @ent.addChild(@sprite)
+              , 0
+          )
+      else
+        spineLoader.add(
+          @ent.entityDef.keyHash,
+          config.asset_base + @character
+        ).load((loader, resources) =>
+          @sprite = new spine.Spine(resources[@ent.entityDef.keyHash].spineData)
+          @ent.addChild(@sprite)
+        )
+  disable: ->
+    @ent.removeChild(@sprite)
 
 module.exports =
   Sprite: Sprite

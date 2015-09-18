@@ -7,10 +7,10 @@ registry =
   ComponentBase: base.ComponentBase
   TerrainPolygon: terrain.TerrainPolygon
   Sprite: render.Sprite
-
+  Spine: render.Spine
 
 find = (component_name) ->
-  return registry[component_name] ? base.ComponentBase
+  return registry[component_name] ? base.EchoBase
 
 module.exports =
   find: find

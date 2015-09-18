@@ -5,7 +5,6 @@ clock = require './clock'
 pixi = require 'pixi'
 entityController = require('./entity_controller')
 entityDef = require './entity_def'
-spine = require 'pixi-spine'
 entCount = 0
 
 updateList = {}
