@@ -1,11 +1,19 @@
 base = require './base'
 terrain = require './terrain'
+render = require './render'
 
-module.exports =
+
+registry =
   ComponentBase: base.ComponentBase
   TerrainPolygon: terrain.TerrainPolygon
-  find: (component_name) ->
-    return module.exports[component_name] ? base.ComponentBase
-  create: (component_name) ->
-    cls = module.exports.find(component_name)
-    return new cls()
+  Sprite: render.Sprite
+
+
+find = (component_name) ->
+  return registry[component_name] ? base.ComponentBase
+
+module.exports =
+  find: find
+  create: (component_name, ent) ->
+    cls = find(component_name)
+    return new cls(ent)

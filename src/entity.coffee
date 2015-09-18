@@ -136,11 +136,6 @@ class Entity extends pixi.Container
     @entityDef = entityDef.get(defHash)
     @updateComponents(@entityDef.components)
 
-    if @entityDef.components.Sprite?
-      @update_anchor_x(@entityDef.components.Sprite.anchor.x)
-      @update_anchor_y(@entityDef.components.Sprite.anchor.y)
-      @update_scale(@entityDef.components.Sprite.scale)
-      @update_sprite(@entityDef.components.Sprite.sprite)
 
     if @entityDef.components.Interactive?
       @update_hit_area(@entityDef.components.Interactive.hit_area)
@@ -165,7 +160,7 @@ class Entity extends pixi.Container
   updateComponents: (data) ->
     for component_name of data
       if not @components[component_name]?
-        @components[component_name] = components.create(component_name)
+        @components[component_name] = components.create(component_name, @)
 
       @components[component_name].updateData(data[component_name])
 
