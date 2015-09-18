@@ -24,6 +24,9 @@ module.exports =
         when packetTypes.BYTE_UPDATE then ent.updateAttribute(pr.readSmallString(), pr.readUint8())
         when packetTypes.ENTITYDEF_HASH_UPDATE then ent.updateEntityDef(pr.readHash64())
         when packetTypes.PARENT_UPDATE then ent.updateParent(pr)
+        when packetTypes.ENTITY_UPDATE
+          ent.updateComponents(JSON.parse(pr.readString()))
+        else console.log 'Unhandled EntityUpdate Packet', updateType
 
       updateType = pr.readUint8()
 

@@ -1,11 +1,11 @@
 config = require './config'
+components = require './entity_components'
 asset = require './asset'
 clock = require './clock'
 pixi = require 'pixi'
 entityController = require('./entity_controller')
 entityDef = require './entity_def'
 spine = require 'pixi-spine'
-
 entCount = 0
 
 updateList = {}
@@ -32,6 +32,7 @@ class Entity extends pixi.Container
     @sprite_cbs = []
     @hidden = true
     @name = 'Entity'
+    @components = {}
 
     require('./main').stage.addChild(@)
     # console.log "ENTITY", entCount++
@@ -84,6 +85,7 @@ class Entity extends pixi.Container
       updateList[@id] = @
 
   update: (dt, init) ->
+    # fancy pants interpolation and extrapolation and other things in this method
     srv = clock.server_adjusted()
 
     # discard old updates, keeping the last
@@ -132,6 +134,7 @@ class Entity extends pixi.Container
       console.error("no support for reassigning entityDefs yet.. but whatever")
 
     @entityDef = entityDef.get(defHash)
+    @updateComponents(@entityDef.components)
 
     if @entityDef.components.Sprite?
       @update_anchor_x(@entityDef.components.Sprite.anchor.x)
@@ -158,6 +161,13 @@ class Entity extends pixi.Container
 
     if @['update_' + attrName]?
       @['update_' + attrName](attrVal)
+
+  updateComponents: (data) ->
+    for component_name of data
+      if not @components[component_name]?
+        @components[component_name] = components.create(component_name)
+
+      @components[component_name].updateData(data[component_name])
 
   setGeom: (@geom) ->
     @updateModel()
@@ -203,6 +213,8 @@ class Entity extends pixi.Container
     )
 
   setVisible: () ->
+    # TODO : check if this is the first time going 'visible'
+    # TODO : rename this stuff from 'visible' to 'enabled'
     if @hidden
       if @sprite?
         @addChild(@sprite)
