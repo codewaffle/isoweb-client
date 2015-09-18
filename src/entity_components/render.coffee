@@ -27,6 +27,10 @@ class Sprite extends base.ComponentBase
 
   setSprite: (@loaded_sprite) ->
     # spr is the pixi sprite.. ahh
+    @loaded_sprite.anchor.x = @anchor.x
+    @loaded_sprite.anchor.y = @anchor.y
+    @loaded_sprite.scale.x = @scale
+    @loaded_sprite.scale.y = @scale
     @show()
 
   show: ->
