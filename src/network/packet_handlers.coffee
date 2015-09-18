@@ -58,12 +58,12 @@ module.exports =
 
     require('../main').menuManager.showContextMenu(menuId, menu)
 
-  handleEntityShow: (conn, pr) ->
+  handleEntityEnable: (conn, pr) ->
     entId = pr.readEntityId()
     ent = entity.get(entId)
     ent.setEnabled()
 
-  handleEntityHide: (conn, pr) ->
+  handleEntityDisable: (conn, pr) ->
     entId = pr.readEntityId()
     ent = entity.get(entId)
     ent.setDisabled()
