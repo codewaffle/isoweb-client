@@ -5,7 +5,7 @@ input = require './input'
 
 registry =
   ComponentBase: base.ComponentBase
-  TerrainPolygon: terrain.TerrainPolygon
+  StaticPolygon: terrain.StaticPolygon
   Sprite: render.Sprite
   Spine: render.Spine
   Interactive: input.Interactive
