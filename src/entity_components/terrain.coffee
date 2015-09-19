@@ -18,7 +18,6 @@ class StaticPolygon extends base.ComponentBase
 
     if not @mask?
       @mask = new pixi.Graphics()
-      console.log @points
       @mask.clear()
       @mask.beginFill(0xFFFFFF)
 
@@ -40,6 +39,7 @@ class StaticPolygon extends base.ComponentBase
   show: ->
     @ent.addChild(@sprite)
     @ent.addChild(@mask)
+    @ent.depth = -0.5
     @sprite.mask = @mask
 
   hide: ->

@@ -1,6 +1,17 @@
 pixi = require 'pixi'
 config = require './config'
 
+depthCompare = (a, b) ->
+  aDepth = a.depth ? 0
+  bDepth = b.depth ? 0
+
+  if aDepth > bDepth
+    return 1
+  if aDepth < bDepth
+    return -1
+
+  return 0
+
 class Camera
   constructor: (@renderer, @stage) ->
     module.exports.current ?= @
@@ -16,6 +27,7 @@ class Camera
     @onResize()
 
   render: ->
+    @stage.children.sort(depthCompare)
     @renderer.render(@container)
 
   setBackground: (@bgName) ->
@@ -27,6 +39,7 @@ class Camera
         config.ASSET_BASE + @bgName
       ), @w, @h
     )
+    @bg.depth = -100
     # mipmaps and tiles equals yuck.. need to manually mipmap maybe.
     # more likely will just have crud with a transparent background that overlays on top of a solid color.
     # @bg.texture.baseTexture.mipmap = true

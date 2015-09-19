@@ -30,6 +30,7 @@ class Entity extends pixi.Container
     @anchor_y = 0.5
     @name = 'Entity'
     @components = {}
+    @depth = 0
 
     require('./main').stage.addChild(@)
     # console.log "ENTITY", entCount++
