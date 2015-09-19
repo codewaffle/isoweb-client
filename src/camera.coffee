@@ -24,7 +24,7 @@ class Camera
 
     @bg = new pixi.extras.TilingSprite(
       pixi.Texture.fromImage(
-        config.asset_base + @bgName
+        config.ASSET_BASE + @bgName
       ), @w, @h
     )
     # mipmaps and tiles equals yuck.. need to manually mipmap maybe.
@@ -37,7 +37,10 @@ class Camera
     if y?
       screenPos = new pixi.Point(screenPos, y)
 
-    return new pixi.Point((screenPos.x - @stage.position.x) / (256/@zoomLevel), (screenPos.y - @stage.position.y)  / (256/@zoomLevel))
+    return new pixi.Point(
+      (screenPos.x - @stage.position.x) / (config.PIXELS_PER_UNIT/@zoomLevel),
+      (screenPos.y - @stage.position.y)  / (config.PIXELS_PER_UNIT/@zoomLevel)
+    )
 
   onResize: ->
     @h = window.innerHeight

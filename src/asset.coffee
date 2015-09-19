@@ -6,6 +6,6 @@ callbacks = {}
 
 module.exports =
   getSprite: (path, cb) ->
-    pepsi = new pixi.Sprite.fromImage(config.asset_base + path)
+    pepsi = new pixi.Sprite.fromImage(config.ASSET_BASE + path)
     pepsi.texture.baseTexture.mipmap = true
     cb(pepsi)

@@ -75,7 +75,7 @@ class Spine extends base.ComponentBase
       else
         spineLoader.add(
           @ent.entityDef.keyHash,
-          config.asset_base + @character
+          config.ASSET_BASE + @character
         ).load((loader, resources) =>
           @sprite = new spine.Spine(resources[@ent.entityDef.keyHash].spineData)
           @show()

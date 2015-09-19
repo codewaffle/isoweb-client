@@ -34,7 +34,7 @@ class EntityDef
       else
         loader = new pixi.loaders.Loader()
         loader.add(
-          @keyHash, config.asset_base + @components.Spine.character
+          @keyHash, config.ASSET_BASE + @components.Spine.character
         ).load( (loader, resources) =>
           spineRegistry[@components.Spine.character] = resources[@keyHash].spineData
           @asyncUpdate('spineCharacter', resources[@keyHash].spineData)

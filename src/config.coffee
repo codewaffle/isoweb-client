@@ -1,2 +1,3 @@
 module.exports =
-  asset_base: '/assets/'
+  ASSET_BASE: '/assets/'
+  PIXELS_PER_UNIT: 256

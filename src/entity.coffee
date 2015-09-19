@@ -50,7 +50,7 @@ class Entity extends pixi.Container
     console.log 'update parent, set to:', entId
 
   pushUpdate: (t, x, y, r, vx, vy) ->
-    @updates.push([t,x*256,y*256,r, vx*256, vy*256])
+    @updates.push([t,x*config.PIXELS_PER_UNIT,y*config.PIXELS_PER_UNIT,r, vx*config.PIXELS_PER_UNIT, vy*config.PIXELS_PER_UNIT])
 
     if not @updating
       @updating = true

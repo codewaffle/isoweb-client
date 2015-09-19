@@ -32,8 +32,8 @@ ftm = new ft.FloatingTextManager(stage, cam)
 document.body.appendChild(renderer.view)
 
 clicker = {}
-pixi.loader.add('clicker', config.asset_base + 'spine/clicker/clicker.json')
-pixi.loader.add(config.asset_base + 'spine/clicker/clicker.atlas')
+pixi.loader.add('clicker', config.ASSET_BASE + 'spine/clicker/clicker.json')
+pixi.loader.add(config.ASSET_BASE + 'spine/clicker/clicker.atlas')
 pixi.loader.once('complete', ->
   # assets loaded
   clicker = new spine.Spine.fromAtlas('clicker')
@@ -121,9 +121,9 @@ class LUTFilter extends pixi.AbstractFilter
     fragmentSrc = tmp
     console.log(tmp)
     super(null, fragmentSrc, {
-      nightLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'night_lut.png')}
-      morningLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'morning_lut.png')}
-      fireLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.asset_base + 'fire_lut.png')}
+      nightLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.ASSET_BASE + 'night_lut.png')}
+      morningLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.ASSET_BASE + 'morning_lut.png')}
+      fireLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.ASSET_BASE + 'fire_lut.png')}
     })
 
 bla = new LUTFilter()
@@ -176,7 +176,7 @@ beginDragMoving = ->
     window.clearTimeout(clickerTimer)
 
   clicker.alpha = 1
-  clicker.position.set(cursorWorldPoint.x * 256, cursorWorldPoint.y * 256)
+  clicker.position.set(cursorWorldPoint.x * config.PIXELS_PER_UNIT, cursorWorldPoint.y * config.PIXELS_PER_UNIT)
   clicker.state.setAnimationByName(0, "animation", true)
 
   dragMoveTimer = window.setInterval(->
@@ -276,7 +276,7 @@ update = (t) ->
   # update clicky marker
   if isDragMoving
     cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
-    clicker.position.set(cursorWorldPoint.x * 256, cursorWorldPoint.y * 256)
+    clicker.position.set(cursorWorldPoint.x * config.PIXELS_PER_UNIT, cursorWorldPoint.y * config.PIXELS_PER_UNIT)
 
   requestAnimationFrame(update)
 requestAnimationFrame(update)
