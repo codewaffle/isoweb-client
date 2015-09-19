@@ -130,25 +130,6 @@ class Entity extends pixi.Container
     ec.takeControl()
 
   init: ->
-    @on('mouseover', =>
-      @tint = 0xAACCFF
-    )
-
-    @on('mouseout', =>
-      @tint = 0xFFFFFF
-    )
-
-    @on('click', (ev) =>
-    # perform default command (or return menu if multiple conflicting default commands [it happens])
-      console.log('entity position: ' + @position)
-      console.log('Requesting contextual command')
-      entityController.current.cmdContextual(@)
-    )
-
-    @on('rightclick', (ev) =>
-      # get full menu
-      entityController.current.cmdMenuReq(@)
-    )
 
   setEnabled: () ->
     if @isEnabled

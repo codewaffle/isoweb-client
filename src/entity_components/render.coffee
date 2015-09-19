@@ -34,10 +34,20 @@ class Sprite extends base.ComponentBase
     @show()
 
   show: ->
+    @ent.highlighter?.clearHighlight()
+    @ent.highlighter = @
     @ent.addChild(@loaded_sprite)
 
   hide: ->
+    @ent.highlighter?.clearHighlight()
+    @ent.highlighter = null
     @ent.removeChild(@loaded_sprite)
+
+  highlight: ->
+    @loaded_sprite.tint = 0xAACCFF
+  clearHighlight: ->
+    @loaded_sprite.tint = 0xFFFFFF
+
 
 spineLoader = new pixi.loaders.Loader()
 
@@ -46,19 +56,20 @@ class Spine extends base.ComponentBase
   @scale: 1
   @atlas: 'NONE'
 
-  # TODO : lotta long variables in here.. make them shorter. MUAHAHAHA
   enable: ->
-    if not @sprite?
+    if @sprite?
+      @show()
+    else
       if spineLoader.resources[@ent.entityDef.keyHash]?
         if spineLoader.resources[@ent.entityDef.keyHash].spineData?
           @sprite = new spine.Spine(spineLoader.resources[@ent.entityDef.keyHash].spineData)
-          @ent.addChild(@sprite)
+          @show()
         else
           spineLoader.resources[@ent.entityDef.keyHash].on(
             'complete', =>
               setTimeout =>
                 @sprite = new spine.Spine(spineLoader.resources[@ent.entityDef.keyHash].spineData)
-                @ent.addChild(@sprite)
+                @show()
               , 10
           )
       else
@@ -67,10 +78,23 @@ class Spine extends base.ComponentBase
           config.asset_base + @character
         ).load((loader, resources) =>
           @sprite = new spine.Spine(resources[@ent.entityDef.keyHash].spineData)
-          @ent.addChild(@sprite)
+          @show()
         )
   disable: ->
+    @hide()
+
+  show: ->
+    @ent.highlighter?.clearHighlight()
+    @ent.highlighter = @
+    @ent.addChild(@sprite)
+
+  hide: ->
+    @ent.highlighter?.clearHighlight()
+    @ent.highlighter = null
     @ent.removeChild(@sprite)
+
+  highlight: -> # TODO : figure out how to highlight Spine stuff.
+  clearHighlight: ->
 
 module.exports =
   Sprite: Sprite
