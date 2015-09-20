@@ -1,3 +1,4 @@
+globals = require './globals'
 pixi = require 'pixi'
 spine = require 'pixi-spine'
 pixiExt = require './pixi_extensions'
@@ -22,7 +23,7 @@ chatManager = new chat.ChatManager()
 renderer = new pixi.autoDetectRenderer(1024, 1024)
 renderer.backgroundColor = 0xAAFFCC
 
-stage = new pixi.Container()
+globals.stage = stage = new pixi.Container()
 
 cam = new camera.Camera(renderer, stage)
 cam.setBackground('tiles/tile_water.png')
@@ -228,7 +229,6 @@ cam.onResize()
 resize()
 
 module.exports =
-  stage: stage
   inputManager: inputManager
   menuManager: menuManager
   windowManager: windowManager

@@ -1,3 +1,4 @@
+globals = require './globals'
 config = require './config'
 components = require './entity_components'
 asset = require './asset'
@@ -32,8 +33,8 @@ class Entity extends pixi.Container
     @components = {}
     @depth = 0
 
-    require('./main').stage.addChild(@)
-    # console.log "ENTITY", entCount++
+    # TODO : add to stage only if entity is present in world..
+    globals.stage.addChild(@)
 
   updatePosition: (pr) ->
     @pushUpdate(
@@ -130,17 +131,13 @@ class Entity extends pixi.Container
     ec.setConnection(@conn)
     ec.takeControl()
 
-  init: ->
-
   setEnabled: () ->
     if @isEnabled
       return
 
-    if @isEnabled is null
-      @init()
-
     for key, val of @components
       val.enable()
+
     @isEnabled = true
     @update(0, true)
 
@@ -169,6 +166,6 @@ module.exports =
   registry: registry
   update: (dt) ->
     for key, ent of updateList
-      if not ent.update(dt)
+      if not ent.update(dt)  # update returns falsey if we should stop updating the entity.
         ent.updating = false
         delete updateList[key]
