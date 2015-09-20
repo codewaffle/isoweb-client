@@ -33,8 +33,14 @@ class Entity extends pixi.Container
     @components = {}
     @depth = 0
 
-    # TODO : add to stage only if entity is present in world..
-    globals.stage.addChild(@)
+  setStage: (stage) ->
+    if stage != @stage
+      if @stage?
+        @stage.removeChild(@)
+      @stage = stage
+
+      if @stage?
+        @stage.addChild(@)
 
   updatePosition: (pr) ->
     @pushUpdate(
