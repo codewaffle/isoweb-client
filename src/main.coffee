@@ -12,8 +12,14 @@ camera = require './camera'
 wm = require './window_manager'
 chat = require './chat_manager'
 ft = require './floating_text_manager'
+em = require './effects_manager'
+effects =
+  grassSpray: require('./effects/grass_spray').GrassSprayEffect
+  smokePuff: require('./effects/smoke_puff').SmokePuffEffect
+  fire: require('./effects/fire').FireEffect
 
 
+offline = location.search == '?offline'
 
 inputManager = new input.InputManager()
 menuManager = new menu.MenuManager()
@@ -27,6 +33,7 @@ cam = new camera.Camera(renderer)
 cam.setBackground('tiles/tile_water.png')
 
 ftm = new ft.FloatingTextManager(cam.stage, cam)
+effectsManager = new em.EffectsManager(cam.stage, cam)
 
 document.body.appendChild(renderer.view)
 
@@ -195,22 +202,22 @@ endDragMoving = ->
     clickerTimer = null
   , 560)
 
-
-bgHitArea.on('mousedown', (ev) ->
-  cursorPoint.set(ev.data.global.x, ev.data.global.y)
-  beginDragMoving()
-)
-bgHitArea.on('mouseup', (ev) ->
-  cursorPoint.set(ev.data.global.x, ev.data.global.y)
-  endDragMoving()
-)
-bgHitArea.on('mousemove', (ev) ->
-  cursorPoint.set(ev.data.global.x, ev.data.global.y)
-  if (ev.data.originalEvent.buttons & 1) == 1 & !isDragMoving # left-mouse down
+if not offline
+  bgHitArea.on('mousedown', (ev) ->
+    cursorPoint.set(ev.data.global.x, ev.data.global.y)
     beginDragMoving()
-  else if (ev.data.originalEvent.buttons & 1) == 0 & isDragMoving # left-mouse up
+  )
+  bgHitArea.on('mouseup', (ev) ->
+    cursorPoint.set(ev.data.global.x, ev.data.global.y)
     endDragMoving()
-)
+  )
+  bgHitArea.on('mousemove', (ev) ->
+    cursorPoint.set(ev.data.global.x, ev.data.global.y)
+    if (ev.data.originalEvent.buttons & 1) == 1 & !isDragMoving # left-mouse down
+      beginDragMoving()
+    else if (ev.data.originalEvent.buttons & 1) == 0 & isDragMoving # left-mouse up
+      endDragMoving()
+  )
 
 resize = ->
   h = window.innerHeight
@@ -234,7 +241,7 @@ module.exports =
   floatingTextManager: ftm
 
 
-if location.search != '?offline'
+if not offline
   network = require './network'
   #conn = new network.Connection('ws://codewaffle.com:10000/player')
   conn = new network.Connection('ws://96.40.72.113:10000/player')
@@ -267,6 +274,7 @@ update = (t) ->
   # cam.setZoom(t/1000)
   cam.update(dt)
   cam.render()
+  effectsManager.update(dt)
   debug.update()
   ftm.update(dt)
 
