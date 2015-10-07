@@ -59,6 +59,8 @@ class Entity extends pixi.Container
       if not root.parent?
         return root
 
+      root = root.parent
+
   updateParent: (pr) ->
     entId = pr.readEntityId()
     # TODO : queue it up.. parent changes need to happen inline with position changes.
