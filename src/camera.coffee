@@ -30,7 +30,6 @@ class Camera
     @onResize()
 
   render: ->
-    # TODO : ensure children's children (and so on..) are also sorted
     @stage.children.sort(depthCompare)
     @renderer.render(@viewport)
 
@@ -82,6 +81,9 @@ class Camera
   setTrackingTarget: (@trackingObject) ->
 
   setRoot: (root) ->
+    if root == @root
+      return
+
     if @root?
       @stage.removeChild(@root)
 
@@ -102,3 +104,4 @@ class Camera
 module.exports =
   Camera: Camera
   current: null
+  depthCompare: depthCompare

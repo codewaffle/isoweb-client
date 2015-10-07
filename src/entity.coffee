@@ -6,6 +6,7 @@ clock = require './clock'
 pixi = require 'pixi'
 entityController = require('./entity_controller')
 entityDef = require './entity_def'
+camera = require './camera'
 entCount = 0
 
 updateList = {}
@@ -34,13 +35,18 @@ class Entity extends pixi.Container
     @depth = 0
 
   setParent: (parent) ->
-    if @isEnabled and @parent? and @parent != parent
+    if @parent == parent
+      return
+
+    if @parent?
       @parent.removeChild(@)
 
-    @parent = parent
-
-    if parent? and @isEnabled
+    if parent?
       parent.addChild(@)
+      # TODO : maybe set a dirty flag and sort just before render (for the case of many many adds at once)
+      parent.children.sort(camera.depthCompare)
+    else
+      @parent = null
 
   updatePosition: (pr) ->
     @pushUpdate(
@@ -63,11 +69,18 @@ class Entity extends pixi.Container
 
   updateParent: (pr) ->
     entId = pr.readEntityId()
-    # TODO : queue it up.. parent changes need to happen inline with position changes.
-    console.log 'update parent, set to:', entId
+    ent = module.exports.get(entId)
+    @setParent(ent)
 
   pushUpdate: (t, x, y, r, vx, vy) ->
-    @updates.push([t,x*config.PIXELS_PER_UNIT,y*config.PIXELS_PER_UNIT,r, vx*config.PIXELS_PER_UNIT, vy*config.PIXELS_PER_UNIT])
+    @updates.push([
+      t,
+      x*config.PIXELS_PER_UNIT,
+      y*config.PIXELS_PER_UNIT,
+      r,
+      vx*config.PIXELS_PER_UNIT,
+      vy*config.PIXELS_PER_UNIT
+    ])
 
     if not @updating
       @updating = true
@@ -144,7 +157,9 @@ class Entity extends pixi.Container
   takeControl: (@conn) ->
     ec = new entityController.EntityController(@)
     ec.setConnection(@conn)
-    ec.takeControl()
+    setTimeout ->
+      ec.takeControl()
+    , 500
 
   setEnabled: () ->
     if @isEnabled
