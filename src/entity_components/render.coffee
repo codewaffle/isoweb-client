@@ -39,7 +39,6 @@ class Sprite extends base.ComponentBase
     @ent.highlighter = @
     @ent.addChild(@loaded_sprite)
     @ent.depth = 1.5
-    @ent.setStage(globals.stage)
 
   hide: ->
     @ent.highlighter?.clearHighlight()
@@ -91,7 +90,6 @@ class Spine extends base.ComponentBase
     @ent.highlighter = @
     @ent.addChild(@sprite)
     @ent.depth = 2.0
-    @ent.setStage(globals.stage)
 
   hide: ->
     @ent.highlighter?.clearHighlight()

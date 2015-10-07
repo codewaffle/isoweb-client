@@ -23,12 +23,10 @@ chatManager = new chat.ChatManager()
 renderer = new pixi.autoDetectRenderer(1024, 1024)
 renderer.backgroundColor = 0xAAFFCC
 
-globals.stage = stage = new pixi.Container()
-
-cam = new camera.Camera(renderer, stage)
+cam = new camera.Camera(renderer)
 cam.setBackground('tiles/tile_water.png')
 
-ftm = new ft.FloatingTextManager(stage, cam)
+ftm = new ft.FloatingTextManager(cam.stage, cam)
 
 document.body.appendChild(renderer.view)
 
@@ -40,7 +38,7 @@ pixi.loader.once('complete', ->
   clicker = new spine.Spine.fromAtlas('clicker')
   clicker.scale.set(0.2, 0.2)
   clicker.alpha = 0
-  stage.addChild(clicker)
+  cam.stage.addChild(clicker)
 )
 pixi.loader.load()
 
@@ -128,7 +126,7 @@ class LUTFilter extends pixi.AbstractFilter
     })
 
 bla = new LUTFilter()
-cam.container.filters = [bla]
+cam.setFilter(bla)
 
 $(document).on('keydown', (ev) ->
   if ev.keyCode == 27 # ESC
@@ -143,10 +141,9 @@ $(document).on('keydown', (ev) ->
     return false
 
   if ev.keyCode == 70
-    if cam.container.filters
-      cam.container.filters = null
+    if cam.setFilter(null)
     else
-      cam.container.filters = [bla]
+      cam.setFilter(bla)
 
   if ev.keyCode == 8 and ev.target == document.body # backspace
     # prevent backspace from navigating
@@ -157,7 +154,7 @@ $(document).on('keydown', (ev) ->
 bgHitArea = new pixi.Container()
 bgHitArea.hitArea = new pixi.Rectangle(0, 0, renderer.width, renderer.height)
 bgHitArea.interactive = true
-cam.container.addChildAt(bgHitArea, 0)
+cam.viewport.addChildAt(bgHitArea, 0)
 
 cursorPoint = new pixi.Point()
 cursorWorldPoint = null

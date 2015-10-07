@@ -13,10 +13,13 @@ depthCompare = (a, b) ->
   return 0
 
 class Camera
-  constructor: (@renderer, @stage) ->
+  constructor: (@renderer) ->
     module.exports.current ?= @
-    @container = new pixi.Container()
-    @container.addChild(@stage)
+
+    @viewport = new pixi.Container()
+    @stage = new pixi.Container()
+    @viewport.addChild(@stage)
+
     @position = new pixi.Point()
     @setZoom(4)
     @w = @h = 0
@@ -27,12 +30,13 @@ class Camera
     @onResize()
 
   render: ->
+    # TODO : ensure children's children (and so on..) are also sorted
     @stage.children.sort(depthCompare)
-    @renderer.render(@container)
+    @renderer.render(@viewport)
 
   setBackground: (@bgName) ->
     if @bg?
-      @container.removeChild(@bg)
+      @viewport.removeChild(@bg)
 
     @bg = new pixi.extras.TilingSprite(
       pixi.Texture.fromImage(
@@ -44,7 +48,13 @@ class Camera
     # more likely will just have crud with a transparent background that overlays on top of a solid color.
     # @bg.texture.baseTexture.mipmap = true
 
-    @container.addChildAt(@bg, 0)
+    @viewport.addChildAt(@bg, 0)
+
+  setFilter: (f) ->
+    if f?
+      @viewport.filters = [f]
+    else
+      @viewport.filters = null
 
   screenToWorld: (screenPos, y) ->
     if y?
@@ -63,13 +73,22 @@ class Camera
       @bg.width = @w
       @bg.height = @h
       @bg.tileScale.x = @bg.tileScale.y = 1/@zoomLevel
-      @bg.position.x = @container.position.x * @zoomLevel * -1
-      @bg.position.y = @container.position.y * @zoomLevel * -1
+      @bg.position.x = @viewport.position.x * @zoomLevel * -1
+      @bg.position.y = @viewport.position.y * @zoomLevel * -1
 
     if @renderer?
       @renderer.resize(@w, @h)
 
   setTrackingTarget: (@trackingObject) ->
+
+  setRoot: (root) ->
+    if @root?
+      @stage.removeChild(@root)
+
+    @root = root
+
+    if root?
+      @stage.addChild(root)
 
   update: (dt) ->
     if @trackingObject?

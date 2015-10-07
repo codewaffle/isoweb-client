@@ -33,14 +33,14 @@ class Entity extends pixi.Container
     @components = {}
     @depth = 0
 
-  setStage: (stage) ->
-    if stage != @stage
-      if @stage?
-        @stage.removeChild(@)
-      @stage = stage
+  setParent: (parent) ->
+    if @isEnabled and @parent? and @parent != parent
+      @parent.removeChild(@)
 
-      if @stage?
-        @stage.addChild(@)
+    @parent = parent
+
+    if parent? and @isEnabled
+      parent.addChild(@)
 
   updatePosition: (pr) ->
     @pushUpdate(
@@ -51,6 +51,13 @@ class Entity extends pixi.Container
       pr.readFloat32(),
       pr.readFloat32()
     )
+
+  findRoot: ->
+    root = @
+
+    while true
+      if not root.parent?
+        return root
 
   updateParent: (pr) ->
     entId = pr.readEntityId()
