@@ -49,14 +49,26 @@ class Entity extends pixi.Container
       @parent = null
 
   updatePosition: (pr) ->
-    @pushUpdate(
-      pr.timestamp,
-      pr.readFloat32(),
-      pr.readFloat32(),
-      pr.readFloat32(),
-      pr.readFloat32(),
-      pr.readFloat32()
-    )
+    t = pr.timestamp
+    x = pr.readFloat32()
+    y = pr.readFloat32()
+    r = pr.readFloat32()
+    vx = pr.readFloat32()
+    vy = pr.readFloat32()
+
+    @updates.push([
+      t,
+      x*config.PIXELS_PER_UNIT,
+      y*config.PIXELS_PER_UNIT,
+      r,
+      vx*config.PIXELS_PER_UNIT,
+      vy*config.PIXELS_PER_UNIT
+    ])
+
+    # add ourselves to the update loop
+    if not @updating
+      @updating = true
+      updateList[@id] = @
 
   findRoot: ->
     root = @
@@ -71,20 +83,6 @@ class Entity extends pixi.Container
     entId = pr.readEntityId()
     ent = module.exports.get(entId)
     @setParent(ent)
-
-  pushUpdate: (t, x, y, r, vx, vy) ->
-    @updates.push([
-      t,
-      x*config.PIXELS_PER_UNIT,
-      y*config.PIXELS_PER_UNIT,
-      r,
-      vx*config.PIXELS_PER_UNIT,
-      vy*config.PIXELS_PER_UNIT
-    ])
-
-    if not @updating
-      @updating = true
-      updateList[@id] = @
 
   update: (dt, init) ->
     # fancy pants interpolation and extrapolation and other things in this method
