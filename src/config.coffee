@@ -1,3 +1,3 @@
 module.exports =
-  ASSET_BASE: '/assets/'
+  ASSET_BASE: 'http://localhost:9002/'
   PIXELS_PER_UNIT: 128
