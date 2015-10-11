@@ -157,17 +157,12 @@ $(document).on('keydown', (ev) ->
     return false
 )
 
-
-bgHitArea = new pixi.Container()
-bgHitArea.hitArea = new pixi.Rectangle(0, 0, renderer.width, renderer.height)
-bgHitArea.interactive = true
-cam.viewport.addChildAt(bgHitArea, 0)
-
 cursorPoint = new pixi.Point()
 cursorWorldPoint = null
 dragMoveTimer = null
 clickerTimer = null
 isDragMoving = false
+
 beginDragMoving = ->
   #console.log 'beginDragMoving'
   if isDragMoving
@@ -202,28 +197,10 @@ endDragMoving = ->
     clickerTimer = null
   , 560)
 
-if not offline
-  bgHitArea.on('mousedown', (ev) ->
-    cursorPoint.set(ev.data.global.x, ev.data.global.y)
-    beginDragMoving()
-  )
-  bgHitArea.on('mouseup', (ev) ->
-    cursorPoint.set(ev.data.global.x, ev.data.global.y)
-    endDragMoving()
-  )
-  bgHitArea.on('mousemove', (ev) ->
-    cursorPoint.set(ev.data.global.x, ev.data.global.y)
-    if (ev.data.originalEvent.buttons & 1) == 1 & !isDragMoving # left-mouse down
-      beginDragMoving()
-    else if (ev.data.originalEvent.buttons & 1) == 0 & isDragMoving # left-mouse up
-      endDragMoving()
-  )
 
 resize = ->
   h = window.innerHeight
   w = window.innerWidth
-  bgHitArea.hitArea.width = renderer.width
-  bgHitArea.hitArea.height = renderer.height
 
 # multiple resize handlers for now.. mostly for the hacked-in bg. bg will not always render this way.
 $(window).on('resize', cam.onResize)
