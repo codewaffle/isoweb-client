@@ -38,8 +38,9 @@ class StaticPolygon extends base.ComponentBase
     @hide()
 
   show: ->
+    @ent.addChildAt(@mask, 0)
+
     @ent.addChildAt(@sprite, 0)
-    @ent.addChildAt(@mask, 1)
     @ent.depth = -0.5
     @sprite.mask = @mask
 

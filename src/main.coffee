@@ -13,6 +13,7 @@ wm = require './window_manager'
 chat = require './chat_manager'
 ft = require './floating_text_manager'
 em = require './effects_manager'
+world = require './world'
 effects =
   grassSpray: require('./effects/grass_spray').GrassSprayEffect
   smokePuff: require('./effects/smoke_puff').SmokePuffEffect
@@ -29,11 +30,11 @@ chatManager = new chat.ChatManager()
 renderer = new pixi.autoDetectRenderer(1024, 1024)
 renderer.backgroundColor = 0xAAFFCC
 
-cam = new camera.Camera(renderer)
+cam = new camera.Camera(world)
 cam.setBackground('tiles/tile_water.png')
 
-ftm = new ft.FloatingTextManager(cam.stage, cam)
-effectsManager = new em.EffectsManager(cam.stage, cam)
+ftm = new ft.FloatingTextManager(cam, cam)
+effectsManager = new em.EffectsManager(cam, cam)
 
 document.body.appendChild(renderer.view)
 
@@ -45,7 +46,7 @@ pixi.loader.once('complete', ->
   clicker = new spine.Spine.fromAtlas('clicker')
   clicker.scale.set(0.2, 0.2)
   clicker.alpha = 0
-  cam.stage.addChild(clicker)
+  cam.addChild(clicker)
 )
 pixi.loader.load()
 
@@ -132,8 +133,8 @@ class LUTFilter extends pixi.AbstractFilter
       fireLut: {type: 'sampler2D', value: pixi.Texture.fromImage(config.ASSET_BASE + 'fire_lut.png')}
     })
 
-bla = new LUTFilter()
-cam.setFilter(bla)
+# bla = new LUTFilter()
+# cam.setFilter(bla)
 
 $(document).on('keydown', (ev) ->
   if ev.keyCode == 27 # ESC
@@ -147,11 +148,6 @@ $(document).on('keydown', (ev) ->
     ev.preventDefault()
     return false
 
-  if ev.keyCode == 70
-    if cam.setFilter(null)
-    else
-      cam.setFilter(bla)
-
   if ev.keyCode == 8 and ev.target == document.body # backspace
     # prevent backspace from navigating
     return false
@@ -161,7 +157,8 @@ $(document).on('keydown', (ev) ->
 bgHitArea = new pixi.Container()
 bgHitArea.hitArea = new pixi.Rectangle(0, 0, renderer.width, renderer.height)
 bgHitArea.interactive = true
-cam.viewport.addChildAt(bgHitArea, 0)
+cam.addChild(bgHitArea)
+# cam.viewport.addChildAt(bgHitArea, 0)
 
 cursorPoint = new pixi.Point()
 cursorWorldPoint = null
@@ -174,7 +171,7 @@ beginDragMoving = ->
     return
 
   isDragMoving = true
-  cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
+  cursorWorldPoint = camera.current.screenToWorld(cursorPoint.x, cursorPoint.y)
   entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
 
   if clickerTimer?
@@ -185,7 +182,7 @@ beginDragMoving = ->
   clicker.state.setAnimationByName(0, "animation", true)
 
   dragMoveTimer = window.setInterval(->
-    cursorWorldPoint = cam.screenToWorld(cursorPoint.x, cursorPoint.y)
+    cursorWorldPoint = camera.current.screenToWorld(cursorPoint.x, cursorPoint.y)
     entityController.current.cmdMove(cursorWorldPoint.x, cursorWorldPoint.y)
   , 50)
 
@@ -224,6 +221,8 @@ resize = ->
   w = window.innerWidth
   bgHitArea.hitArea.width = renderer.width
   bgHitArea.hitArea.height = renderer.height
+  renderer.resize(w, h)
+
 
 # multiple resize handlers for now.. mostly for the hacked-in bg. bg will not always render this way.
 $(window).on('resize', cam.onResize)
@@ -273,7 +272,7 @@ update = (t) ->
   entity.update(dt)
   # cam.setZoom(t/1000)
   cam.update(dt)
-  cam.render()
+  renderer.render(cam)
   effectsManager.update(dt)
   debug.update()
   ftm.update(dt)

@@ -7,6 +7,7 @@ pixi = require 'pixi'
 entityController = require('./entity_controller')
 entityDef = require './entity_def'
 camera = require './camera'
+world = require './world'
 entCount = 0
 
 updateList = {}
@@ -33,6 +34,7 @@ class Entity extends pixi.Container
     @name = 'Entity'
     @components = {}
     @depth = 0
+    world.addChild(@)
 
   setParent: (parent) ->
     if @parent == parent
@@ -40,6 +42,8 @@ class Entity extends pixi.Container
 
     if @parent?
       @parent.removeChild(@)
+    else
+      world.removeChild(@)
 
     if parent?
       parent.addChild(@)
@@ -47,6 +51,8 @@ class Entity extends pixi.Container
       parent.children.sort(camera.depthCompare)
     else
       @parent = null
+      world.addChild(@)
+
 
   updatePosition: (pr) ->
     t = pr.timestamp
@@ -89,8 +95,10 @@ class Entity extends pixi.Container
     srv = clock.server_adjusted()
 
     # discard old updates, keeping the last
-    while @updates.length > 0 and @updates[0][0] <= srv
+    while @updates.length > 0 and @updates[0][0] < srv
       u = @updates.shift()
+
+    # TODO : rework this with modern stuffs.
 
     if u?
       if @updates.length > 0
