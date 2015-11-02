@@ -59,11 +59,15 @@ class Camera extends pixi.Container
   )
 
   trackTarget: (dt, target) ->
-    # diff = target -
+    diffX = target.x - @target.x
+    diffY = target.y - @target.y
+
+    @target.x += diffX * 0.2
+    @target.y += diffY * 0.2
 
   update: (dt) ->
     if @targetEntity
-      @trackTarget(dt, @targetEntity.worldTransform.apply(new pixi.Point(0,0)))
+      @trackTarget(dt, @targetEntity.position)
 
     x = (@target.x * @zoom) - (@width / 2)
     y = (@target.y * @zoom) - (@height / 2)
@@ -141,21 +145,10 @@ class Camera extends pixi.Container
     if y?
       screenPos = new pixi.Point(screenPos, y)
 
-
-    #screenPos.x /= config.PIXELS_PER_UNIT
-    #screenPos.y /= config.PIXELS_PER_UNIT
-
-    #screenPos.x /= @zoom
-    #screenPos.y /= @zoom
-
-    console.log @, screenPos, @root.position
-
     ret = new pixi.Point(
       (screenPos.x - @root.position.x) / config.PIXELS_PER_UNIT / @zoom ,
       (screenPos.y - @root.position.y) / config.PIXELS_PER_UNIT / @zoom
     )
-
-    console.log ret
 
     return ret
 
